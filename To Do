@@ -179,8 +179,8 @@ Best solution brainstormed so far is to make a "label-viewer" mini-app.
 ERRORS, FIXES, AND TESTS
 Reinstate javascript testing
 Fix vulnerabilities that are noted in e-mail
-Live site won't match lowercase letters, but development site will
-Live site won't search by student number
+Live site should ignore case while searching
+Test that I didn't break other searches by fixing the student number searching
 
 Update or remove all skipped tests
 Worksheet didn't seem to attach when an admin created a new worksheet while attaching.

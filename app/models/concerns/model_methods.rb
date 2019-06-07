@@ -13,7 +13,7 @@ module ModelMethods
                 if whichParam == "user_number"
                     results = where(:user_number => search)
                 else
-                    results = where("#{whichParam} LIKE ?" , "%#{search}%")
+                    results = where("#{whichParam} ILIKE ?" , "%#{search}%")
                 end
             end
             results = [0] if results == []
