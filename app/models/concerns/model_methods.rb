@@ -13,6 +13,7 @@ module ModelMethods
                 actual_search = search.to_i
             else
                 actual_search = search
+            end
             if search
                 results = where("#{whichParam} LIKE ?" , "%#{actual_search}%")
             else
