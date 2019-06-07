@@ -196,6 +196,7 @@ class SeminarsController < ApplicationController
     
     def usernames
         @seminar = Seminar.find(params[:id])
+        update_current_class
         @students = @seminar.students
     end
     
