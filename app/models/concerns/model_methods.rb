@@ -9,15 +9,14 @@ module ModelMethods
         
         # Search for specific records
         def search(search, whichParam)
-            if whichParam == "user_number"
-                actual_search = search.to_i
-            else
-                actual_search = search
-            end
-            results = [0]
             if search
-                results = where("#{whichParam} LIKE ?" , "%#{actual_search}%")
+                if whichParam == "user_number"
+                    results = where(:user_number => search)
+                else
+                    results = where("#{whichParam} LIKE ?" , "%#{search}%")
+                end
             end
+            results = [0] if results == []
             return results
         end
         
