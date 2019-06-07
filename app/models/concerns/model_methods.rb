@@ -14,13 +14,9 @@ module ModelMethods
             else
                 actual_search = search
             end
+            results = [0]
             if search
                 results = where("#{whichParam} LIKE ?" , "%#{actual_search}%")
-            else
-               nil
-            end
-            if results.nil? || results == []
-                results = [0]
             end
             return results
         end
