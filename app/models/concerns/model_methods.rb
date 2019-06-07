@@ -9,8 +9,12 @@ module ModelMethods
         
         # Search for specific records
         def search(search, whichParam)
+            if whichParam == "user_number"
+                actual_search = search.to_i
+            else
+                actual_search = search
             if search
-                results = where("#{whichParam} LIKE ?" , "%#{search}%")
+                results = where("#{whichParam} LIKE ?" , "%#{actual_search}%")
             else
                nil
             end
