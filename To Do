@@ -63,24 +63,14 @@ IP Address  34.207.161.220
 Subnet ID    subnet-651f5a4b
 
 
-2.92 Students_Needed in Code
-Replace any uses of old students_needed method with column
-Tests
-Erase method
-answer_quiz_randomly should only answer the quiz.  Not begin it.
+
+
 
 Fix terminal prompt to show current branch
 
-Fix git both links
-
-/home/ubuntu/.rvm/gems/ruby-2.6.0/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:27: warning: constant ::Fixnum is deprecatedime: 00:08:16,  ETA: 00:01:41
 
 
-2.93_DIFFERENT_KEY_TYPES
-V Make three different key icons.
-V Show them in the student's key pool.
-V Clicking on a key removes that TYPE of key from the student's holdings.
-V Now check keybox updating for a whole class at a time.
+
 
 Get in the habit of precompiling before pushing to heroku
 
@@ -93,6 +83,8 @@ Get in the habit of precompiling before pushing to heroku
 ******************************************
 IMPORTANT UPDATES FOR SUMMER 2019
 ******************************************
+Prepare Pitch Materials
+Decide how/when to approach Instructure or MasteryConnect
 Errors, fixes, and tests (see below)
 Tests to Add
 Market suggestions from Mr. Korn
@@ -187,8 +179,9 @@ Best solution brainstormed so far is to make a "label-viewer" mini-app.
 ERRORS, FIXES, AND TESTS
 Reinstate javascript testing
 Fix vulnerabilities that are noted in e-mail
-Using stars toward grade isn't working
-Live site has errors in student searching. It occurred when trying to add Melissa Suess to 7th period
+Live site won't match lowercase letters, but development site will
+Live site won't search by student number
+
 Update or remove all skipped tests
 Worksheet didn't seem to attach when an admin created a new worksheet while attaching.
 Can I learn how to test file uploads in a reasonable time?
@@ -279,6 +272,11 @@ For the sake of performance, the method "set_pretests" should only be called whe
     anything about the seminar is changed.
 Check pagination everywhere it occurs
 Don't block the "Desk Consultants" icon when it isn't availble. Instead, re-route to a screen that explains what is needed.
+answer_quiz_randomly should only answer the quiz.  Not begin it.
+/home/ubuntu/.rvm/gems/ruby-2.6.0/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:27: warning: constant ::Fixnum is deprecatedime: 00:08:16,  ETA: 00:01:41
+
+
+
 
 
 
@@ -286,6 +284,8 @@ LESS-IMPORTANT SMALL FIXES
 Dry up the four buttons shown in the bottom of seminar navigation
     See what pages they should be included on
 Note that Mr. Z school recommends against naming a commodity "Star" or "Gem"
+
+
 
 
 MARKET
@@ -297,6 +297,7 @@ Or mark all items delivered in school market
 1. Buttons for school only on profile page
 2. Classes have option to see purchased items for that specific class
 3. Visually separate the buttons in the teacher view
+Using stars toward grade isn't working
 
 
 

@@ -14,7 +14,9 @@ module ModelMethods
             else
                nil
             end
-            results = [0] if results == []
+            if results.nil? || results == []
+                results = [0]
+            end
             return results
         end
         
