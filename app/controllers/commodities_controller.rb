@@ -61,7 +61,7 @@ class CommoditiesController < ApplicationController
         @commodity.destroy
         flash[:success] = "Item Deleted"
         
-        redirect_to commodities_path(:school_id => school_id)
+        redirect_to commodities_path(:user_id => current_user.id)
     end
     
     private

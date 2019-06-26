@@ -71,22 +71,26 @@ class Student < User
     end
     
     def teach_options(seminar)
-        objective_students
-            .where(:objective => seminar.objs_above_zero_priority, :points_all_time => seminar.consultantThreshold..9)
-            .select{|x| x.total_keys == 0}
-            .sort_by {|x| -x.objective.priority_in(seminar)}
+        Objective.joins(objective_seminars: :seminar, objective_students: :user)
+            .where("objective_seminars.seminar_id == ?", seminar.id)
+            .where("objective_students.user_id == ?", self.id)
+            .where("objective_seminars.priority > 0")
+            .where("objective_students.points_all_time BETWEEN 6 AND 9")
+            .order('objective_seminars.priority DESC')
+            .distinct
             .take(10)
-            .map(&:objective)
     end
     
     def learn_options(seminar)
-        c_thresh = seminar.consultantThreshold
-        objective_students
-            .where(:objective => seminar.objectives)
-            .select{|x| x.total_keys == 0 && x.obj_ready_and_willing?(c_thresh)}
-            .sort_by{|x| -x.objective.priority_in(seminar)}
+        Objective.joins(objective_seminars: :seminar, objective_students: :user)
+            .where("objective_seminars.seminar_id == ?", seminar.id)
+            .where("objective_students.user_id == ?", self.id)
+            .where("objective_students.ready == ?", true)
+            .where("objective_students.points_all_time <= 7")
+            .where("objective_seminars.priority > 0")
+            .order('objective_seminars.priority DESC')
+            .distinct
             .take(10)
-            .map(&:objective)
     end
     
     def present_in(seminar)

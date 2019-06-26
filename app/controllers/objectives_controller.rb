@@ -1,6 +1,6 @@
 class ObjectivesController < ApplicationController
   
-  before_action only: [:delete, :destroy] do
+  before_action only: [:delete, :destroy, :update] do
     correct_owner(Objective)
   end
   
@@ -58,10 +58,9 @@ class ObjectivesController < ApplicationController
     @old_pre_reqs = @objective.preassign_ids
     redirect_path = @objective
     
+    params_to_use = objective_params_basic
     @which_params = params[:objective][:which_params]
-    if @which_params == "name"
-      params_to_use = objective_params_basic
-    elsif @which_params == "seminars"
+    if @which_params == "seminars"
       params_to_use = objective_params_seminars
     elsif @which_params == "labels"
       params_to_use = objective_params_labels
@@ -82,8 +81,6 @@ class ObjectivesController < ApplicationController
     end
   end
   
-
-
   def destroy
     @objective = Objective.find(params[:id])
     
@@ -101,10 +98,6 @@ class ObjectivesController < ApplicationController
   
   ## Submenu Actions
   
-  #@labels = labels_to_offer
-    #@term = current_user.school.term if current_user.school
-
-    #set_permissions(@objective)
     
   def include_files
     @objective = Objective.find(params[:id])

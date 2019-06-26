@@ -2,22 +2,35 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
-            <h2><%= "Question".pluralize(q_num) %> Created by: <%= @created_by %> &nbsp;</h2>
+            
+            <h2><%= "Question".pluralize(q_num) %> Created by <%= @created_by %> &nbsp;</h2>
             </br>
             
-            <% check_pub = "checked = checked" %>
-            <% check_private = "" %>
-            <% if @question && @question.extent == "private" %>
-                <% check_pub = "" %>
-                <% check_private = "checked = checked" %>
-            <% end %>
+            <table>
+                <tr>
+                    <td width="10%">
+                        <%= radio_button_tag "extent", "public", @question&.extent == "public" %>
+                    </td>
+                    <td>Public <%= "Question".pluralize(q_num) %></td>
+                </tr>
+                <tr>
+                    <td width="10%">
+                        <%= radio_button_tag "extent", "public", @question&.extent == "private" %>    
+                    </td>
+                    <td>Private <%= "Question".pluralize(q_num) %></td>
+                </tr>
+            </table>
             
+            </br>
             <table><tr>
-                <td width="10%"><input type="radio" name="extent" id="public" value="public" <%= check_pub %> /></td>
-                <td>Public <%= "Question".pluralize(q_num) %></td>
-                <td width = "20%" class="borderless"></td>
-                <td width="10%"><input type="radio" name="extent" id="private" value="private" <%= check_private %> /></td>
-                <td>Private <%= "Question".pluralize(q_num) %></td></tr>
+                <% [["computer", 'Computer Graded Responses'],
+                    ["teacher", 'Teacher-Graded In-App Response'],
+                    ["none", 'Teacher-Graded, No In-App Response']].each_with_index do |z, index| %><tr>
+                    <td width="10%">
+                        <%= radio_button_tag "grade_type", z[0], @question&.grade_type == z[0], :id => "grade_type_#{z[0]}" %>
+                    </td>
+                    <td><%= z[1] %></td>
+                </tr><% end %>
             </table>
             
             <% if action_name == "new" %>

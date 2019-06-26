@@ -86,29 +86,6 @@ class SeminarStudentsShowTest < ActionDispatch::IntegrationTest
         assert_no_selector("h2", :text => "Current Files")
         assert_selector("h5", :text => "1st Period")
     end
-    
-    test 'teacher updates seminar student' do
-        skip
-        this_gs = @student_2.goal_students.find_by(:seminar => @seminar, :term => 1)
-        assert_nil this_gs.goal_id
-        
-        capybara_login(@teacher_1)
-        click_on("scoresheet_seminar_#{@seminar.id}")
-        click_on(@student_2.last_name_first)
-        
-        click_on("Market")
-        assert_selector('div', :id => "add_buck_increment")
-        
-        click_on("Edit This Goal")
-        select("#{Goal.first.name}", :from => 'goal_student_goal_id')
-        select("65%", :from => 'goal_student_target')
-        click_on("Save This Goal")
-        
-        this_gs.reload
-        assert_equal Goal.first.id, this_gs.goal_id
-        assert_equal 65, this_gs.target
-    end
-    
     test "move student to different class" do
         sem_2 = @teacher_1.seminars.second
         
@@ -158,7 +135,6 @@ class SeminarStudentsShowTest < ActionDispatch::IntegrationTest
     end
     
     test "remove student from class" do
-    
         # Establish students_needed for an objective, to test that it gets updated
         first_obj_sem = @seminar.objective_seminars[0]
         this_obj = first_obj_sem.objective

@@ -1,7 +1,6 @@
 
 <div>
-    <h4>NOTE: Desk Consultants is currently in open BETA. Some errors are likely
-    to occur. Please send problems, suggestions, or requests to zivkovic.jeff@gmail.com</h4>
+    <h4>Please send problems, suggestions, or requests to zivkovic.jeff@gmail.com</h4>
 </div>
 
 <% if user_is_a_teacher %>
@@ -9,8 +8,8 @@
         <table class="table-borderless">
             <tr>
                 <td class="spacer"></td>
-                
-                <% teacher_show_links.each do |z| %>
+    
+                <% teacher_show_links(false).each do |z| %>
                     <% if (action_name == z[3] && controller_name == z[4]) %>
                         <% @this_path = "#{z[2]}_url"  %>
                         <% break %>
@@ -43,7 +42,8 @@
                 <td class="spacer"></td>
                 
                 <% if @seminar %>
-                    <% teacher_show_links.each do |z| %>
+                    
+                    <% teacher_show_links(@seminar.grading_needed).each do |z| %>
                         <td class=" center <%= 'highlighted' if (action_name == z[3] && controller_name == z[4]) %>">
                             <%= link_to image_tag(z[1]), send("#{z[2]}_url", @seminar, :seminar_id => @seminar.id), :id => "#{z[2]}_#{@seminar.id}" %>
                         </td>
@@ -56,7 +56,7 @@
                 <td class="small_spacer"></td>
                 
                 <% if @seminar %>
-                    <% teacher_show_links.each do |z| %>
+                    <% teacher_show_links(@seminar).each do |z| %>
                         <td class="<%= 'highlighted' if (action_name == z[3] && controller_name == z[4]) %> center">
                             <b><%= link_to z[0],
                                 send("#{z[2]}_url", @seminar, :seminar_id => @seminar.id),

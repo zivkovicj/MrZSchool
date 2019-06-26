@@ -40,7 +40,6 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_no_selector('input', :id => "label_#{@other_l_priv.id}")
         choose("label_#{@user_l.id}")
         
-        
         click_on("Create Some Questions")
         @new_prompt.each_with_index do |prompt, index|
             fill_prompt(index)
@@ -76,6 +75,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
             assert_not @new_question.correct_answers.include?(@new_choice[0][n]) if n != 2
         end
         assert @new_question.picture.blank?
+        assert_equal "computer", @new_question.grade_type  # Not selected, but should be computer-graded by default
         
         @new_question_2 = Question.all[-4]
         assert_equal "Are there two questions?", @new_question_2.prompt
@@ -88,14 +88,17 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         # Need to assert redirection soon
     end
     
-    test "create fill-in questions" do
+    test "create computer graded fill in questions" do
         capybara_login(@teacher_1)
         go_to_new_questions
         
         choose("style_fill-in")
+        choose("grade_type_computer")
         choose("label_#{@user_l.id}")
         click_on("Create Some Questions")
         
+        assert_no_selector("h4", :text => "This question needs to be graded by a person. ")
+        assert_selector("h4", :text => "A student may enter any of the answers below to earn credit.")
         fill_prompt(0)
         fill_choice(0,0)
         fill_choice(0,1)
@@ -115,7 +118,8 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert @new_question.correct_answers.include?(@new_choice[0][0])
         assert @new_question.correct_answers.include?(@new_choice[0][1])
         assert_not @new_question.correct_answers.include?("")
-        assert @new_question.correct_answers.length == 2
+        assert_equal 2, @new_question.correct_answers.length
+        assert_equal "computer", @new_question.grade_type
         
         @new_question_2 = Question.all[-1]
         assert_equal @teacher_1, @new_question_2.user
@@ -127,6 +131,33 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert @new_question_2.correct_answers.include?(@new_choice[1][0])
         assert @new_question_2.correct_answers.include?(@new_choice[1][1])
         assert @new_question_2.correct_answers.length == 2
+    end
+    
+    test "create teacher graded fill in questions" do
+        capybara_login(@teacher_1)
+        go_to_new_questions
+        
+        choose("style_fill-in")
+        choose("grade_type_teacher")
+        choose("label_#{@user_l.id}")
+        click_on("Create Some Questions")
+        
+        assert_selector("h4", :text => "This question needs to be graded by a person. ")
+        assert_no_selector("h4", :text => "A student may enter any of the answers below to earn credit.")
+        fill_in "prompt_0", with: "Prompt for teacher-graded question"
+        fill_in "question_0_choice_0", with: "Your answer should be good."
+        click_on("Create These Questions")
+        
+        assert_equal @old_question_count + 1, Question.count
+        @new_question = Question.all[-1]
+        assert_equal @teacher_1, @new_question.user
+        assert_equal "public", @new_question.extent
+        assert_equal "fill-in", @new_question.style
+        assert_equal @user_l, @new_question.label
+        assert_equal "Prompt for teacher-graded question", @new_question.prompt
+        assert @new_question.correct_answers.include?("Your answer should be good.")
+        assert_equal 1, @new_question.correct_answers.length
+        assert_equal "teacher", @new_question.grade_type
     end
     
     test "dont create with empty prompt" do

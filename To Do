@@ -3,9 +3,13 @@ Demo Teacher:
 demo_teacher@gmail.com
 demopass
 
-Demo Student:
+Demo Student Production:
 lh258
 lh258
+
+Development Students
+ta36
+mb26
 
 
 BUSINESS / MARKETING TO-DO'S
@@ -80,6 +84,8 @@ Get in the habit of precompiling before pushing to heroku
         Expected false to be truthy.
         test/integration/consultancies/consultancies_show_test.rb:335:in `block in <class:ConsultanciesShowTest>'
 
+
+
 ******************************************
 IMPORTANT UPDATES FOR SUMMER 2019
 ******************************************
@@ -88,13 +94,15 @@ Decide how/when to approach Instructure or MasteryConnect
 Errors, fixes, and tests (see below)
 Tests to Add
 Market suggestions from Mr. Korn
+Materials Site (Easier browsing of all study guides and Materials)
 Solid plan for public objectives and questions
 Huge list of labels for questions
 Write Update Plan
 Default Term Date Plan
-Materials Site (Easier browsing of all study guides)
 Teacher-graded questions
+Students can flag a question for the teacher to take another look.  Or suggest an improvement.  
 Objectives need official names and catchy names
+    And system numbers, and domain labels (Alg, Geom, Elec)
 Allow for teachers to see and edit student passwords
 Small, important visuals
 Consultant points as a method of determining consultant topics
@@ -110,7 +118,9 @@ Spiral Review
 “I don’t want the rest of my keys to this objective”
 Sign up Mr. Z School to receive BAT
 End-of-term Stuff
+Track teacher supplies to prevent too many consultant groups for a topic that needs supplies. 
 Archive Classes
+
 
 
 
@@ -132,6 +142,11 @@ Archive a class at the end of a school year
 
 Slunk
 
+
+STUDENTS CAN FLAG A QUESTION
+Questions should display the question number to easier finding and editing.
+After a quiz, a student can flag a question for the teacher to take another look at the answer.
+Or a student can make a suggestion to improve the question
 
 WRITE UPDATE PLAN
 Make a plan for how to roll out updates after more users are using the apps.
@@ -179,28 +194,32 @@ Best solution brainstormed so far is to make a "label-viewer" mini-app.
 ERRORS, FIXES, AND TESTS
 Reinstate javascript testing
 Fix vulnerabilities that are noted in e-mail
-Live site should ignore case while searching
-Test that I didn't break other searches by fixing the student number searching
 
-Update or remove all skipped tests
-Worksheet didn't seem to attach when an admin created a new worksheet while attaching.
-Can I learn how to test file uploads in a reasonable time?
-Test that a "user" is added to a worksheet as it's uploaded
 Shrink picture for apple, label, etc.  They should all be the size of the key.
 Figure out how to make the link to be the color that I've asked.
     In the meantime, I think I acutally like the blue background for tables with a list of files
     The list of all files, accessed through the content page, needs at least one of these two solutions:
         Either fix the color of the link text, or put a background color on the table.  Or both.
 There is a block in the D/C algorithm that probably has no effect
-Right now assets compile is set to true.  This was a solution to images not appearing in heroku.
-But the article mentioned that this causes a performance slowdown.  So keep looking for better solutions.
-A teacher's Class list is showing all classes, even before invite is accepted.
-    Could probably use a better line than this one: assert_no_text("Teacher Since:") when testing redirection to profile.
-    Button should say "Finish Quiz" if it's on the last question.
+
+Could probably use a better line than this one: assert_no_text("Teacher Since:") when testing redirection to profile.
+Button should say "Finish Quiz" if it's on the last question.
+
 Look into adding multiple records at once with rails and SQL.
     If possible, add new ObjectiveStudents this way
+
 The sign-up screen looks like crap
-Don't show zero-priority objectives in suggestion list
+
+Learn Options can surely be trimmed.  It calls for the list of objectives three times.  
+So TeachOptions can probably be trimmed as well.  
+
+https://www.foraker.com/blog/active-record-includes-query-logic
+
+https://stackoverflow.com/questions/45552480/i-need-some-help-implementing-eager-loading?rq=1
+
+Consider making "total_keys" into a db column so that I can query it with SQL.
+    Is that worth all the updating that would be needed?
+    If I do, add that query to teach_options and learn_options
 Should check for assign_permission on the back end to prevent url hacks
 Not allowing me to remove 3-2 as a pre-req from 3-3
 If student buys item that sold out after he loaded page, it appears to student that purchase is working.
@@ -274,7 +293,7 @@ Check pagination everywhere it occurs
 Don't block the "Desk Consultants" icon when it isn't availble. Instead, re-route to a screen that explains what is needed.
 answer_quiz_randomly should only answer the quiz.  Not begin it.
 /home/ubuntu/.rvm/gems/ruby-2.6.0/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:27: warning: constant ::Fixnum is deprecatedime: 00:08:16,  ETA: 00:01:41
-
+Refreshing the screen while in the question details page creates an error
 
 
 
@@ -381,17 +400,74 @@ Submenus needs a ribbon or something to set it apart.
 Don't need the edit button below teacher's name
 Page to update pretests for a class should list those objectives in order
 Footer message should be random like the header message.
-Links are hard to see after used  
+Links are hard to see after used 
+Almost all tables need a little bit of padding on the left so that the text isn't touching the table border
+More of the tables should be borderless, but the borderless class isn't working on some
 
 
 
+ aqui
  
-TEACHER-GRADED QUESTIONS
-Quizzes that have no questions shouldn't give any stars at all.
-    Shouldn't even allow the student a response.
-    Even after I make the update that allows for teacher-graded questions, this will still be an issue
-        Because quizzes like rotations still cannot be submitted online. For now.
+2.94 TEACHER-GRADED QUESTIONS
+VT Questions have a "Grade-type" column
+VT Update this column in development and testing
+VT Can be set to "Teacher" or "None" or "Computer"
+VT Riposte "graded" column
+    VT Set to nil by default (question not submitted)
+    VT Set to 1 when computer grades (or after teacher grades)
+        VT But not if a blank question is submitted
+    VT Set to 0 when a quiz is submitted with non computer-graded questions
+VT When creating new questions, graded should appear in the intial screen, before specific question-editing
+VT Possible final scores are shown with quiz display
+VT Also mark quizzes as "Needing Graded".  This will help to pull them up faster.  And to check whether the seminar still needs more grading.
+VT In teacher show page, classes that have ungraded quizzes will have an extra option in the menu.
+VT This option links to the submitted quiz questions that need grading
+VT Questions and student responses are shown for quick grading.
+VT A score space is provided.
+VT Submit button submits all scores at once for these questions
 
+VT When creating a teacher-graded question, make it clear that the correct answers shown are merely examples.  
+VT The student should see a short message explaining these example answers.
+    VT Along with the example answers.
+VT But not see that message for a fully computer-graded test.
+VT Re-work the way that quiz grading is included in the teacher show links so that it gets included in the navribbon
+VT Make separate icons for graded and ungraded
+VT Maintain the grading type as a default when editing a question
+
+VT Add in all page formatting to quiz screen that the other pages have
+VT There's a home jpg and a home png
+
+VT Column to seminar: grading_needed
+VT Image is shown based on this column
+VT This column is updated when a student takes a quiz
+    VT Also updated when teacher grades a quiz, since that uses the same method for setting the quiz final score. 
+
+Check how the other tests will need to consider these new columns
+    add_column  :seminars, :grading_needed, :boolean
+    
+Precompile for images
+Migrate
+Update grade-type of existing questions in production
+I got an error after erasing some of the teacher's classes.  Will that happen to a new teacher?
+
+TEACHER GRADING IMPROVEMENTS
+Take remaining keys for a quiz that needs teacher grading.
+As the teacher grades the quiz, she has option to give new keys.
+Is the "seminar" column of quiz model neccessary.  It probably shouldn't be, since a quiz can belong to many different classes
+Updating the end of the quiz should be a method in the quiz model, not the riposte controller
+Don't allow a multiple-choice question to be teacher-graded.
+Allow grading for all quizzes, not just those with teacher-designated questions.
+    Will need a "Quiz Grading mode" for scoresheet.  This mode shows a button that leads to the quizzes that a student has taken for that topic.
+    There, the teacher can select a quiz to edit scores.  
+    For extra bonus, teacher can add an answer to the list of correct answers.
+    In the future, teacher will suggest the addition.  An admin will need to approve.  Unless the teacher owns that question.
+
+NO IN-APP RESPONSE QUESTIONS
+A no-response question should be a separate label, different from "multiple choice" or fill-in
+Question is not scored when quiz is submitted
+When teacher logs in, in-app response questions are included with teacher-graded questions
+Question and score space are shown, but no student response.
+* Objectives with unfinished quizzes should be excluded from learn_options and teach_options
 
 
  
@@ -1241,4 +1317,5 @@ This will help office staff in case an item was marked as delivered when it shou
 OPTIONAL FEATURES TO CONSIDER SOME DAY
 Upload student photos. Or have student icons.
 Don't show the goal on a student's profile unless teacher has enabled goalkeeper.
+D/C Feature to give the teacher a heads-up about how many copies she'll need for an upcoming day of Desk Consultants
 

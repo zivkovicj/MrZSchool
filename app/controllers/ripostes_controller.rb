@@ -13,37 +13,45 @@ class RipostesController < ApplicationController
             next_riposte_num = @riposte.position + 1
             
             perc = 0
-            case @question.style
-            when "multiple-choice"
-                if params[:whichIsCorrect]
-                    n = params[:whichIsCorrect][:whichIsCorrect].to_i
-                    stud_answer = @question.read_attribute(:"choice_#{n}")
-                    perc = @riposte.poss if @question.correct_answers.include?(stud_answer)
-                else
-                    stud_answer = "blank"
-                end
-            when "fill-in"
-                stud_answer = params[:stud_answer]
-                if stud_answer.blank?
-                    stud_answer = "blank"
-                else
-                    @question.correct_answers.each do |correct_answer|
-                        if stud_answer.downcase.gsub(/\s+/, "") == correct_answer.downcase.gsub(/\s+/, "")
-                            perc = @riposte.poss
-                            break
+            if @question.grade_type == "computer"
+                is_graded = 1
+                case @question.style
+                when "multiple-choice"
+                    if params[:whichIsCorrect]
+                        n = params[:whichIsCorrect][:whichIsCorrect].to_i
+                        stud_answer = @question.read_attribute(:"choice_#{n}")
+                        perc = @riposte.poss if @question.correct_answers.include?(stud_answer)
+                    else
+                        stud_answer = "blank"
+                        is_graded = nil
+                    end
+                when "fill-in"
+                    stud_answer = params[:stud_answer]
+                    if stud_answer.blank?
+                        stud_answer = "blank"
+                        is_graded = nil
+                    else
+                        @question.correct_answers.each do |correct_answer|
+                            if stud_answer.downcase.gsub(/\s+/, "") == correct_answer.downcase.gsub(/\s+/, "")
+                                perc = @riposte.poss
+                                break
+                            end
                         end
                     end
                 end
+            else
+                is_graded = 0
+                stud_answer = params[:stud_answer]
             end
-            
-            @riposte.update(:stud_answer => stud_answer, :tally => perc)
+        
+            @riposte.update(:stud_answer => stud_answer, :tally => perc, :graded => is_graded)
             @quiz.update(:progress => next_riposte_num)
             
             if @riposte == @quiz.ripostes.order(:position).last
                 @student = @quiz.user
                 @objective = @quiz.objective
                 @this_obj_stud = @student.objective_students.find_by(:objective => @objective)
-                set_total_score
+                @quiz.set_total_score
                 take_post_req_keys
                 redirect_to quiz_path(@quiz)
             else
@@ -54,16 +62,40 @@ class RipostesController < ApplicationController
             redirect_to quiz_path(@quiz)
         end
     end
+    
+    # Erase this after using
+    def update_quantities
+        if params[:syl]
+            params[:syl].each do |key, value|
+                @lo = LabelObjective.find(key)
+                @lo.update(:quantity => value[:quantity], :point_value => value[:point_value])
+            end
+        end
+        redirect_to current_user
+    end
+    
+    def teacher_grading
+        if params[:ripostes]
+            params[:ripostes].each do |key, value|
+                @riposte = Riposte.find(key)
+                new_tally = ((value.to_i/10.to_f)*@riposte.poss).round
+                graded_now = value.present? ? 1 : 0  # If the value is blank, leave the riposte marked ungraded
+                @riposte.update(:tally => new_tally, :graded => graded_now)
+            end
+        end
+        
+        if params[:quizzes]
+            params[:quizzes].each do |key|
+                @quiz = Quiz.find(key)
+                @quiz.set_total_score
+            end
+        end
+        redirect_to current_user
+    end
 
     private
     
-        def set_total_score
-            total_poss = @quiz.ripostes.sum(:poss)
-            summed_score = @quiz.ripostes.sum(:tally)
-            
-            @new_percentage = ((summed_score * 10)/total_poss.to_f).round
-            @quiz.update(:total_score => @new_percentage)
-        end
+
         
         def take_post_req_keys
             if @this_obj_stud.total_keys == 0 && !@this_obj_stud.passed

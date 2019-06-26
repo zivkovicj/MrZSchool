@@ -37,6 +37,12 @@ class QuizzesController < ApplicationController
         @objective = @quiz.objective
         @student = @quiz.user
         @this_os = @objective.objective_students.find_by(:user => @student) 
+        
+        @this_score = @quiz.total_score 
+        @old_stars = @quiz.old_stars 
+        @max_after_grade = @quiz.max_after_grade 
+        @points_still_to_grade = @quiz.points_still_to_grade 
+
         establish_offer_next_try
     end
     

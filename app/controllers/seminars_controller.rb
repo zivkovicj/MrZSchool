@@ -132,6 +132,11 @@ class SeminarsController < ApplicationController
         set_editing_privilege
     end
     
+    def quiz_grading
+        @seminar = Seminar.find(params[:id])
+        @quizzes_to_grade = @seminar.quizzes_to_grade
+    end
+    
     def remove
         @seminar = Seminar.find(params[:id])
     end

@@ -31,3 +31,11 @@ other_label_private:
 fill_in_label:
   name: Fill-in Label
   extent: public
+  
+teacher_graded_label_1:
+  name: teacher_graded_label_1
+  extent: public
+  
+teacher_graded_label_2:
+  name: teacher_graded_label_2
+  extent: public

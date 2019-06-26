@@ -26,6 +26,7 @@ class SeminarsNewTest < ActionDispatch::IntegrationTest
         assert_equal @teacher_1, @seminar.owner
         assert_equal 1, @seminar.term
         assert_equal Seminar.due_date_array, @seminar.checkpoint_due_dates
+        assert_not @seminar.grading_needed
         
         sem_teach = SeminarTeacher.last
         assert_equal @teacher_1, sem_teach.user

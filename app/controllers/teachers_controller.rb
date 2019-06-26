@@ -21,7 +21,7 @@ class TeachersController < ApplicationController
   
   def show
     @teacher = Teacher.find(params[:id])
-    @seminars = @teacher.seminars
+    @seminars = @teacher.seminars.order(:name)
     current_user.update(:current_class => nil)
     @school = @teacher.school
     #create_commodities

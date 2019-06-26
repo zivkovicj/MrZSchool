@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190212042755) do
+ActiveRecord::Schema.define(version: 20190618181526) do
 
   create_table "checkpoints", force: :cascade do |t|
     t.integer  "goal_student_id"
@@ -222,6 +222,7 @@ ActiveRecord::Schema.define(version: 20190212042755) do
     t.string   "choice_5"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.string   "grade_type"
     t.index ["label_id"], name: "index_questions_on_label_id"
     t.index ["picture_id"], name: "index_questions_on_picture_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
@@ -231,12 +232,13 @@ ActiveRecord::Schema.define(version: 20190212042755) do
     t.integer  "user_id"
     t.integer  "objective_id"
     t.integer  "total_score"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "progress"
     t.string   "origin"
     t.integer  "old_stars"
     t.integer  "seminar_id"
+    t.boolean  "needs_grading"
     t.index ["objective_id"], name: "index_quizzes_on_objective_id"
     t.index ["seminar_id"], name: "index_quizzes_on_seminar_id"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
@@ -251,6 +253,7 @@ ActiveRecord::Schema.define(version: 20190212042755) do
     t.integer  "poss"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "graded"
     t.index ["question_id"], name: "index_ripostes_on_question_id"
     t.index ["quiz_id"], name: "index_ripostes_on_quiz_id"
   end
@@ -313,6 +316,7 @@ ActiveRecord::Schema.define(version: 20190212042755) do
     t.datetime "term_end_date"
     t.integer  "term"
     t.integer  "owner_id"
+    t.boolean  "grading_needed"
     t.index ["owner_id"], name: "index_seminars_on_owner_id"
     t.index ["school_id"], name: "index_seminars_on_school_id"
     t.index ["user_id"], name: "index_seminars_on_user_id"

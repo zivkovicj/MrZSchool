@@ -9,12 +9,14 @@ class QuestionsController < ApplicationController
   
   def new
     @labels = labels_to_offer()
+    @created_by = current_user.full_name_with_title
   end
   
   def details
     @extent = params[:extent]
     @label = Label.find(params[:label])
     @style = params[:style]
+    @grade_type = params[:grade_type]
     @pictures = @label.pictures
     create_question_group
   end
@@ -70,6 +72,7 @@ class QuestionsController < ApplicationController
 
   def edit
     @question = Question.find(params[:id])
+    @grade_type = @question.grade_type
     @labels = labels_to_offer()
     @pictures = @question.label.pictures
     set_permissions(@question)
@@ -81,6 +84,7 @@ class QuestionsController < ApplicationController
     ensure_essentials
     @question.label_id = params[:label]
     @question.extent = params[:extent]
+    @question.grade_type = params[:grade_type]
     set_correct_answers(params["questions"]["0"])
     if @question.update_attributes(multi_params(params["questions"]["0"]))
       flash[:success] = "Question Updated"
@@ -104,7 +108,7 @@ class QuestionsController < ApplicationController
   private
     def multi_params(my_params)
       my_params.permit(:prompt, :choice_0, :choice_1, :choice_2, :choice_3,
-        :choice_4, :choice_5, :user_id, :label_id, :extent, :style, :picture_id)
+        :choice_4, :choice_5, :user_id, :label_id, :extent, :style, :picture_id, :grade_type)
     end
     
     def create_question_group

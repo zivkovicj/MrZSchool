@@ -1,25 +1,37 @@
 
-<% this_score = @quiz.total_score %>
-<% old_stars = @quiz.old_stars %>
+<% def star_list(which_score) %>
+    <div class="center">
+        <% 10.times do |x| %>
+            <% if which_score > x %>
+                <% if @old_stars > x %>
+                    <% pic = "stars/star_yellow.png" %>
+                <% else %>
+                    <% pic = "stars/star_new.png" %>
+                <% end %>
+            <% else %>
+                <% pic = "stars/star_empty.png" %>
+            <% end %>
+            <%= image_tag (pic) %>
+        <% end %>
+    </div>
+<% end %>
+
+
 
 <div class="singleOption container">
     <div class="row">
-        <h1><%= pluralize(this_score, 'Star') %></h1>
-        <div class="center"
-            <% 11.times do |x| %>
-                <% if this_score >= x %>
-                    <% if old_stars >= x %>
-                        <% pic = "stars/star_yellow.png" %>
-                    <% else %>
-                        <% pic = "stars/star_new.png" %>
-                    <% end %>
-                <% else %>
-                    <% pic = "stars/star_empty.png" %>
-                <% end %>
-                
-                <%= image_tag (pic) %>
-            <% end %>
-        </div>
+        <% if @points_still_to_grade == 0 %>
+            <h1><%= pluralize(@this_score, 'Star') %></h1>
+            <% star_list(@this_score) %>
+        <% else %>
+            <h2>Your teacher still needs to grade some questions.</h2>
+            <h3 class="center">Your final score will be at least <%= @this_score %> stars.</h3>
+            <% star_list(@this_score) %>
+            </br>
+            <h3 class="center">The highest you could earn is <%= @max_after_grade %> stars.</h3>
+            <% star_list(@max_after_grade) %>
+        <% end %>
+        
         </br></br>
             
         <div class="col-sm-4 center">
@@ -27,10 +39,12 @@
             <%= pluralize(@quiz.old_stars, 'Star') %>
         </div>
         
-        <div class="col-sm-4 center">
-            <h5>New Stars</h5>
-            <%= pluralize(@quiz.added_stars, 'Star') %>
-        </div>
+        <% if @points_still_to_grade == 0 %>
+            <div class="col-sm-4 center">
+                <h5>New Stars</h5>
+                <%= pluralize(@quiz.added_stars, 'Star') %>
+            </div>
+        <% end %>
         
         <div class="col-sm-4 center">
             <h5>Highest score ever</h5>

@@ -37,6 +37,13 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         choose("choice_bubble_#{incorrect_answer}")
     end
     
+    def assert_all_ripostes_graded
+        # Ripostes have been marked as graded
+        @quiz.ripostes.each do |riposte|
+            assert_equal 1, riposte.graded
+        end
+    end
+    
     def prepare_fill_in
         @fill_in_objective = Objective.find_by(:name => "Fill-in Questions Only")
         set_specific_score(@student_2, @fill_in_objective, 4)
@@ -52,15 +59,18 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         
         go_to_first_period
         begin_quiz
-        @new_quiz = Quiz.last
-        assert_equal @new_quiz.user, @student_2
-        assert_equal @new_quiz.objective, @objective_10
+        @quiz = Quiz.last
+        assert_equal @quiz.user, @student_2
+        assert_equal @quiz.objective, @objective_10
         assert_equal old_quiz_count + 1, Quiz.count
-        assert @new_quiz.old_stars >= 2
+        assert @quiz.old_stars >= 2
         
-        new_riposte_count = @new_quiz.ripostes.count
+        new_riposte_count = @quiz.ripostes.count
         assert new_riposte_count > 0
         assert_equal old_riposte_count + new_riposte_count, Riposte.count
+        # Ripostes should be created with the "graded" value set to nil
+        last_riposte = @quiz.ripostes.last
+        assert_nil last_riposte.graded
     end
     
     test "blank mc" do
@@ -78,6 +88,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         @riposte.reload
         assert_equal 0, @riposte.tally
         assert_equal "blank", @riposte.stud_answer
+        assert_nil @riposte.graded      # Riposte graded should be set back to nil with a blank answer
     end
     
     test "blank fill in" do
@@ -97,17 +108,18 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         @riposte.reload
         assert_equal 0, @riposte.tally
         assert_equal "blank", @riposte.stud_answer
+        assert_nil @riposte.graded      # Riposte graded should be set back to nil with a blank answer
     end
     
-    test "take multiple-choice quiz" do
+    test "take multiple choice quiz" do
         setup_consultancies
         go_to_first_period
         begin_quiz
         assert_no_text("Your Scores in All Objectives")
-        @new_quiz = Quiz.last
-        assert @new_quiz.ripostes.count > 0
-        assert_nil @new_quiz.total_score
-        @new_quiz.ripostes.each do |riposte|
+        @quiz = Quiz.last
+        assert @quiz.ripostes.count > 0
+        assert_nil @quiz.total_score
+        @quiz.ripostes.each do |riposte|
             assert riposte.tally.blank?
             assert_nil riposte.tally
         end
@@ -116,13 +128,17 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         
         # Replace this with the new line that checks to see if a student is on her profile page
         #assert_text("Your Scores in All Objectives")
-        @new_quiz.reload
-        assert_not_nil @new_quiz.total_score
-        @new_quiz.ripostes.each do |riposte|
+        @quiz.reload
+        assert_equal 0, @quiz.points_still_to_grade   # Counterpart to the quiz that has teacher-graded questions
+        assert_not_nil @quiz.total_score
+        @quiz.ripostes.each do |riposte|
             assert_not riposte.tally.blank?
             assert_not_nil riposte.tally
         end
-        assert @student_2.quizzes.include?(@new_quiz)
+        assert @student_2.quizzes.include?(@quiz)
+        
+        assert_all_ripostes_graded
+        assert_not @seminar.reload.grading_needed   #Counterpart to the quiz that has teacher-graded questions
     end
     
     test "take fill in quiz" do
@@ -152,9 +168,157 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         fill_in "stud_answer", with: "course of"
         click_on "Next Question"
         
-        @new_quiz = Quiz.last
-        assert_equal 6, @new_quiz.total_score
-        assert @student_2.quizzes.include?(@new_quiz)
+        @quiz.reload
+        assert_equal 6, @quiz.total_score
+        assert @student_2.quizzes.include?(@quiz)
+        assert_all_ripostes_graded
+        assert_not @seminar.reload.grading_needed
+        assert_no_selector("h3", :text => "Your teacher will grade this question.")  #Counterpart to teacher-graded questions.
+    end
+    
+    test "quiz with teacher graded question" do
+        @tg_objective_1 = objectives(:teacher_graded_objective_1)
+        @tg_objective_2 = objectives(:teacher_graded_objective_2)
+        @seminar.objectives << @tg_objective_1
+        @seminar.objectives << @tg_objective_2
+        
+        #Give keys for the quizzes that students are about to take.
+        # Student_2 gets keys for two different quizzes.  Student_3 only needs keys for the first quiz.
+        ObjectiveStudent.find_by(:objective => @tg_objective_1, :user => @student_2).update(:teacher_granted_keys => 2)
+        ObjectiveStudent.find_by(:objective => @tg_objective_2, :user => @student_2).update(:teacher_granted_keys => 2)
+        ObjectiveStudent.find_by(:objective => @tg_objective_1, :user => @student_3).update(:teacher_granted_keys => 2)
+        
+        # TEACHER DOESN'T HAVE ANY QUESTIONS TO GRADE RIGHT NOW
+        assert_not @seminar.grading_needed
+        
+        capybara_login(@teacher_1)
+        find("#quiz_grading_seminar_#{@seminar.id}").click
+        assert_text("All quizzes in this class are fully graded.")
+        
+        click_on("Log out")
+        
+        ###  FIRST STUDENT TAKES QUIZ FOR OBJECTIVE 1
+        go_to_first_period
+        click_on("Quizzes")
+        find("#teacher_granted_#{@tg_objective_1.id}").click
+        @quiz = Quiz.last
+        one_wrong = false
+        
+        @quiz.ripostes.count.times do
+            teacher_graded_tags = all('#teacher_graded_tag')
+            if teacher_graded_tags.present?
+                fill_in "stud_answer", with: "Yesiree Bob"
+            else
+                if !one_wrong   #Answer only one question wrong, for testing out the display of the possible scores
+                    answer_question_incorrectly
+                    one_wrong = true
+                else
+                    answer_question_correctly
+                end
+            end
+            click_on "Next Question"
+        end
+        
+        @quiz.reload
+        quiz_1_ripostes = @quiz.ripostes.select{|x| x.question.grade_type == "teacher"}
+        riposte_0 = quiz_1_ripostes[0]
+        riposte_1 = quiz_1_ripostes[1]
+        assert @quiz.points_still_to_grade > 0
+        assert_equal 5, @quiz.total_score
+        assert_equal "Yesiree Bob", riposte_0.stud_answer
+        assert @seminar.reload.grading_needed
+        
+        assert_selector('h3', :text => "Your final score will be at least 5 stars.")
+        assert_selector('h3', :text => "The highest you could earn is 9 stars.")
+        assert @seminar.reload.quizzes_to_grade
+        assert_selector("h4", :text => "Your teacher will grade this question.")
+        assert_text("Yesiree Bob")
+
+        ###  FIRST STUDENT TAKES QUIZ FOR OBJECTIVE 2
+        click_on("Back to Your Class Page")
+        click_on("Quizzes")
+        find("#teacher_granted_#{@tg_objective_2.id}").click
+        @quiz_2 = Quiz.last
+        2.times do 
+            fill_in "stud_answer", with: "Yes"
+            click_on "Next Question"
+        end
+        
+        assert_equal 0, @quiz_2.reload.total_score
+        
+        click_on("Log out")
+        
+        # SECOND STUDENT TAKES QUIZ FOR OBJECTIVE 1
+        capybara_login(@student_3)
+        click_on('1st Period')
+        click_on("Quizzes")
+        find("#teacher_granted_#{@tg_objective_1.id}").click
+        @quiz_3 = Quiz.last
+        @quiz.ripostes.count.times do
+            teacher_graded_tags = all('#teacher_graded_tag')
+            if teacher_graded_tags.present?
+                fill_in "stud_answer", with: "Yes"
+            else
+                answer_question_correctly
+            end
+            click_on "Next Question"
+        end
+        
+        assert_equal 6, @quiz_3.reload.total_score
+        
+        click_on("Log out")
+        
+        # TEACHER GRADES THOSE QUESTIONS
+        capybara_login(@teacher_1)
+        assert_no_selector("span", :id => "fully_graded_#{@seminar.id}")
+        find("#quiz_grading_seminar_#{@seminar.id}").click
+        assert_no_text("All quizzes in this class are fully graded.")
+        
+        quiz_2_ripostes = @quiz_2.ripostes.select{|x| x.question.grade_type == "teacher"}
+        riposte_2 = quiz_2_ripostes[0]
+        riposte_3 = quiz_2_ripostes[1]
+        quiz_3_ripostes = @quiz_3.ripostes.select{|x| x.question.grade_type == "teacher"}
+        riposte_4 = quiz_3_ripostes[0]
+        riposte_5 = quiz_3_ripostes[1]
+        
+        assert_equal 0, riposte_0.graded
+        assert_equal 0, riposte_2.graded
+        assert @quiz.needs_grading
+        assert @quiz_2.needs_grading
+        assert @quiz_3.needs_grading
+        
+        fill_in "score_for_#{riposte_0.id}", with: 0
+        fill_in "score_for_#{riposte_1.id}", with: 10
+        # Score_2 left blank on purpose.  This question is still marked ungraded.
+        fill_in "score_for_#{riposte_3.id}", with: 10
+        fill_in "score_for_#{riposte_4.id}", with: 5
+        fill_in "score_for_#{riposte_5.id}", with: 10
+        click_on("Submit These Scores")
+        
+        assert_equal 1, riposte_0.reload.graded  # Should be marked graded now
+        assert_equal 0, riposte_2.reload.graded  # Still not graded
+        assert_equal 7, @quiz.reload.total_score
+        assert_equal 5, @quiz_2.reload.total_score
+        assert_equal 9, @quiz_3.reload.total_score
+        assert_not @quiz.needs_grading
+        assert @quiz_2.needs_grading
+        assert_not @quiz_3.needs_grading
+        assert @seminar.reload.grading_needed
+        
+        # Go back and grade that last quiz.
+        assert_text("Teacher Since:")
+        assert_no_selector("span", :id => "fully_graded_#{@seminar.id}")
+        find("#quiz_grading_seminar_#{@seminar.id}").click
+        
+        fill_in "score_for_#{riposte_2.id}", with: 5
+        click_on("Submit These Scores")
+        
+        assert_equal 8, @quiz_2.reload.total_score
+        assert_not @seminar.reload.grading_needed
+        
+        assert_text("Teacher Since:")
+        find("#quiz_grading_seminar_#{@seminar.id}").click
+        assert_text("All quizzes in this class are fully graded.")
     end
     
     test "100 total score" do
@@ -169,8 +333,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             click_on("Next Question")
         end
         
-        @new_quiz = Quiz.last
-        assert_equal 10, @new_quiz.total_score
+        @quiz = Quiz.last
+        assert_equal 10, @quiz.total_score
         @test_obj_stud.reload
         assert_equal 0, @test_obj_stud.teacher_granted_keys
         assert_equal 0, @test_obj_stud.dc_keys

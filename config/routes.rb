@@ -50,7 +50,9 @@ Rails.application.routes.draw do
     post 'create_group', on: :collection
   end
   resources :quizzes
-  resources :ripostes
+  resources :ripostes do
+    post 'teacher_grading', on: :collection
+  end
   resources :seminars do
     get 'basic_info', on: :member
     get 'change_owner', on: :member
@@ -60,6 +62,7 @@ Rails.application.routes.draw do
     get 'objectives', on: :member
     get 'pretests', on: :member
     get 'priorities', on: :member
+    get 'quiz_grading', on: :member
     get 'remove', on: :member
     get 'rewards', on: :member
     get 'scoresheet', on: :member

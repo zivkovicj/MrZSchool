@@ -16,6 +16,7 @@
         <%= hidden_field_tag "questions[#{index.to_i}][extent]", @extent %>
         <%= hidden_field_tag "questions[#{index.to_i}][label_id]", @label.id %>
         <%= hidden_field_tag "questions[#{index.to_i}][style]", @style %>
+        <%= hidden_field_tag "questions[#{index.to_i}][grade_type]", @grade_type %>
         <% @question = question %>
         <%= render 'prompt_and_answers', :locals =>{:index => index, :style => @style} %>
         </br>

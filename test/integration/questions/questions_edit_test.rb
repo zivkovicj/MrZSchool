@@ -98,6 +98,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
     
     test "edit fill in question" do  
         # This test also checks that the default label and extent stays the same
+        # But changes the grade_type
         
         @fill_q = Question.where(:style => "fill-in").first
         @fill_q.update(:user => @teacher_1)
@@ -106,6 +107,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         new_array.push("Test if one choice left alone")
         @fill_q.update(:correct_answers => new_array)
         old_label = @fill_q.label
+        assert @fill_q.grade_type == "computer"
         
         capybara_login(@teacher_1)
         go_to_all_questions
@@ -116,6 +118,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         fill_prompt(0)
         fill_choice(0,0)
         fill_choice(0,1)
+        choose("grade_type_teacher")
         click_on("save_changes_2")
         
         @fill_q.reload
@@ -126,8 +129,24 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert @fill_q.correct_answers.include?("Test if one choice left alone")
         assert_equal old_label, @fill_q.label
         assert_equal "public", @fill_q.extent
+        assert_equal "teacher", @fill_q.grade_type
         
         assert_selector('h2', :text => "All Questions")
+    end
+    
+    test "default grade type" do
+        this_question = questions(:teacher_graded_question_1)
+        
+        capybara_login(@teacher_1)
+        go_to_all_questions
+        fill_in "search_field", with: this_question.prompt
+        click_on("Search")
+        click_on(this_question.short_prompt)
+        
+        click_on("save_changes_2")
+        
+        this_question.reload
+        assert_equal "teacher", this_question.grade_type
     end
     
     test "invalid question edit" do

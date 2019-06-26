@@ -10,6 +10,7 @@ class Question < ApplicationRecord
   serialize :correct_answers
   
   attribute  :extent, :string, default: "private"
+  attribute  :grade_type, :string, default: "computer"
   
   validates :prompt, :presence => true
   validates :extent, :presence => true

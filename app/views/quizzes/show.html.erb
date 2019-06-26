@@ -18,14 +18,28 @@
             </div>
             </br>
             
-            <% class_type = (riposte.tally == riposte.poss ? "green" : "red") %>
-            Your Response: <span class=<%= class_type %>> <%= riposte.stud_answer %></span>
-            </br>
-            </br>
-            Correct Responses:
-            <% riposte.question.correct_answers.each do |answer| %>
-                <li> <%= answer %></li>
-            <% end %>
+            <div class="row">
+                <div class="col-sm-6">
+                    <% class_type = (riposte.tally == riposte.poss ? "green" : "red") %>
+                    <% class_type = "" if question.grade_type != "computer" %>
+                    <h4>Your Response</h4>
+                    <span class=<%= class_type %>> <%= riposte.stud_answer %></span>
+                </div>
+                <div class="col-sm-6">
+                    <% if question.grade_type == "computer" %>
+                        <% first_phrase = "Correct Responses" %>
+                    <% else %>
+                        <% first_phrase = "Example Responses" %>
+                        <h4>Your teacher will grade this question.</h4>
+                    <% end %>
+                    <% if question.correct_answers.present? %>
+                        <%= first_phrase %>
+                        <% question.correct_answers.each do |answer| %>
+                            <li> <%= answer %></li>
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
         </div>
         </br>
     <% end %>

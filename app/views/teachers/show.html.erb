@@ -31,20 +31,19 @@
   <table>
     <thead>
       <th></th>
-      <% teacher_show_links.each do |z| %>
+      <% teacher_show_links(false).each do |z| %>
         <th class="center">&nbsp;<%= z[0] %> &nbsp;</th>
       <% end %>
     </thead>
-    <% @seminars.order(:name).each do |sem| %>
+    <% @seminars.each do |sem| %>
       <tr>
         <td><h4><%= link_to sem.name, seminar_path(sem), :class => "plain_link" %></h4></td>
         
-        <% teacher_show_links.each do |z| %>
-          <td>
+        <% teacher_show_links(sem.grading_needed).each do |z| %>
+          <td class="center">
             <%= link_to image_tag(z[1]), send("#{z[2]}_url", sem), :id => "#{z[2]}_#{sem.id}" %>
           </td>
         <% end %>
-        
       </tr>
     <% end %>
   </table>

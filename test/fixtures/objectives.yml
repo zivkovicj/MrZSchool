@@ -101,3 +101,13 @@ fill-in:
   name: Fill-in Questions Only
   extent: public
   user: archer
+  
+teacher_graded_objective_1: 
+  name: Teacher-Graded Objective 1
+  extent: public
+  user: archer
+  
+teacher_graded_objective_2: 
+  name: Teacher-Graded Objective 2
+  extent: public
+  user: archer

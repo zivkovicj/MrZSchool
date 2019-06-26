@@ -23,3 +23,24 @@ for_delete_test:
   label: admin_label
   quantity: 2
   point_value: 2
+
+# Two labels for the first test.  One is regular questions.
+for_teacher_grading_test_1:
+  objective: teacher_graded_objective_1
+  label: teacher_graded_label_1
+  quantity: 2
+  point_value: 10
+  
+for_teacher_grading_test_2:
+  objective: teacher_graded_objective_1
+  label: user_label
+  quantity: 6
+  point_value: 5
+
+# One label for the second test. 
+for_teacher_grading_test_3:
+  objective: teacher_graded_objective_2
+  label: teacher_graded_label_2
+  quantity: 2
+  point_value: 10
+

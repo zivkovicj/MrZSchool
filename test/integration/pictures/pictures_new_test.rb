@@ -21,8 +21,7 @@ class PicturesNewTest < ActionDispatch::IntegrationTest
     end
     
     test "uploads an image" do
-        skip
-        pic = Picture.create(:image => fixture_file_upload('/files/DJ.jpg','image/jpg'), :user => User.first) 
+        pic = Picture.create(:image => fixture_file_upload('/files/DJ.jpg','image/jpg'), :user => User.first, :name => "Test Picture")
         assert(File.exists?(pic.reload.image.file.path))
     end
     

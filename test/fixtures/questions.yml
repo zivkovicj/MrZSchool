@@ -1,94 +1,108 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 
-
-one:
-  style: multiple-choice
-  prompt: A admin-created question
-  correct_answers: ["0"]
+  
+five_choices: &base_choices
   choice_0: 0
   choice_1: 1
   choice_2: 2
   choice_3: 3
   choice_4: 4
   choice_5: 5
+
+one:
+  style: multiple-choice
+  prompt: An admin-created question
+  correct_answers: ["0"]
+  <<: *base_choices
   extent: public
   user: michael
   label: admin_label
   picture: cheese_logo
+  grade_type: "computer"
 
 two:
   style: multiple-choice
   prompt: A user-created question
   correct_answers: ["0"]
-  choice_0: 0
-  choice_1: 1
-  choice_2: 2
-  choice_3: 3
-  choice_4: 4
-  choice_5: 5
-  extent: public
+  <<: *base_choices
   label: user_label
   extent: private
   user: archer
+  grade_type: "computer"
   
 three:
   style: multiple-choice
   prompt: A different_user_public
   correct_answers: ["0"]
-  choice_0: 0
-  choice_1: 1
-  choice_2: 2
-  choice_3: 3
-  choice_4: 4
-  choice_5: 5
+  <<: *base_choices
   extent: public
   label: other_label_public
-  extent: public
   user: zacky
+  grade_type: "computer"
   
 four:
   style: multiple-choice
   prompt: A different_user_private
   correct_answers: ["0"]
-  choice_0: 0
-  choice_1: 1
-  choice_2: 2
-  choice_3: 3
-  choice_4: 4
-  choice_5: 5
-  extent: public
+  <<: *base_choices
   label: other_label_private
   extent: private
   user: zacky
+  grade_type: "computer"
   
 five:
   style: multiple-choice
   prompt: More_user_created_for_testing_label_objectives
   correct_answers: ["0"]
-  choice_0: 0
-  choice_1: 1
-  choice_2: 2
-  choice_3: 3
-  choice_4: 4
-  choice_5: 5
-  extent: public
+  <<: *base_choices
   label: user_label
   extent: public
   user: archer
+  grade_type: "computer"
+  
+teacher_graded_question_1:
+  style: fill-in
+  prompt: "First Teacher-Graded In-App Response Question"
+  extent: public
+  label: teacher_graded_label_1
+  user: archer
+  grade_type: "teacher"
+  
+teacher_graded_question_2:
+  style: fill-in
+  prompt: "Second Teacher-Graded In-App Response Question"
+  extent: public
+  label: teacher_graded_label_1
+  user: archer
+  grade_type: "teacher"
+  
+teacher_graded_question_3:
+  style: fill-in
+  prompt: "Third Teacher-Graded In-App Response Question"
+  extent: public
+  label: teacher_graded_label_2
+  user: archer
+  grade_type: "teacher"
+  
+teacher_graded_question_4:
+  style: fill-in
+  prompt: "Fourth Teacher-Graded In-App Response Question"
+  extent: public
+  label: teacher_graded_label_2
+  user: archer
+  grade_type: "teacher"
   
 <% 30.times do |n| %>
 question_<%= n+5 %>:
   style: multiple-choice
   prompt: Admin_question_<%= n %>
   correct_answers: ["0"]
-  choice_0: 0
-  choice_1: 1
-  choice_2: 2
+  <<: *base_choices
   extent: public
   label: admin_label
-  extent: public
   user: michael
+  grade_type: "computer"
 <% end %>
 
 <% 10.times do |n| %>
@@ -96,12 +110,11 @@ question_<%= n+100 %>:
   style: multiple-choice
   prompt: User_question_<%= n %>
   correct_answers: ["0"]
-  choice_0: 0
-  choice_1: 1
+  <<: *base_choices
   extent: public
   label: user_label
-  extent: public
   user: archer
+  grade_type: "computer"
 <% end %>
 
 <% 10.times do |n| %>
@@ -111,6 +124,6 @@ question_<%= n+200 %>:
   correct_answers: ["Yes","Absolutely","Of Course"]
   extent: public
   label: fill_in_label
-  extent: public
   user: michael
+  grade_type: "computer"
 <% end %>

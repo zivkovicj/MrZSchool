@@ -144,6 +144,10 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         select('4', :from => "syl_#{lab_obj_u.id}_point_value")
         select('5', :from => "syl_#{lab_obj_a.id}_point_value")
         
+        # Counterparts to the test that blanks this quantity box if the label has no questions.
+        assert_selector('select', :id => "syl_#{lab_obj_u.id}_quantity") 
+        assert_no_text(no_questions_message)
+        
         click_on "Update These Quantities"
         
         assert_equal 2, lab_obj_u.reload.quantity
@@ -423,68 +427,22 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert @objective_50.mainassigns.include?(@own_assign)
     end
     
-    test "teacher edits public objective" do
-        skip
+    test "teacher views public objective" do
+        setup_seminars
+        setup_objectives
+        
         assert @seminar.objectives.include?(@objective_20)
         capybara_login(@teacher_1)
         go_to_all_objectives
         click_on(@objective_20.full_name)
-        check(@seminar.name)
         
+        click_on("Basic Info")
         assert_text("You are viewing the details of this objective. You may not make any edits because it was created by another teacher.")
         assert_no_selector('input', :id => "name", :visible => true)
-        assert_selector('li', :text => @objective_20.preassigns.first.short_name)
-        assert_no_selector('input', :id => "#{@objective_20.name}", :visible => true)
-    end
-    
-    test "view other teacher objective" do
-        skip
-        capybara_login(@teacher_1)
-        go_to_all_objectives
+        
         click_on(@objective_20.full_name)
-        check(@seminar.name)
-        
-        assert_text("You are viewing the details of this objective. You may not make any edits because it was created by another teacher.")
-        assert_no_selector('input', :id => "name", :visible => true)
+        click_on("Pre Reqs")
         assert_selector('li', :text => @objective_20.preassigns.first.short_name)
-        assert_no_selector('input', :id => "#{@objective_20.name}", :visible => true)
-        assert_no_text("Save Changes")
-    end
-    
-    test "user edits own objective" do
-        skip
-        assert_not @own_assign.preassigns.include?(@assign_to_add)
-        assert_not @own_assign.labels.include?(@user_l)
-        old_label_objective_count = LabelObjective.count
-        
-        capybara_login(@teacher_1)
-        go_to_all_objectives
-        click_on(@own_assign.full_name)
-        assert_no_text("You may only edit an objective that you have created. You may use this window to choose which classes this objective is assigned to.")
-        
-        new_name = "Boobenfarten"
-        fill_in "name", with: new_name
-        check("check_#{@assign_to_add.id}")
-        check("check_#{@user_l.id}")
-        check("check_#{@admin_l.id}")
-        click_on("Save Changes")
-        
-        @own_assign.reload
-        label_objective_1 = @own_assign.label_objectives.find_by(:label => @user_l)
-        label_objective_2 = @own_assign.label_objectives.find_by(:label => @admin_l)
-        select('2', :from => "syl_#{label_objective_1.id}_quantity")
-        select('3', :from => "syl_#{label_objective_2.id}_quantity")
-        click_on("Update these quantities")
-        
-        @own_assign.reload
-        label_objective_1.reload
-        label_objective_2.reload
-        assert_equal new_name, @own_assign.name
-        assert @own_assign.preassigns.include?(@assign_to_add)
-        assert @own_assign.labels.include?(@user_l)
-        assert_equal old_label_objective_count + 2, LabelObjective.count
-        assert_equal 2, label_objective_1.quantity
-        assert_equal 3, label_objective_2.quantity
     end
     
     test "empty name update" do
@@ -502,60 +460,29 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         @own_assign.reload
         assert_equal old_name, @own_assign.name
     end
-   
-    test "teacher made no objectives" do
-        skip
-        capybara_login(@teacher_1)
-        click_on("New Objective")
-        
-        click_on('Create a New Objective')
-        assert_text("Nothing here right now.")
-    end
-    
-    test "teacher made objectives" do
-        skip
-        capybara_login(@teacher_1)
-        click_on("New Objective")
-        assert_no_text("Nothing here right now.")
-    end
     
     test "objective with label but not questions" do
-        skip
+        # Check that the message appears to let users know that a chosen label has no questions.
+        setup_labels
+        
+        @new_label = Label.create(:name => "New Label", :extent => "public", :user => @teacher_1)
+        
         capybara_login(@teacher_1)
+        click_on("View/Create Content")
         click_on("New Objective")
-        check("check_#{@user_l.id}")
-        click_on('Create a New Objective')
+        fill_in("name", :with => "Name")
+        click_on("Create a New Objective")
+        click_on("Labels")
+        check("check_#{@new_label.id}")
+        click_on("Save Changes")
         
         assert_no_text(no_label_message)
         assert_text(quantity_instructions)
-    end
-    
-    test "label with no questions" do
-        skip
-        @user_l.questions.destroy_all
-        
-        capybara_login(@teacher_1)
-        click_on("New Objective")
-        check("check_#{@user_l.id}")
-        click_on('Create a New Objective')
-        
-        @lo = @user_l.label_objectives.find_by(:objective => Objective.last)
         assert_text(no_questions_message)
+        
+        @lo = @new_label.label_objectives.find_by(:objective => Objective.last)
         assert_no_selector('select', :id => "syl_#{@lo.id}_quantity")
     end
-    
-    test "label with questions" do
-        skip
-        capybara_login(@teacher_1)
-        click_on("New Objective")
-        check("check_#{@user_l.id}")
-        click_on('Create a New Objective')
-        
-        @lo = @user_l.label_objectives.find_by(:objective => Objective.last)
-        assert_no_text(no_questions_message)
-        assert_selector('select', :id => "syl_#{@lo.id}_quantity")
-    end
-    
     
     
 end

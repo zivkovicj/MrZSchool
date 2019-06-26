@@ -24,8 +24,17 @@ class ObjectivesControllerTest < ActionDispatch::IntegrationTest
     # Non-admin doesn't get those links.
   end
   
-  test "edit as non-admin" do
-    skip
+  test "edit with permission"do
+    log_in_as(@objective_20.user)
+    
+    patch objective_path(@objective_20), params: { objective: { name:  "Burgersauce",
+                                          seminar_id: @seminar.id } }
+                                          
+    @objective_20.reload
+    assert_equal "Burgersauce", @objective_20.name
+  end
+  
+  test "edit as non admin" do
     old_name = @objective_20.name
     
     log_in_as(@teacher_1)
@@ -37,7 +46,6 @@ class ObjectivesControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "edit without login" do
-    skip
     old_name = @objective_20.name
     
     log_in_as(@teacher_1)

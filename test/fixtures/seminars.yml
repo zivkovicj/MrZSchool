@@ -13,6 +13,7 @@ barebones: &minimal
   school_year: 9
   term: 1
   which_checkpoint: 1
+  grading_needed: false
 
 one:
   name: 1st Period
@@ -47,7 +48,7 @@ four:
   
 
   
-<% 30.times do |n| %>
+<% 3.times do |n| %>
 seminar_<%= n %>:
   name:  <%= "Seminar #{n}" %>
   #user: archer

@@ -1,0 +1,49 @@
+
+<% provide(:title, "Quiz Grading") %>
+
+<% provide(:headerText, "#{@seminar.name} Quiz Grading") %>
+<% provide(:headerPic, "quiz.png") %>
+
+<%= render 'shared/navribbons/main_navribbon' %><br/>
+<%= render 'shared/headline' %>
+
+<% if @seminar.grading_needed %>
+
+    <h3>Important Note: All scores should be a scale of 1-10</h3>
+    
+    <%= form_tag teacher_grading_ripostes_path do %>
+        <% @quizzes_to_grade.each do |quiz| %>
+            <input type="hidden" name="quizzes[]" value="<%= quiz.id %>" />
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan=3>
+                            <strong>Student</strong> <%= quiz.user.last_name_first %>
+                            &emsp; <strong>Objective</strong> <%= quiz.objective.name %></td>
+                    </tr>
+                    <tr>
+                        <th class="center">Prompt</th>
+                        <th class="center">Student Response</th>
+                        <th class="center">Score</th>
+                    </tr>
+                </thead>
+                
+                <% quiz.ripostes.where(:graded => false).each do |riposte| %>
+                    <tr>
+                        <td><%= riposte.question.prompt %></td>
+                        <td><%= riposte.stud_answer %></td>
+                        <td><input type="text" name="ripostes[<%= riposte.id %>]" id="score_for_<%= riposte.id %>" /></td>
+                    </tr>
+                <% end %>
+            </table>
+            </br>
+        <% end %>
+        
+        <div class="actions">
+            <%= submit_tag "Submit These Scores", :class => "btn btn-primary" %>
+        </div>
+    <% end %>
+    
+<% else %>
+    <h2>All quizzes in this class are fully graded.</h2>
+<% end %>

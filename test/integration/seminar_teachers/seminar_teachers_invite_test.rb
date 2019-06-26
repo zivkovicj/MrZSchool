@@ -12,7 +12,6 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
     end
     
     def go_to_invite_screen
-        capybara_login(@teacher_1)
         go_to_seminar
         click_on("Shared Teachers")
     end
@@ -38,6 +37,8 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         assert @teacher_1.school.teachers.include?(@other_teacher)
         assert @teacher_1.seminar_teachers.find_by(:seminar => @seminar).can_edit
         assert_not SeminarTeacher.find_by(:seminar => @seminar, :user => @other_teacher)
+        
+        capybara_login(@teacher_1)
         go_to_invite_screen
         
         # Buttons don't appear for a teacher to invite herself
@@ -59,37 +60,45 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
     end
     
     test "invite and accept" do
+        capybara_login(@teacher_1)
         go_to_invite_screen
         send_the_invite
         set_new_seminar_teacher
         click_on("Log out")
         
         capybara_login(@other_teacher)
+        assert_no_selector("a", :id => "scoresheet_seminar_#{@seminar.id}")
         find("#accept_invites").click
         click_on("accept_#{@st_2.id}")
-        
-        assert_text("Teacher Since:")
         
         @st_2.reload
         assert @st_2.accepted
         assert_not @st_2.can_edit
+        
+        assert_text("Teacher Since:")
+        assert_selector("a", :id => "scoresheet_seminar_#{@seminar.id}")
     end
     
     test "invite and decline" do
+        capybara_login(@teacher_1)
         go_to_invite_screen
         send_the_invite
         set_new_seminar_teacher
         click_on("Log out")
         
         capybara_login(@other_teacher)
+        assert_no_selector("a", :id => "scoresheet_seminar_#{@seminar.id}")
         find("#accept_invites").click
         click_on("decline_#{@st_2.id}")
         
         assert_not SeminarTeacher.find_by(:seminar => @seminar, :user => @other_teacher)
         assert_equal @old_st_count, SeminarTeacher.count
+        assert_text("Teacher Since:")
+        assert_no_selector("a", :id => "scoresheet_seminar_#{@seminar.id}")
     end
     
     test "more invites to accept" do
+        capybara_login(@teacher_1)
         go_to_invite_screen
         send_the_invite
         set_new_seminar_teacher
@@ -110,6 +119,7 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
     end
     
     test "more invites to decline" do
+        capybara_login(@teacher_1)
         go_to_invite_screen
         send_the_invite
         set_new_seminar_teacher
