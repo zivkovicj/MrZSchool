@@ -275,7 +275,7 @@ Error upon admin saving new objective
 Updating question quantities should give a flash message
 Pictures Index needs pagination
 Confirm removing <Seminar 1073514> from your classes
-Fill-in Questions need at least 8 answer choices
+fill_in Questions need at least 8 answer choices
 Update seminar_bucks_earned or school_bucks_earned each time a new currency is added
     Or when an item is purchased
     Refer to those when loading the view
@@ -307,16 +307,25 @@ Note that Mr. Z school recommends against naming a commodity "Star" or "Gem"
 
 
 
-MARKET
+MARKET IMPROVEMENTS
+
+https://www.engineyard.com/blog/zero-downtime-deploys-with-migrations
+
 Mark fewer items delivered in school market
 Or mark all items delivered in school market
-- The units of money should not use the dollar sign.  Instead, I think it would be good to either use a letter 'Z' with a line through it (every dollar is called a Z buck) or letting the teacher choose from various symbols for their own dollar.
- - Using decimals (at least 0.25 and 0.50).  Actually this suggestion came from a student of mine who thought that the MrZ Marketplace would be a good way of teaching and learning decimal operations
+- The units of money should not use the dollar sign.
+  Instead, I think it would be good to either use a letter 'Z' with a line through it (every dollar is called a Z buck)
+  or letting the teacher choose from various symbols for their own dollar.
+ - Using decimals (at least 0.25 and 0.50).
+ Database is not working well with decimal inputs.
+ Actually this suggestion came from a student of mine who thought that the MrZ Marketplace would be a good way of teaching and learning decimal operations
 (I think I might have already implemented the next three)
 1. Buttons for school only on profile page
 2. Classes have option to see purchased items for that specific class
 3. Visually separate the buttons in the teacher view
 Using stars toward grade isn't working
+
+Migrate to allow float
 
 
 
@@ -406,51 +415,18 @@ More of the tables should be borderless, but the borderless class isn't working 
 
 
 
- aqui
- 
-2.94 TEACHER-GRADED QUESTIONS
-VT Questions have a "Grade-type" column
-VT Update this column in development and testing
-VT Can be set to "Teacher" or "None" or "Computer"
-VT Riposte "graded" column
-    VT Set to nil by default (question not submitted)
-    VT Set to 1 when computer grades (or after teacher grades)
-        VT But not if a blank question is submitted
-    VT Set to 0 when a quiz is submitted with non computer-graded questions
-VT When creating new questions, graded should appear in the intial screen, before specific question-editing
-VT Possible final scores are shown with quiz display
-VT Also mark quizzes as "Needing Graded".  This will help to pull them up faster.  And to check whether the seminar still needs more grading.
-VT In teacher show page, classes that have ungraded quizzes will have an extra option in the menu.
-VT This option links to the submitted quiz questions that need grading
-VT Questions and student responses are shown for quick grading.
-VT A score space is provided.
-VT Submit button submits all scores at once for these questions
 
-VT When creating a teacher-graded question, make it clear that the correct answers shown are merely examples.  
-VT The student should see a short message explaining these example answers.
-    VT Along with the example answers.
-VT But not see that message for a fully computer-graded test.
-VT Re-work the way that quiz grading is included in the teacher show links so that it gets included in the navribbon
-VT Make separate icons for graded and ungraded
-VT Maintain the grading type as a default when editing a question
 
-VT Add in all page formatting to quiz screen that the other pages have
-VT There's a home jpg and a home png
 
-VT Column to seminar: grading_needed
-VT Image is shown based on this column
-VT This column is updated when a student takes a quiz
-    VT Also updated when teacher grades a quiz, since that uses the same method for setting the quiz final score. 
-
-Check how the other tests will need to consider these new columns
-    add_column  :seminars, :grading_needed, :boolean
     
 Precompile for images
-Migrate
-Update grade-type of existing questions in production
+
 I got an error after erasing some of the teacher's classes.  Will that happen to a new teacher?
+shit didn't precompile!
 
 TEACHER GRADING IMPROVEMENTS
+When creating a new question, "public" and "computer-graded" should be chosen by default
+When choosing point values for ObjectiveLabels, they should allow at least 10.  Maybe offer them in multiples of 10.
 Take remaining keys for a quiz that needs teacher grading.
 As the teacher grades the quiz, she has option to give new keys.
 Is the "seminar" column of quiz model neccessary.  It probably shouldn't be, since a quiz can belong to many different classes
@@ -461,9 +437,11 @@ Allow grading for all quizzes, not just those with teacher-designated questions.
     There, the teacher can select a quiz to edit scores.  
     For extra bonus, teacher can add an answer to the list of correct answers.
     In the future, teacher will suggest the addition.  An admin will need to approve.  Unless the teacher owns that question.
+If the highest score possible is less than the previous score from this term, don't waste the teacher's time by submitting the quiz for grading.
+
 
 NO IN-APP RESPONSE QUESTIONS
-A no-response question should be a separate label, different from "multiple choice" or fill-in
+A no-response question should be a separate label, different from "multiple choice" or fill_in
 Question is not scored when quiz is submitted
 When teacher logs in, in-app response questions are included with teacher-graded questions
 Question and score space are shown, but no student response.
@@ -671,10 +649,7 @@ LEVEL 2 ADMIN CAN GIVE TEACHERS MORE BUCKS
     
 LEVEL 2 ADMIN CAN REMOVE A TEACHER FROM THE SCHOOL
 
-aqui    
-    
 
-aqui
 QUIZ FINISHING
 
 Show the number of keys left in the quiz report
@@ -1189,10 +1164,69 @@ Main Goal: Teacher can lock and unlock quizzes
 Students cannot take the quiz outside of the open time.
 But there also needs to be an "Quick Unlock" button so that teacher can quickly allow quiz-taking on an off-day.
 
-MULTIPLE-SELECT QUESTIONS
 
-SHORT-ANSWER QUESTIONS
-Teacher must review these questions and provide a score.
+
+aqui
+
+2.95 MULTIPLE-SELECT QUESTIONS
+VT Add possible type to menu of questions
+VT When ediing question, teacher checks ALL correct answers
+    VT All of them go into the correct_answers array
+VT When answering, student is presented with checkboxes
+VT When grading, compare chosen responses with correct responses.  
+VT Dry the question creating enough to go back to a single file.  
+VT Also dry the riposte views for the different question types
+VT Dry the grading function so that it works for all three types?
+VT The code for adding multiple-choice answers could be revamped. Questions controller, set_correct_answers method
+
+Show student responses one-at-a-time
+This should eliminate the brackets.
+Make quantities in multiples of 100.
+
+Use method for backending stud_answer and correct_answer when displaying
+    Can I dry it to use in both places?
+    
+
+** Fix these after next push.  But really do it. **
+
+
+ FAIL["test_choose_consultants", Minitest::Result, 114.73413340499974]
+ test_choose_consultants#Minitest::Result (114.73s)
+        Expected false to be truthy.
+        test/integration/consultancies/consultancies_show_test.rb:132:in `block in test_all_consultants'
+        test/integration/consultancies/consultancies_show_test.rb:130:in `test_all_consultants'
+        test/integration/consultancies/consultancies_show_test.rb:337:in `block in <class:ConsultanciesShowTest>'
+
+ FAIL["test_new_place_for_lone_students", Minitest::Result, 221.15188337699874]
+ test_new_place_for_lone_students#Minitest::Result (221.15s)
+        Expected false to be truthy.
+        test/integration/consultancies/consultancies_show_test.rb:601:in `block in <class:ConsultanciesShowTest>'
+
+Run and fix all tests before pushing
+
+Change style from multiple-choice to multiple_choice
+And all fill_in to fill_in
+Multiply all point_value values by 100
+
+
+
+Make question choices into a single array, just like the correct answers.
+That will make it easier to add more choices in the future.
+Will need to migrate the new column.
+Then use the console to populate the new column
+Then erase the old columns
+
+Might need to update existing mult-choice questions so that the correct answer is an array
+
+Check all this by making new questions
+And check with old questions
+    
+
+
+
+OPTION TO NOT SHUFFLE QUESTIONS
+
+
 
 QUIZ SCORE CALCULATION
 Should calculate the final quiz results before going to the quiz show page.
@@ -1213,12 +1247,12 @@ ADMIN CAN CREATE NEW ADMIN
 IMAGES AS ANSWER CHOICES
 This feature may not be completely necessary. But it would help with fractions and similar needs.
 
-EQUATION-EDITOR FOR FILL-IN ANSWERS
+EQUATION-EDITOR FOR fill_in ANSWERS
 Some way for students to enter fractions and exponents in their answers.
-    Or maybe implement multi-box fill-in answers. then the student can input the numerator and denominator.
+    Or maybe implement multi-box fill_in answers. then the student can input the numerator and denominator.
 
 FRIENDLY WARNINGS
-Alert the teacher if she is creating a fill-in question without any correct answers
+Alert the teacher if she is creating a fill_in question without any correct answers
 Don't give message, "Students added to class" if zero students were added. Also, give errors if any students were not saved. Do the same with the 
     multi-question creator.
 Before the userchanges an objective to priority level 3.

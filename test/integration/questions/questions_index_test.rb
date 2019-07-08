@@ -9,7 +9,9 @@ class QuestionsIndexTest < ActionDispatch::IntegrationTest
         @this_teachers_q = questions(:two)
         @other_teacher_public_q = questions(:three)
         @other_teacher_private_q = questions(:four)
-        setup_questions()
+        setup_questions
+        
+        Question.where(:extent => nil).destroy_all
     end
     
     def go_to_all_questions
@@ -21,12 +23,19 @@ class QuestionsIndexTest < ActionDispatch::IntegrationTest
         capybara_login(@admin_user)
         go_to_all_questions
 
+        search_for(@admin_q.prompt)
         assert_selector('a', :id => "edit_#{@admin_q.id}", :text => @admin_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@admin_q.id}", :text => "Delete")
+        
+        search_for(@this_teachers_q.prompt)
         assert_selector('a', :id => "edit_#{@this_teachers_q.id}", :text => @this_teachers_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@this_teachers_q.id}", :text => "Delete")
+        
+        search_for(@other_teacher_public_q.prompt)
         assert_selector('a', :id => "edit_#{@other_teacher_public_q.id}", :text => @other_teacher_public_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@other_teacher_public_q.id}", :text => "Delete")
+        
+        search_for(@other_teacher_private_q.prompt)
         assert_selector('a', :id => "edit_#{@other_teacher_private_q.id}", :text => @other_teacher_private_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@other_teacher_private_q.id}", :text => "Delete")
     end
@@ -35,12 +44,19 @@ class QuestionsIndexTest < ActionDispatch::IntegrationTest
         capybara_login(@teacher_1)
         go_to_all_questions
     
+        search_for(@admin_q.prompt)
         assert_selector('a', :id => "edit_#{@admin_q.id}", :text => @admin_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@admin_q.id}", :text => "Delete", :count => 0)
+        
+        search_for(@this_teachers_q.prompt)
         assert_selector('a', :id => "edit_#{@this_teachers_q.id}", :text => @this_teachers_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@this_teachers_q.id}", :text => "Delete")
+        
+        search_for(@other_teacher_public_q.prompt)
         assert_selector('a', :id => "edit_#{@other_teacher_public_q.id}", :text => @other_teacher_public_q.short_prompt)
         assert_selector('h5', :id => "delete_#{@other_teacher_public_q.id}", :text => "Delete",:count => 0)
+        
+        search_for(@other_teacher_private_q.prompt)
         assert_selector('a', :id => "edit_#{@other_teacher_private_q.id}", :text => @other_teacher_private_q.short_prompt, :count => 0)
         assert_selector('h5', :id => "delete_#{@other_teacher_private_q.id}", :text => "Delete", :count => 0)
     end
@@ -64,7 +80,7 @@ class QuestionsIndexTest < ActionDispatch::IntegrationTest
         
         capybara_login(@admin_user)
         go_to_all_questions
-        
+        search_for(@admin_q.prompt)
         find("#delete_#{@admin_q.id}").click
         click_on("confirm_#{@admin_q.id}")
         

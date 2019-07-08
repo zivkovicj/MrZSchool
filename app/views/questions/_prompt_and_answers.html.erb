@@ -1,6 +1,21 @@
 <% index = locals[:index] %>
 <% style = locals[:style] %>
 
+<% answer_message = {:multiple_choice => {:computer => "Answer Choices",
+                                          :teacher => "Answer Choices"},
+                     :select_many => {:computer => "Answer Choices",
+                                     :teacher => "Answer Choices"},
+                     :fill_in => {:computer => "Correct Answers",
+                                  :teacher => "Example Answers"}} %>
+<% check_message = {:multiple_choice => {:computer => "Mark the bubble for the correct answer",
+                                         :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a multiple-choice question.)"},
+                    :select_many => {:computer => "Check the box for each correct answer",
+                                    :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a select-many question.)"},
+                    :fill_in => {:computer => "A student may enter any of the answers below to earn credit.",
+                                :teacher => "This question needs to be graded by a person.  But if you include hints or examples here, students can see them after completing the quiz."}} %>
+
+
+
 <div class="container singleOption">
     <div class="row">
         <div class="col-sm-5">
@@ -30,9 +45,44 @@
         </div>
         <div class="col-sm-1"></div>
         <div class="col-sm-4">
-            <% @index = index %>
-            <%= render :partial => "#{style}", :locals =>{:index => index} %>
-            
+            <h2><%= answer_message[:"#{@style}"][:"#{@grade_type}"] %></h2>
+            <h3><%= check_message[:"#{@style}"][:"#{@grade_type}"] %></h3>
+            </br>
+            <table class="table-borderless">
+                <thead>
+                    <th>Correct? &nbsp;</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <% 6.times do |n| %>
+                        <% if @question.style == "fill_in" %>
+                            <%# Supply the existing answer choices (or example answers) if they exist. %>
+                            <% these_answers = @question.correct_answers %>
+                            <% default_text = these_answers.present? ? these_answers[n] : nil %>
+                        <% else %>
+                            <% default_text = @question.attributes["choice_#{n}"] %>
+                        <% end %>
+                        <% checkery = (@question.correct_answers.blank? && n == 0) || @question.correct_answers&.include?(default_text) %>
+                        <tr>
+                            <div class="row">
+                                <td>
+                                    <% if @style == "select_many" %>
+                                        <%= check_box_tag "questions[#{index}][is_correct][]", n, checked = checkery, :id => "question_#{index}_is_correct_#{n}" %>
+                                    <% else %>
+                                        <%= radio_button_tag "questions[#{index}][is_correct][]", n, checked = checkery, :id => "question_#{index}_is_correct_#{n}" %>
+                                    <% end %>
+                                </td>
+                                <td>
+                                    <input type="text"
+                                        name="questions[<%= index.to_i %>][choice_<%= n %>]"
+                                        id="question_<%= index %>_choice_<%= n %>"
+                                        value="<%= default_text %>" />
+                                </td>
+                            </div>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

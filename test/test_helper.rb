@@ -59,6 +59,11 @@ class ActiveSupport::TestCase
     ObjectiveStudent.find_or_create_by(:user => student, :objective => objective).set_ready
   end
   
+  def search_for(target)
+    fill_in "search_field", with: target
+    click_on("Search")
+  end
+  
   def set_ready_all (student)
     student.objective_students.each do |os|
       os.set_ready

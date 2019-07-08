@@ -17,9 +17,8 @@ module ModelMethods
                     when 'PostgreSQL'
                         results = where("#{whichParam} ILIKE ?" , "%#{search}%")
                     else
-                       results = where("#{whichParam} LIKE ?" , "%#{search}%")
+                        results = where("#{whichParam} LIKE ?" , "%#{search}%")
                     end
-                    
                 end
             end
             results = [0] if results == []

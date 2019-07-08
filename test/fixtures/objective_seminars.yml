@@ -43,9 +43,9 @@ one-zero_priority:
     pretest: 0
     priority: 0
     
-one-fill-in:
+one-fill_in:
     seminar: one
-    objective: fill-in
+    objective: fill_in
     pretest: 1
     priority: 2
     

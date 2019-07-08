@@ -10,6 +10,7 @@ class QuestionsController < ApplicationController
   def new
     @labels = labels_to_offer()
     @created_by = current_user.full_name_with_title
+    @grade_type = "computer"
   end
   
   def details
@@ -23,7 +24,7 @@ class QuestionsController < ApplicationController
 
   def create_group
     one_saved = false
-    
+  
     params["questions"].each do |n|
       if params["questions"][n][:prompt].present?
         @question = Question.new(multi_params(params["questions"][n]))
@@ -64,7 +65,11 @@ class QuestionsController < ApplicationController
       third_list = second_list
     end
     
-    @questions = third_list.order(:prompt).paginate(page: params[:page])
+    if third_list == [0] then
+      @questions = [0]
+    else
+      @questions = third_list.order(:prompt).paginate(page: params[:page])
+    end
   end
 
   def show
@@ -72,10 +77,7 @@ class QuestionsController < ApplicationController
 
   def edit
     @question = Question.find(params[:id])
-    @grade_type = @question.grade_type
-    @labels = labels_to_offer()
-    @pictures = @question.label.pictures
-    set_permissions(@question)
+    set_edit_variables
     render 'show' if @assign_permission == "other"
   end
 
@@ -90,7 +92,7 @@ class QuestionsController < ApplicationController
       flash[:success] = "Question Updated"
       redirect_to questions_path
     else
-      @labels = labels_to_offer()
+      set_edit_variables
       render 'edit'
     end
   end
@@ -125,17 +127,22 @@ class QuestionsController < ApplicationController
     
     def set_correct_answers(these_params)
       correct_array = []
-      case @question.style
-      when 'multiple-choice'
-        param_num = these_params[:whichIsCorrect]
-        correct_num = param_num ? param_num.to_i : 0
-        correct_value = @question.read_attribute(:"choice_#{correct_num}")
-        correct_value ||= "Correct Answer"
-        correct_array.push(correct_value)
-      when 'fill-in'
-        correct_array = (0..5).map { |i| these_params[:"choice_#{i}"] }.select(&:present?)
+      if @question.style == "fill_in"
+        correct_array = (0..5).map { |n| these_params[:"choice_#{n}"] }.select(&:present?)
+      else
+        these_params["is_correct"]&.each do |n|
+          correct_array << these_params["choice_#{n}"]
+        end
       end
       @question.update(:correct_answers => correct_array)
+    end
+    
+    def set_edit_variables
+      @style = @question.style
+      @grade_type = @question.grade_type
+      @labels = labels_to_offer
+      @pictures = @question.label.pictures
+      set_permissions(@question)
     end
     
     def fix_quantities

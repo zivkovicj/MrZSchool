@@ -4,7 +4,7 @@
 <table class="table-borderless">
     <tr>
         <td class="check_2">Bucks in </br>Savings </td>
-        <td><h2><strong><div class="singleOption">$ <span id="current_cash"><%= @bucks_current %></span></div></strong></h2></td>
+        <td><h2><strong><div class="singleOption"><span id="current_cash"><%= @bucks_current %></span></div></strong></h2></td>
         <% if current_user.type == "Teacher" %>
             <td>&emsp;&emsp;</td>
             <td class="add_bucks" seminar_student_id="<%= @ss_id %>" amount="<%= @dbi %>">
@@ -14,7 +14,7 @@
             <td class="center">
                 <div class="singleOption">
                     </br>
-                    <input id="buck_spinbox" TYPE="NUMBER" MIN="-10" MAX="10" STEP="1" VALUE="1" SIZE="6">
+                    <input id="buck_spinbox" TYPE="text" MIN="-10" MAX="10" STEP="0.25" VALUE="1" SIZE="6">
                     <div class="add_bucks btn btn-small btn-primary" seminar_student_id="<%= @ss_id %>" amount="X">
                         Add
                     </td>

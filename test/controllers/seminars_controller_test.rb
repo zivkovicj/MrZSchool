@@ -7,7 +7,7 @@ class SeminarsControllerTest < ActionDispatch::IntegrationTest
     setup_users
     setup_schools
     setup_seminars
-    setup_scores()
+    setup_scores
   end
   
   test "seminars index test" do

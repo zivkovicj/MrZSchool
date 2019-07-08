@@ -28,17 +28,18 @@
     <%= f.label "add an image...." %>
     <%= f.file_field :image %>
   </div>
+  </br>
   
   <div class="row">
-    <div class="field col-sm-2">
+    <div class="field col-sm-3">
       <%= f.label "Cost" %>
-      <%= f.number_field :current_price %>
+      <%= f.number_field :current_price, :step => 0.25 %>
     </div>
-    <div class="field col-sm-2">
+    <div class="field col-sm-3">
       <%= f.label "Quantity" %>
       <%= f.number_field :quantity %>
     </div>
-    <div class="field col-sm-2">
+    <div class="field col-sm-1">
     </div>
     <div class="singleOption col-sm-4">
       <div class="singleOption">

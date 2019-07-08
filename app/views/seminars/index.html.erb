@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @seminars.each do |seminar| %>
+      <% @seminars.where.not(:owner => nil).each do |seminar| %>
         <tr class="users">
           <td><%= render 'shared/delete_and_confirm', object: seminar %></td>
           <td><%= link_to seminar.id, seminar, :class => "plain_link" %></td>

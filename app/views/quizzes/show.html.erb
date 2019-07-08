@@ -20,10 +20,17 @@
             
             <div class="row">
                 <div class="col-sm-6">
-                    <% class_type = (riposte.tally == riposte.poss ? "green" : "red") %>
-                    <% class_type = "" if question.grade_type != "computer" %>
                     <h4>Your Response</h4>
-                    <span class=<%= class_type %>> <%= riposte.stud_answer %></span>
+                    <% correct_array_fixed = question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "")} %>
+                    <% riposte.stud_answer.each do |response| %>
+                        <% if question.grade_type == "computer" then %>
+                            <% fixed_response = response.downcase.gsub(/\s+/, "") %>
+                            <% class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
+                        <% else %>
+                            <% class_type == "" %>
+                        <% end %>
+                        <p class=<%= class_type %>><%= response %></p>
+                    <% end %>
                 </div>
                 <div class="col-sm-6">
                     <% if question.grade_type == "computer" %>

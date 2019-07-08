@@ -14,7 +14,37 @@
 </br>
 
 <%= form_for(@riposte) do |r| %>
-    <%= render :partial => "/ripostes/#{@question.style}" %>
+    <% if @question.grade_type == "teacher" then %>
+        <h5 id="teacher_graded_tag">Teacher-Graded Question</h5>
+    <% end %>
+
+    <% this_order = [0,1,2,3,4,5].shuffle %>
+
+    <table>
+        <div class="container">
+            <% if @question.style == "fill_in" %>
+                <p>Your Response: <input type="text" name="stud_answer" id="stud_answer" /> </p>
+            <% else  %>
+                <% 6.times do |n| %>
+                    <% x = this_order[n] %>
+                    <% answer_text = @question.read_attribute("choice_#{x}") %>
+                    <% if !answer_text.blank? %>
+                        <tr>
+                            <td width="50%">
+                                <% if @question.style == "multiple_choice" %>
+                                    <%= radio_button_tag "stud_answer[]", x, false, :id => "choice_bubble_#{x}" %>
+                                <% elsif @question.style == "select_many" %>
+                                    <%= check_box_tag "stud_answer[]", x, false, :id => "check_box_#{x}" %>
+                                <% end %>
+                            </td>
+                            <td><%= answer_text %></td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            <% end %>
+        </div>
+    </table>
+    
     </br>
     <%= r.submit "Next Question", class: "btn btn-primary" %>
 <% end %>

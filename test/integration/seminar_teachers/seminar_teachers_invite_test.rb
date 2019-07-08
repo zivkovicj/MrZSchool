@@ -67,7 +67,6 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         click_on("Log out")
         
         capybara_login(@other_teacher)
-        assert_no_selector("a", :id => "scoresheet_seminar_#{@seminar.id}")
         find("#accept_invites").click
         click_on("accept_#{@st_2.id}")
         
@@ -87,7 +86,6 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         click_on("Log out")
         
         capybara_login(@other_teacher)
-        assert_no_selector("a", :id => "scoresheet_seminar_#{@seminar.id}")
         find("#accept_invites").click
         click_on("decline_#{@st_2.id}")
         

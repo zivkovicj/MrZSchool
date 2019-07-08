@@ -1,6 +1,7 @@
 
 <%# The !object.try part protects from nil error for objects that don't have a user %>
 
+
 <% if current_user.type == "Admin" || !object.try(:user) || object.user == current_user %>
     <div class="delete_group">
         <h5 class="btn btn-small btn-primary remove_btn" id="delete_<%= object.id %>">Delete</h5>

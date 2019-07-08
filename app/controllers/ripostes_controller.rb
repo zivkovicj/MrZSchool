@@ -15,29 +15,26 @@ class RipostesController < ApplicationController
             perc = 0
             if @question.grade_type == "computer"
                 is_graded = 1
-                case @question.style
-                when "multiple-choice"
-                    if params[:whichIsCorrect]
-                        n = params[:whichIsCorrect][:whichIsCorrect].to_i
-                        stud_answer = @question.read_attribute(:"choice_#{n}")
-                        perc = @riposte.poss if @question.correct_answers.include?(stud_answer)
+                if params[:stud_answer].blank?
+                    stud_answer = "blank"
+                    is_graded = nil
+                else
+                    stud_answer = []
+                    if @question.style == "fill_in"
+                        stud_answer = [params[:stud_answer]]
+                        correct_poss = 2
+                        correct_array = @question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "")}
+                        backend_answer = stud_answer.map{|e| e.downcase.gsub(/\s+/, "")}
                     else
-                        stud_answer = "blank"
-                        is_graded = nil
-                    end
-                when "fill-in"
-                    stud_answer = params[:stud_answer]
-                    if stud_answer.blank?
-                        stud_answer = "blank"
-                        is_graded = nil
-                    else
-                        @question.correct_answers.each do |correct_answer|
-                            if stud_answer.downcase.gsub(/\s+/, "") == correct_answer.downcase.gsub(/\s+/, "")
-                                perc = @riposte.poss
-                                break
-                            end
+                        params[:stud_answer].each do |this_answer|
+                            stud_answer << @question.read_attribute(:"choice_#{this_answer}")
                         end
+                        correct_array = @question.correct_answers
+                        backend_answer = stud_answer
+                        correct_poss = backend_answer.length + correct_array.length
                     end
+                    correct_count = 2 * (backend_answer & correct_array).length
+                    perc = (@riposte.poss * correct_count.to_f / correct_poss.to_f).round
                 end
             else
                 is_graded = 0

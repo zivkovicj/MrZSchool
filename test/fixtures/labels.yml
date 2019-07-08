@@ -29,7 +29,7 @@ other_label_private:
   extent: private
 
 fill_in_label:
-  name: Fill-in Label
+  name: fill_in Label
   extent: public
   
 teacher_graded_label_1:
@@ -38,4 +38,8 @@ teacher_graded_label_1:
   
 teacher_graded_label_2:
   name: teacher_graded_label_2
+  extent: public
+  
+select_many_label:
+  name: select_many_label
   extent: public

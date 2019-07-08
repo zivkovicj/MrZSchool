@@ -45,10 +45,11 @@ class NewQuizTest < ActionDispatch::IntegrationTest
     end
     
     def prepare_fill_in
-        @fill_in_objective = Objective.find_by(:name => "Fill-in Questions Only")
+        @fill_in_objective = Objective.find_by(:name => "fill_in Questions Only")
         set_specific_score(@student_2, @fill_in_objective, 4)
         @fill_in_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
     end
+    
     
     test "setup quiz" do
         old_riposte_count = Riposte.count
@@ -115,10 +116,15 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         setup_consultancies
         go_to_first_period
         begin_quiz
+        
+        # General stuff to check for across different quiz types
+        # This next line also needs to be replaced soon.
         assert_no_text("Your Scores in All Objectives")
         @quiz = Quiz.last
         assert @quiz.ripostes.count > 0
         assert_nil @quiz.total_score
+        
+        # Take this quiz randomly
         @quiz.ripostes.each do |riposte|
             assert riposte.tally.blank?
             assert_nil riposte.tally
@@ -127,18 +133,46 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         click_on("Back to Your Class Page")
         
         # Replace this with the new line that checks to see if a student is on her profile page
-        #assert_text("Your Scores in All Objectives")
+        # assert_text("Your Scores in All Objectives")
         @quiz.reload
         assert_equal 0, @quiz.points_still_to_grade   # Counterpart to the quiz that has teacher-graded questions
         assert_not_nil @quiz.total_score
         @quiz.ripostes.each do |riposte|
-            assert_not riposte.tally.blank?
             assert_not_nil riposte.tally
         end
         assert @student_2.quizzes.include?(@quiz)
         
         assert_all_ripostes_graded
         assert_not @seminar.reload.grading_needed   #Counterpart to the quiz that has teacher-graded questions
+    end
+    
+    test "take select many quiz" do
+        sm_objective = objectives(:select_many_objective)
+        set_specific_score(@student_2, sm_objective, 4)
+        sm_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
+        
+        go_to_first_period
+        click_on("Quizzes")
+        find("#teacher_granted_#{sm_objective.id}").click
+        
+        # Choose two of three correct answers, and add one wrong choice
+        check("check_box_0")
+        check("check_box_1")
+        check("check_box_2")
+        click_on "Next Question"
+        
+        @quiz = Quiz.last
+        assert_equal 7, @quiz.total_score
+        assert_equal 0, @quiz.points_still_to_grade
+        assert_all_ripostes_graded
+        assert_not @seminar.reload.grading_needed 
+        
+        riposte = @quiz.ripostes.first
+        assert_equal 67, riposte.tally
+        assert riposte.stud_answer.include?("0")
+        assert riposte.stud_answer.include?("1")
+        assert riposte.stud_answer.include?("2")
+        assert_not riposte.stud_answer.include?("3")
     end
     
     test "take fill in quiz" do

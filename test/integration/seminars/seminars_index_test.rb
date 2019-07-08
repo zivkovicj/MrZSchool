@@ -8,21 +8,7 @@ class SeminarsIndexTest < ActionDispatch::IntegrationTest
     setup_seminars
   end
 
-  test "seminar index" do
-    log_in_as(@admin_user)
-    get seminars_path
-    assert_template 'seminars/index'
-    assert_select 'div.pagination'
-    first_page_of_seminars = Seminar.paginate(page: 1)
-    first_page_of_seminars.each do |seminar|
-      assert_select 'a[href=?]', seminar_path(seminar), text: seminar.name
-    end
-    assert_difference 'Seminar.count', -1 do
-      delete seminar_path(@seminar)
-    end
-  end
-
-  test "Seminar index as non-admin" do
+  test "Redirect for non-admin" do
     log_in_as(@teacher_1)
     get seminars_path
     assert_redirected_to login_url

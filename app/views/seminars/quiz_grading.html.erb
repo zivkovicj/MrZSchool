@@ -9,7 +9,7 @@
 
 <% if @seminar.grading_needed %>
 
-    <h3>Important Note: All scores should be a scale of 1-10</h3>
+    <h3>Important Note: All scores should be on a scale of 1-10</h3>
     
     <%= form_tag teacher_grading_ripostes_path do %>
         <% @quizzes_to_grade.each do |quiz| %>

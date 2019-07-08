@@ -17,7 +17,7 @@
     <tr>
         <td height="100"><%= image_tag(commode.image_url(:thumb).to_s) %></td>
         <td>&emsp;<%= @commode.name %>&emsp;</td>
-        <td class="center" >$ <span class="price_display" id="price_<%= @com_id %>" com_id="<%= @com_id %>"><%= @price %></span></td>
+        <td class="center" ><span class="price_display" id="price_<%= @com_id %>" com_id="<%= @com_id %>"><%= @price %></span></td>
         
         <% if controller_name == "seminar_students" %>
             <%= render 'commodities/market_buttons/buy_button' %>

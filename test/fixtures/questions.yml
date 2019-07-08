@@ -11,7 +11,7 @@ five_choices: &base_choices
   choice_5: 5
 
 one:
-  style: multiple-choice
+  style: multiple_choice
   prompt: An admin-created question
   correct_answers: ["0"]
   <<: *base_choices
@@ -19,10 +19,10 @@ one:
   user: michael
   label: admin_label
   picture: cheese_logo
-  grade_type: "computer"
+  grade_type: computer
 
 two:
-  style: multiple-choice
+  style: multiple_choice
   prompt: A user-created question
   correct_answers: ["0"]
   <<: *base_choices
@@ -32,7 +32,7 @@ two:
   grade_type: "computer"
   
 three:
-  style: multiple-choice
+  style: multiple_choice
   prompt: A different_user_public
   correct_answers: ["0"]
   <<: *base_choices
@@ -42,7 +42,7 @@ three:
   grade_type: "computer"
   
 four:
-  style: multiple-choice
+  style: multiple_choice
   prompt: A different_user_private
   correct_answers: ["0"]
   <<: *base_choices
@@ -52,7 +52,7 @@ four:
   grade_type: "computer"
   
 five:
-  style: multiple-choice
+  style: multiple_choice
   prompt: More_user_created_for_testing_label_objectives
   correct_answers: ["0"]
   <<: *base_choices
@@ -62,7 +62,7 @@ five:
   grade_type: "computer"
   
 teacher_graded_question_1:
-  style: fill-in
+  style: fill_in
   prompt: "First Teacher-Graded In-App Response Question"
   extent: public
   label: teacher_graded_label_1
@@ -70,7 +70,7 @@ teacher_graded_question_1:
   grade_type: "teacher"
   
 teacher_graded_question_2:
-  style: fill-in
+  style: fill_in
   prompt: "Second Teacher-Graded In-App Response Question"
   extent: public
   label: teacher_graded_label_1
@@ -78,7 +78,7 @@ teacher_graded_question_2:
   grade_type: "teacher"
   
 teacher_graded_question_3:
-  style: fill-in
+  style: fill_in
   prompt: "Third Teacher-Graded In-App Response Question"
   extent: public
   label: teacher_graded_label_2
@@ -86,16 +86,26 @@ teacher_graded_question_3:
   grade_type: "teacher"
   
 teacher_graded_question_4:
-  style: fill-in
+  style: fill_in
   prompt: "Fourth Teacher-Graded In-App Response Question"
   extent: public
   label: teacher_graded_label_2
   user: archer
   grade_type: "teacher"
   
+select_many_question:
+  style: select_many
+  prompt: "This is a select-many question"
+  extent: public
+  label: select_many_label
+  user: archer
+  grade_type: "computer"
+  <<: *base_choices
+  correct_answers: ["0", "2", "3"]
+  
 <% 30.times do |n| %>
 question_<%= n+5 %>:
-  style: multiple-choice
+  style: multiple_choice
   prompt: Admin_question_<%= n %>
   correct_answers: ["0"]
   <<: *base_choices
@@ -107,7 +117,7 @@ question_<%= n+5 %>:
 
 <% 10.times do |n| %>
 question_<%= n+100 %>:
-  style: multiple-choice
+  style: multiple_choice
   prompt: User_question_<%= n %>
   correct_answers: ["0"]
   <<: *base_choices
@@ -119,8 +129,8 @@ question_<%= n+100 %>:
 
 <% 10.times do |n| %>
 question_<%= n+200 %>:
-  style: fill-in
-  prompt: Fill-in_question_<%= n %>
+  style: fill_in
+  prompt: fill_in_question_<%= n %>
   correct_answers: ["Yes","Absolutely","Of Course"]
   extent: public
   label: fill_in_label

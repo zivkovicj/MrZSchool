@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190618181526) do
+ActiveRecord::Schema.define(version: 20190702151212) do
 
   create_table "checkpoints", force: :cascade do |t|
     t.integer  "goal_student_id"
@@ -29,12 +29,12 @@ ActiveRecord::Schema.define(version: 20190618181526) do
     t.integer  "school_id"
     t.integer  "user_id"
     t.integer  "production_rate"
-    t.integer  "current_price"
+    t.decimal  "current_price",      precision: 2, scale: 2
     t.integer  "production_day"
     t.integer  "quantity"
     t.datetime "date_last_produced"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.boolean  "deliverable"
     t.boolean  "salable"
     t.boolean  "usable"

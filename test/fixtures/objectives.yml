@@ -97,8 +97,13 @@ objective_160:
   extent: "private"
   user: zacky
   
-fill-in:
-  name: Fill-in Questions Only
+fill_in:
+  name: fill_in Questions Only
+  extent: public
+  user: archer
+  
+select_many_objective:
+  name: Select-Many Objective
   extent: public
   user: archer
   

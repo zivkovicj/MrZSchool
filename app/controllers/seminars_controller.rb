@@ -29,9 +29,9 @@ class SeminarsController < ApplicationController
 
     def index
         if !params[:search].blank?
-          @seminars = Seminar.paginate(page: params[:page]).search(params[:search], params[:whichParam])
+          @seminars = Seminar.order(:name).paginate(page: params[:page]).search(params[:search], params[:whichParam])
         else
-          @seminars = Seminar.paginate(page: params[:page])
+          @seminars = Seminar.order(:name).paginate(page: params[:page])
         end
     end
   

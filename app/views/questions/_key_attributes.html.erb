@@ -1,4 +1,13 @@
 <% q_num = action_name == "new" ? 2 : 1 %>
+
+<% pub_check = true %>
+<% priv_check = false %>
+<% if @question&.extent == "private" || action_name == "new" %>
+    <% pub_check = false %>
+    <% priv_check = true %>
+<% end %>
+
+
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
@@ -6,37 +15,44 @@
             <h2><%= "Question".pluralize(q_num) %> Created by <%= @created_by %> &nbsp;</h2>
             </br>
             
+            <h3>Public/Private</h3>
             <table>
                 <tr>
                     <td width="10%">
-                        <%= radio_button_tag "extent", "public", @question&.extent == "public" %>
+                        <%= radio_button_tag "extent", "public", pub_check %>
                     </td>
                     <td>Public <%= "Question".pluralize(q_num) %></td>
                 </tr>
                 <tr>
                     <td width="10%">
-                        <%= radio_button_tag "extent", "public", @question&.extent == "private" %>    
+                        <%= radio_button_tag "extent", "private", priv_check %>    
                     </td>
                     <td>Private <%= "Question".pluralize(q_num) %></td>
                 </tr>
             </table>
             
             </br>
-            <table><tr>
+            <h3>Grade Type</h3>
+            <table>
                 <% [["computer", 'Computer Graded Responses'],
                     ["teacher", 'Teacher-Graded In-App Response'],
-                    ["none", 'Teacher-Graded, No In-App Response']].each_with_index do |z, index| %><tr>
-                    <td width="10%">
-                        <%= radio_button_tag "grade_type", z[0], @question&.grade_type == z[0], :id => "grade_type_#{z[0]}" %>
-                    </td>
-                    <td><%= z[1] %></td>
-                </tr><% end %>
+                    ["none", 'Teacher-Graded, No In-App Response']].each_with_index do |z, index| %>
+                    <% checkery = @grade_type == z[0] || @question&.grade_type == z[0] %>
+                    <tr>
+                        <td width="10%">
+                            <%= radio_button_tag "grade_type", z[0], checkery, :id => "grade_type_#{z[0]}" %>
+                        </td>
+                        <td><%= z[1] %></td>
+                    </tr>
+                <% end %>
             </table>
             
             <% if action_name == "new" %>
-                <h2>Style</h2>
+                <h3>Style</h3>
                 <table>
-                    <% [["multiple-choice", 'Multiple Choice'] ,["fill-in", 'Fill-in']].each_with_index do |z, index| %><tr>
+                    <% [["multiple_choice", 'Multiple Choice'],
+                        ["select_many", "Select Many"],
+                        ["fill_in", 'Fill in']].each_with_index do |z, index| %><tr>
                         <td width="20%"><% checkery = index == 0 ? "checked='checked'" : "" %>
                         <input type="radio" name="style" id="style_<%= z[0] %>" value=<%= z[0] %> <%= checkery %> /></td>
                         <td><%= z[1] %></td>

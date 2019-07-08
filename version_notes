@@ -21,23 +21,41 @@ Between each update, manually test:
 
 
 
+2.94 TEACHER-GRADED QUESTIONS
+Questions have a "Grade-type" column
+Update this column in development and testing
+Can be set to "Teacher" or "None" or "Computer"
+Riposte "graded" column
+    Set to nil by default (question not submitted)
+    Set to 1 when computer grades (or after teacher grades)
+        But not if a blank question is submitted
+    Set to 0 when a quiz is submitted with non computer-graded questions
+When creating new questions, graded should appear in the intial screen, before specific question-editing
+Possible final scores are shown with quiz display
+Also mark quizzes as "Needing Graded".  This will help to pull them up faster.  And to check whether the seminar still needs more grading.
+In teacher show page, classes that have ungraded quizzes will have an extra option in the menu.
+This option links to the submitted quiz questions that need grading
+Questions and student responses are shown for quick grading.
+A score space is provided.
+Submit button submits all scores at once for these questions
 
+When creating a teacher-graded question, make it clear that the correct answers shown are merely examples.  
+The student should see a short message explaining these example answers.
+    Along with the example answers.
+But not see that message for a fully computer-graded test.
+Re-work the way that quiz grading is included in the teacher show links so that it gets included in the navribbon
+Make separate icons for graded and ungraded
+Maintain the grading type as a default when editing a question
 
-The short version: My app has been using a method that has significant weight on performance. I'm considering solving this problem by adding a database column that tracks the same output as the method.
+Add in all page formatting to quiz screen that the other pages have
+There's a home jpg and a home png
 
-I realize that this is not a typical question for Stack Overflow. Is there a better venue for a question of this nature? I'm sure there are already articles that deal with these types of "best practice" issues. But I don't know what vocabulary I would search to find them. If somebody could point me toward some already-published reading, I would be happy to look there.
+Column to seminar: grading_needed
+Image is shown based on this column
+This column is updated when a student takes a quiz
+    Also updated when teacher grades a quiz, since that uses the same method for setting the quiz final score. 
+Check how the other tests will need to consider these new columns
 
-The long version: My app places students in groups based on the math objectives they haven't yet passed. One key method, students_needed(), counts the number of students who need a given objective. For example, there might be 13 students who need to pass "Subtracting Integers". When the teacher runs the group-creation feature, this method needs to be called for every single objective relevant to the classroom. This will probably be around 400 objectives for most classrooms. To make matters more complicated, it also checks the pre-requisites for each objective. (Students can't be counted as needing "Subtracting Integers" if they haven't yet passed off "Adding Integers.") By the time all of this is checked, that amounts to 1,800 hits on the database. It's causing a major slowdown.
-
-I've got one solution idea that seems promising. I already have a join model between classroom and objective. What if I added a column to this model called students_needed? This column would store the integer that would be the same as the result of the method that I've been calling. The difference is that I would store this value BEFORE the teacher tries to create groups, so that I don't need to call the method during group creation. I would be able to pluck the values from all of the ClassroomObjectives with one query.
-
-But there are some very inelegant downsides: I would now need to update the students_needed column every time a student enters or leaves a classroom. And I would need to do this for every objective in the classroom. Even worse, I would need to update every time a student passes a pre-requisite objective.
-
-So it's almost like this approach would just take those 1,800 database calls and spread them out over some less-common events. (I expect the group-creation feature to be significantly more common than the events I mentioned in the previous paragraph.)
-
-Right now, I feel like this refactoring would be worth the time. But I suspect that some professional Rails developers would hate this design.
-
-Thank you in advance for any insight.
 
 
 
@@ -1230,26 +1248,26 @@ Clicking on a class in the navribbon directs to that class show view. It should 
 
 
 
-2.22 FILL-IN QUESTIONS-- STARTED 08/08/17
+2.22 fill_in QUESTIONS-- STARTED 08/08/17
                     --PUSHED 08/13/17
 
-    Goal of this update: Offer "Fill-in" questions as an option for teacher who are writing assessments
+    Goal of this update: Offer "fill_in" questions as an option for teacher who are writing assessments
     Question table needs to be updated with the "style" attribute
         Validation must require "style" for every question
     Test for if a question is at first invalid, but then submitted successfully
     When user begins writing questions, they first choose label and type on one screen
         Editing prompt and answer choices will occur on the next screen.
-        But answer choices won't be offered for "fill-in" questions. Instead, several blanks to enter all possible answers
+        But answer choices won't be offered for "fill_in" questions. Instead, several blanks to enter all possible answers
         Saving these questions saves an array with many possible answers
     When comparing student answer to the correct answers, both sides is downcased and spaces are removed.
     Make sure that questions can be checked and graded correctly.
     Test changing label and extent
     While editing a question, don't allow editing the style
     Add Style for seed questions
-        And seed a few fill-in questions
+        And seed a few fill_in questions
     Instead of splitting all the different form parts by @assign_permission, redirect the user to show or edit based on that variable.
         Update the tests for viewing another teacher's question.
-    Test for editing fill-in questions
+    Test for editing fill_in questions
     The fixtures probably don't need to load associations in the test helper anymore
 
 

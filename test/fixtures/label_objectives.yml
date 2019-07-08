@@ -12,8 +12,8 @@ for_quiz_2:
   quantity: 6
   point_value: 1
 
-fill-in:
-  objective: fill-in
+fill_in:
+  objective: fill_in
   label: fill_in_label
   quantity: 7
   point_value: 2
@@ -23,6 +23,13 @@ for_delete_test:
   label: admin_label
   quantity: 2
   point_value: 2
+  
+# Select-Many Objective
+for_select_many_objective:
+  objective: select_many_objective
+  label: select_many_label
+  quantity: 1
+  point_value: 100
 
 # Two labels for the first test.  One is regular questions.
 for_teacher_grading_test_1:
@@ -43,4 +50,6 @@ for_teacher_grading_test_3:
   label: teacher_graded_label_2
   quantity: 2
   point_value: 10
+  
+  
 

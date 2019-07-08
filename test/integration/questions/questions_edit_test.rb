@@ -40,18 +40,20 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         on_show_page
         assert_no_selector('textarea', :id => "prompt", :visible => true)
         assert_no_selector('input', :id => "answer_1_edit", :visible => true)
-        assert_no_selector('input', :id => "whichIsCorrect_whichIsCorrect_3", :visible => true)
+        assert_no_selector('input', :id => "question_0_is_correct_3", :visible => true)
     end
     
     test "edit admin question" do
         capybara_login(@teacher_1)
         go_to_all_questions
+        
+        search_for(@admin_q.prompt)
         click_on(@admin_q.short_prompt)
         
         on_show_page
         assert_no_selector('textarea', :id => "prompt", :visible => true)
         assert_no_selector('input', :id => "answer_1_edit", :visible => true)
-        assert_no_selector('input', :id => "whichIsCorrect_whichIsCorrect_3", :visible => true)
+        assert_no_selector('input', :id => "question_0_is_correct_3", :visible => true)
     end
     
     test "edit multiple choice question" do
@@ -63,11 +65,12 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         goto_mc_question
         not_on_show_page
         assert_no_selector('input', :id => "style_multiple-choice") # Counterpart is in the questions_new_test
+        assert_selector('input', :id => "question_0_is_correct_3", :visible => true)
         
         fill_prompt(0)
         fill_choice(0,0)
-        choose('question_0_whichIsCorrect_3')
-        choose("public")
+        choose('question_0_is_correct_3')
+        choose("extent_public")
         choose("label_#{@admin_l.id}")
         choose("question_0_picture_#{@user_p.id}")
         click_on("save_changes_2")
@@ -100,7 +103,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         # This test also checks that the default label and extent stays the same
         # But changes the grade_type
         
-        @fill_q = Question.where(:style => "fill-in").first
+        @fill_q = Question.where(:style => "fill_in").first
         @fill_q.update(:user => @teacher_1)
         @fill_q.update(:extent => "public")
         new_array = @fill_q.correct_answers
@@ -111,8 +114,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         
         capybara_login(@teacher_1)
         go_to_all_questions
-        fill_in "search_field", with: @fill_q.prompt
-        click_on("Search")
+        search_for(@fill_q.prompt)
         click_on(@fill_q.short_prompt)
         
         fill_prompt(0)
@@ -139,8 +141,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         
         capybara_login(@teacher_1)
         go_to_all_questions
-        fill_in "search_field", with: this_question.prompt
-        click_on("Search")
+        search_for(this_question.prompt)
         click_on(this_question.short_prompt)
         
         click_on("save_changes_2")

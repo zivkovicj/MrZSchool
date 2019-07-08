@@ -216,7 +216,7 @@ Label.first.pictures << Picture.second
 Label.second.pictures << Picture.third
 
 (1..10).each do |n|
-    question = Question.new(:user => jeff, :extent => "public", :style => "multiple-choice")
+    question = Question.new(:user => jeff, :extent => "public", :style => "multiple_choice")
     r = rand(10 * n)
     s = rand(6 * n)
     prompt_string = "What is #{r} + #{s} ?"
@@ -229,7 +229,7 @@ Label.second.pictures << Picture.third
     question.label = add_label
     question.save
     
-    question = Question.new(:user => jeff, :extent => "public", :style => "multiple-choice")    
+    question = Question.new(:user => jeff, :extent => "public", :style => "multiple_choice")    
     r = rand(9 * n)
     s = rand(5 * n)
     prompt_string = "What is #{r} - #{s} ?"
@@ -242,7 +242,7 @@ Label.second.pictures << Picture.third
     question.label = subtract_label
     question.save
     
-    question = Question.new(:user => jeff, :extent => "public", :style => "multiple-choice")
+    question = Question.new(:user => jeff, :extent => "public", :style => "multiple_choice")
     r = rand(12)
     prompt_string = "What is #{n} x #{r} ?"
     question.prompt = prompt_string
@@ -255,7 +255,7 @@ Label.second.pictures << Picture.third
     question.label = multiply_label
     question.save
     
-    question = Question.new(:user => jeff, :extent => "public", :style => "multiple-choice")
+    question = Question.new(:user => jeff, :extent => "public", :style => "multiple_choice")
     r = rand(12)
     prompt_string = "What is #{n * r} / #{n} ?"
     question.prompt = prompt_string
@@ -268,7 +268,7 @@ Label.second.pictures << Picture.third
     question.label = divide_label
     question.save
     
-    question = Question.new(:user => jeff, :extent => "public", :style => "fill-in")
+    question = Question.new(:user => jeff, :extent => "public", :style => "fill_in")
     r = rand(10 * n)
     s = rand(6 * n)
     prompt_string = "What is #{r} + #{s} ?"
