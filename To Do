@@ -1179,11 +1179,11 @@ VT Also dry the riposte views for the different question types
 VT Dry the grading function so that it works for all three types?
 VT The code for adding multiple-choice answers could be revamped. Questions controller, set_correct_answers method
 
-Show student responses one-at-a-time
-This should eliminate the brackets.
+VT Show student responses one-at-a-time
 Make quantities in multiples of 100.
 
-Use method for backending stud_answer and correct_answer when displaying
+V Backend stud_answer and correct_answer when displaying
+Should I use a method for this?
     Can I dry it to use in both places?
     
 
@@ -1202,13 +1202,14 @@ Use method for backending stud_answer and correct_answer when displaying
         Expected false to be truthy.
         test/integration/consultancies/consultancies_show_test.rb:601:in `block in <class:ConsultanciesShowTest>'
 
-Run and fix all tests before pushing
+VT Run and fix all tests before pushing
 
-Change style from multiple-choice to multiple_choice
-And all fill_in to fill_in
-Multiply all point_value values by 100
+VT Change style from multiple-choice to multiple_choice
+VT And all fill_in to fill_in
+VT Multiply all point_value values by 100
 
-
+Check all this by making new questions
+And check with old questions
 
 Make question choices into a single array, just like the correct answers.
 That will make it easier to add more choices in the future.
@@ -1216,10 +1217,8 @@ Will need to migrate the new column.
 Then use the console to populate the new column
 Then erase the old columns
 
-Might need to update existing mult-choice questions so that the correct answer is an array
 
-Check all this by making new questions
-And check with old questions
+
     
 
 

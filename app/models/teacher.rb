@@ -32,14 +32,14 @@ class Teacher < User
     
     def seminars_i_can_edit
         Seminar.joins(seminar_teachers: :user)
-            .where("seminar_teachers.user_id == ?", self.id)
-            .where("seminar_teachers.can_edit == ?", true)
+            .where("seminar_teachers.user_id = ?", self.id)
+            .where("seminar_teachers.can_edit = ?", true)
     end
     
     def unaccepted_classes
         Seminar.joins(seminar_teachers: :user)
-            .where("seminar_teachers.user_id == ?", self.id)
-            .where("seminar_teachers.accepted == ?", false)
+            .where("seminar_teachers.user_id = ?", self.id)
+            .where("seminar_teachers.accepted = ?", false)
     end
     
     private
