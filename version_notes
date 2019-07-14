@@ -22,6 +22,27 @@ Between each update, manually test:
 
 
 
+
+
+2.96 FIX STORAGE OF QUESTION CHOICES
+Add a column called choices
+Correctly populate this column when creating mc question
+    select_many question
+    fill_in question
+Correctly show choices when editing an mc question
+    select_many question
+    fill_in question
+V Show questions with choices listed in index
+Correctly grade a student's mc quesiton
+    select_many_question
+    fill_in question
+Search tests for all references to "choice_"
+Search code for all references to "choice_"
+Don't show Correct Bubbles when creating a fill-in question 
+
+
+
+
 2.95 MULTIPLE-SELECT QUESTIONS
  Add possible type to menu of questions
  When ediing question, teacher checks ALL correct answers
@@ -34,7 +55,7 @@ Between each update, manually test:
  The code for adding multiple-choice answers could be revamped. Questions controller, set_correct_answers method
  Show student responses one-at-a-time
 Make quantities in multiples of 100.
-V Backend stud_answer and correct_answer when displaying
+Backend stud_answer and correct_answer when displaying
 Should I use a method for this?
     Can I dry it to use in both places?
  Run and fix all tests before pushing

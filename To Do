@@ -1169,42 +1169,30 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 aqui
 
 
-2.96 FIX STORAGE OF QUESTION CHOICES
-VT Add a column called choices
-VT Correctly populate this column when creating mc question
-    VT select_many question
-    VT fill_in question
-VT Correctly show choices when editing an mc question
-    VT select_many question
-    VT fill_in question
-V Show questions with choices listed in index
-VT Correctly grade a student's mc quesiton
-    VT select_many_question
-    VT fill_in question
-VT Search tests for all references to "choice_"
-VT Search code for all references to "choice_"
-V Don't show Correct Bubbles when creating a fill-in question 
-
-Will need to migrate the new column.
-Write a method to populate the new column from the old choices
-Then erase the old columns
-Then erase the method
-
+2.97 DOMAINS
+Remove choice columns
+Delete the method for populating the new choice column
+Domain
+    Name
+    Has_many subdomains
+    Has_many objectives through subdomains
+Subdomain
+    Name
+    Belongs_to domain
+    Has_many objectives
+Objective
+    Rename name to formal_name
+    Catchy name
+    Index number
+    Belongs_to subdomain
+Rename label to subobjective
+    Check everywhere in code that "label" is used
+Show domain, sub, and catchy name when a student checks her score
 
 
+CRUD DOMAINS
+Only admin
 
-
-
-
-DOMAINS, SUBDOMAINS, AND SUBOBJECTIVES
-Add to objective
-    subdomain
-        has domain :through => subdomain
-    catchy name
-    index number
-Show these when a student checks her score
-
-ADMIN CAN CRUD DOMAINS
 
 NAME-SHOWING OPTION
 Option to show either objective name or both names
