@@ -21,7 +21,12 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h4>Your Response</h4>
-                    <% correct_array_fixed = question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "")} %>
+                    <% these_answers = question.correct_answers %>
+                    <% if these_answers.present? %>
+                        <% correct_array_fixed = question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "")} %>
+                    <% else %>
+                        <% correct_array_fixed = [] %>
+                    <% end %>
                     <% riposte.stud_answer.each do |response| %>
                         <% if question.grade_type == "computer" then %>
                             <% fixed_response = response.downcase.gsub(/\s+/, "") %>

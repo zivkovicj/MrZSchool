@@ -4,9 +4,6 @@
 <%= render 'shared/back-link' %>
 <%= render 'shared/headline' %>
 
-<% choice_array = [:choice_0, :choice_1, :choice_2, :choice_3, :choice_4,
-        :choice_5] %>
-
   <div class="singleOption">
     <h2><%= @question.extent.capitalize %> Question Created by: <%= @created_by %></h2>
     </br>
@@ -27,11 +24,10 @@
           </br> 
           <h2>Answer Choices</h2>
           <ul>
-            <% 6.times do |n| %>
-              <% this_answer_choice = @question.read_attribute(choice_array[n]) %>
-              <% if this_answer_choice.present? %>
-                <li><% conditional_wrapper(@question.correct_answers.include?(this_answer_choice)) do %>
-                  <%= this_answer_choice %>
+            <% @question.choices.each do |this_choice| %>
+              <% if this_choice.present? %>
+                <li><% conditional_wrapper(@question.correct_answers.include?(this_choice)) do %>
+                  <%= this_choice %>
                 <% end %></li>
               <% end %>
             <% end %>

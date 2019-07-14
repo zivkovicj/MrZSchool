@@ -1168,63 +1168,58 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 
 aqui
 
-2.95 MULTIPLE-SELECT QUESTIONS
-VT Add possible type to menu of questions
-VT When ediing question, teacher checks ALL correct answers
-    VT All of them go into the correct_answers array
-VT When answering, student is presented with checkboxes
-VT When grading, compare chosen responses with correct responses.  
-VT Dry the question creating enough to go back to a single file.  
-VT Also dry the riposte views for the different question types
-VT Dry the grading function so that it works for all three types?
-VT The code for adding multiple-choice answers could be revamped. Questions controller, set_correct_answers method
 
-VT Show student responses one-at-a-time
-Make quantities in multiples of 100.
+2.96 FIX STORAGE OF QUESTION CHOICES
+VT Add a column called choices
+VT Correctly populate this column when creating mc question
+    VT select_many question
+    VT fill_in question
+VT Correctly show choices when editing an mc question
+    VT select_many question
+    VT fill_in question
+V Show questions with choices listed in index
+VT Correctly grade a student's mc quesiton
+    VT select_many_question
+    VT fill_in question
+VT Search tests for all references to "choice_"
+VT Search code for all references to "choice_"
+V Don't show Correct Bubbles when creating a fill-in question 
 
-V Backend stud_answer and correct_answer when displaying
-Should I use a method for this?
-    Can I dry it to use in both places?
-    
-
-** Fix these after next push.  But really do it. **
-
-
- FAIL["test_choose_consultants", Minitest::Result, 114.73413340499974]
- test_choose_consultants#Minitest::Result (114.73s)
-        Expected false to be truthy.
-        test/integration/consultancies/consultancies_show_test.rb:132:in `block in test_all_consultants'
-        test/integration/consultancies/consultancies_show_test.rb:130:in `test_all_consultants'
-        test/integration/consultancies/consultancies_show_test.rb:337:in `block in <class:ConsultanciesShowTest>'
-
- FAIL["test_new_place_for_lone_students", Minitest::Result, 221.15188337699874]
- test_new_place_for_lone_students#Minitest::Result (221.15s)
-        Expected false to be truthy.
-        test/integration/consultancies/consultancies_show_test.rb:601:in `block in <class:ConsultanciesShowTest>'
-
-VT Run and fix all tests before pushing
-
-VT Change style from multiple-choice to multiple_choice
-VT And all fill_in to fill_in
-VT Multiply all point_value values by 100
-
-Check all this by making new questions
-And check with old questions
-
-Make question choices into a single array, just like the correct answers.
-That will make it easier to add more choices in the future.
 Will need to migrate the new column.
-Then use the console to populate the new column
+Write a method to populate the new column from the old choices
 Then erase the old columns
+Then erase the method
 
 
 
+
+
+
+
+DOMAINS, SUBDOMAINS, AND SUBOBJECTIVES
+Add to objective
+    subdomain
+        has domain :through => subdomain
+    catchy name
+    index number
+Show these when a student checks her score
+
+ADMIN CAN CRUD DOMAINS
+
+NAME-SHOWING OPTION
+Option to show either objective name or both names
+    Make a method for this
+    Use it 
+        In student score page
+        In objective-adding-to-class page
+        In index
+        
+SORT OBJECTIVES BY SUBDOMAIN
+    Use this in objective index
+
+SORT PICTURES BY SUBDOMAIN
     
-
-
-
-OPTION TO NOT SHUFFLE QUESTIONS
-
+OPTION TO NOT SHUFFLE ANSWER CHOICES
 
 
 QUIZ SCORE CALCULATION

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190702151212) do
+ActiveRecord::Schema.define(version: 20190709193823) do
 
   create_table "checkpoints", force: :cascade do |t|
     t.integer  "goal_student_id"
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 20190702151212) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "grade_type"
+    t.text     "choices"
     t.index ["label_id"], name: "index_questions_on_label_id"
     t.index ["picture_id"], name: "index_questions_on_picture_id"
     t.index ["user_id"], name: "index_questions_on_user_id"

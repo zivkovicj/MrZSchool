@@ -50,7 +50,7 @@
             </br>
             <table class="table-borderless">
                 <thead>
-                    <th>Correct? &nbsp;</th>
+                    <th><% if @style != "fill_in" %>Correct? &nbsp;<% end %></th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -60,7 +60,7 @@
                             <% these_answers = @question.correct_answers %>
                             <% default_text = these_answers.present? ? these_answers[n] : nil %>
                         <% else %>
-                            <% default_text = @question.attributes["choice_#{n}"] %>
+                            <% default_text = @question.choices[n] if @question.choices %>
                         <% end %>
                         <% checkery = (@question.correct_answers.blank? && n == 0) || @question.correct_answers&.include?(default_text) %>
                         <tr>
@@ -68,13 +68,13 @@
                                 <td>
                                     <% if @style == "select_many" %>
                                         <%= check_box_tag "questions[#{index}][is_correct][]", n, checked = checkery, :id => "question_#{index}_is_correct_#{n}" %>
-                                    <% else %>
+                                    <% elsif @style == "multiple_choice" %>
                                         <%= radio_button_tag "questions[#{index}][is_correct][]", n, checked = checkery, :id => "question_#{index}_is_correct_#{n}" %>
                                     <% end %>
                                 </td>
                                 <td>
                                     <input type="text"
-                                        name="questions[<%= index.to_i %>][choice_<%= n %>]"
+                                        name="questions[<%= index.to_i %>]choices[]"
                                         id="question_<%= index %>_choice_<%= n %>"
                                         value="<%= default_text %>" />
                                 </td>

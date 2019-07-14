@@ -77,12 +77,41 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         
         @user_q.reload
         assert_equal @new_prompt[0], @user_q.prompt
-        assert_equal @new_choice[0][0], @user_q.choice_0
-        assert @user_q.correct_answers.include?("3")
-        assert_equal 1, @user_q.correct_answers.length
+        assert_equal ["Bill", "1", "2", "3", "4", "5"], @user_q.choices
+        assert_equal ["3"], @user_q.correct_answers
         assert_equal "public", @user_q.extent
         assert_equal @admin_l, @user_q.label
         assert_equal @user_q.picture, @user_p
+        
+        assert_selector('h2', :text => "All Questions")
+    end
+    
+    test "edit select many question" do
+        @select_many_q = questions(:select_many_question)
+        @select_many_l = labels(:select_many_label)
+        assert_equal ["0","1","2","3","4","5"], @select_many_q.choices
+        assert_equal ["0", "2", "3"], @select_many_q.correct_answers
+        assert_equal "public", @select_many_q.extent
+        assert_equal @select_many_l, @select_many_q.label
+        
+        capybara_login(@teacher_1)
+        go_to_all_questions
+        search_for(@select_many_q.prompt)
+        click_on(@select_many_q.short_prompt)
+        
+        fill_prompt(0)
+        fill_choice(0,0)
+        fill_in "question_0_choice_5", with: ""
+        uncheck('question_0_is_correct_2')
+        check('question_0_is_correct_4')
+        check('question_0_is_correct_5') # Mark it right, but leave the space blank
+        click_on("save_changes_2")
+        
+        @select_many_q.reload
+        assert_equal @new_prompt[0], @select_many_q.prompt
+        assert_equal ["Bill","1","2","3","4"], @select_many_q.choices  # Blank choice has been removed
+        assert_equal ["Bill", "3", "4"], @select_many_q.correct_answers # Blank choice is excluded
+        assert_equal "public", @select_many_q.extent  # Default extent is left
         
         assert_selector('h2', :text => "All Questions")
     end

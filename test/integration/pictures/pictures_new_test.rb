@@ -29,7 +29,6 @@ class PicturesNewTest < ActionDispatch::IntegrationTest
         goto_picture_create
         fill_in "picture_name", with: "Apple"
         attach_file('picture[image]', Rails.root + 'app/assets/images/apple.jpg')
-        debugger
         check("check_#{@user_l.id}")
         check("check_#{@admin_l.id}")
         click_on ("Create Picture")

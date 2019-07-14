@@ -21,6 +21,29 @@ Between each update, manually test:
 
 
 
+
+2.95 MULTIPLE-SELECT QUESTIONS
+ Add possible type to menu of questions
+ When ediing question, teacher checks ALL correct answers
+     All of them go into the correct_answers array
+ When answering, student is presented with checkboxes
+ When grading, compare chosen responses with correct responses.  
+ Dry the question creating enough to go back to a single file.  
+ Also dry the riposte views for the different question types
+ Dry the grading function so that it works for all three types?
+ The code for adding multiple-choice answers could be revamped. Questions controller, set_correct_answers method
+ Show student responses one-at-a-time
+Make quantities in multiples of 100.
+V Backend stud_answer and correct_answer when displaying
+Should I use a method for this?
+    Can I dry it to use in both places?
+ Run and fix all tests before pushing
+ Change style from multiple-choice to multiple_choice
+ And all fill_in to fill_in
+ Multiply all point_value values by 100
+
+
+
 2.94 TEACHER-GRADED QUESTIONS
 Questions have a "Grade-type" column
 Update this column in development and testing

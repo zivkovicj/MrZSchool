@@ -27,7 +27,7 @@
             <% else  %>
                 <% 6.times do |n| %>
                     <% x = this_order[n] %>
-                    <% answer_text = @question.read_attribute("choice_#{x}") %>
+                    <% answer_text = @question.choices[x] %>
                     <% if !answer_text.blank? %>
                         <tr>
                             <td width="50%">

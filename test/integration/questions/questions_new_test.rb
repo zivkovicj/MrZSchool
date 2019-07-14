@@ -63,7 +63,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_equal @old_question_count + 5, Question.count
         Question.all[-5..-1].each_with_index do |question, index|
             assert_equal @new_prompt[index], question.prompt
-            assert_equal "public", question.extent
+            assert_equal "private", question.extent
             assert_equal "multiple_choice", question.style
             assert_equal @teacher_1, question.user
             assert_equal @user_l, question.label
@@ -73,7 +73,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         @new_question = Question.all[-5]
         assert @new_question.correct_answers.include?(@new_choice[0][2])
         6.times do |n|
-            assert_equal @new_choice[0][n], @new_question.read_attribute("choice_#{n}")
+            assert @new_question.choices.include?(@new_choice[0][n])
             assert_not @new_question.correct_answers.include?(@new_choice[0][n]) if n != 2
         end
         assert @new_question.picture.blank?
@@ -81,8 +81,8 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         
         @new_question_2 = Question.all[-4]
         assert_equal "Are there two questions?", @new_question_2.prompt
-        assert_equal @new_choice[1][0], @new_question_2.choice_0
-        assert_equal @new_choice[1][1], @new_question_2.choice_1
+        assert @new_question_2.choices.include?(@new_choice[1][0])
+        assert @new_question_2.choices.include?(@new_choice[1][1])
         assert @new_question_2.correct_answers.include?(@new_choice[1][0])
         assert_not @new_question_2.correct_answers.include?(@new_choice[1][1])
         assert_equal @user_p, @new_question_2.picture
@@ -111,10 +111,11 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         click_on("Create These Questions")
         
         new_question = Question.last
+        assert_equal ["Correct", "Incorrect", "Also Correct", "Also incorrect", "This one's incorrect too"], new_question.choices
+            # This also checks that the blank field does not add a blank entry to the choices.
         assert_equal ["Correct", "Also Correct"], new_question.correct_answers
         assert_equal "select_many", new_question.style
         assert_equal "Prompt for select-many question", new_question.prompt
-        assert_equal "Also Correct", new_question.choice_2
     end
     
     test "create computer graded fill in questions" do
@@ -141,11 +142,12 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_equal @old_question_count + 2, Question.count
         @new_question = Question.all[-2]
         assert_equal @teacher_1, @new_question.user
-        assert_equal "public", @new_question.extent
+        assert_equal "private", @new_question.extent
         assert_equal "fill_in", @new_question.style
         assert_equal @user_l, @new_question.label
         @user_l.questions.include?(@new_question)
         assert_equal @new_prompt[0], @new_question.prompt
+        assert_equal [], @new_question.choices
         assert @new_question.correct_answers.include?(@new_choice[0][0])
         assert @new_question.correct_answers.include?(@new_choice[0][1])
         assert_not @new_question.correct_answers.include?("")
@@ -154,11 +156,12 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         
         @new_question_2 = Question.all[-1]
         assert_equal @teacher_1, @new_question_2.user
-        assert_equal "public", @new_question_2.extent
+        assert_equal "private", @new_question_2.extent
         assert_equal "fill_in", @new_question_2.style
         assert_equal @user_l, @new_question_2.label
         @user_l.questions.include?(@new_question_2)
         assert_equal @new_prompt[1], @new_question_2.prompt
+        assert_equal [], @new_question_2.choices
         assert @new_question_2.correct_answers.include?(@new_choice[1][0])
         assert @new_question_2.correct_answers.include?(@new_choice[1][1])
         assert @new_question_2.correct_answers.length == 2
@@ -182,11 +185,12 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_equal @old_question_count + 1, Question.count
         @new_question = Question.all[-1]
         assert_equal @teacher_1, @new_question.user
-        assert_equal "public", @new_question.extent
+        assert_equal "private", @new_question.extent
         assert_equal "fill_in", @new_question.style
         assert_equal @user_l, @new_question.label
         assert_equal "Prompt for teacher-graded question", @new_question.prompt
         assert @new_question.correct_answers.include?("Your answer should be good.")
+        assert_equal [], @new_question.choices
         assert_equal 1, @new_question.correct_answers.length
         assert_equal "teacher", @new_question.grade_type
     end

@@ -152,8 +152,8 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         assert_equal 2, lab_obj_u.reload.quantity
         assert_equal 3, lab_obj_a.reload.quantity
-        assert_equal 4, lab_obj_u.reload.point_value
-        assert_equal 5, lab_obj_a.reload.point_value
+        assert_equal 400, lab_obj_u.reload.point_value
+        assert_equal 500, lab_obj_a.reload.point_value
     end
     
     test "include labels blank" do

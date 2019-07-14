@@ -170,6 +170,7 @@ add_label = Label.create(:name => "Adding Numbers", :extent => "public", :user =
 subtract_label = Label.create(:name => "Subtracting Numbers", :extent => "public", :user => jeff)
 multiply_label = Label.create(:name => "Multiplying Numbers", :extent => "public", :user => jeff)
 divide_label = Label.create(:name => "Dividing Numbers", :extent => "public", :user => jeff)
+select_many_label = Label.create(:name => "Which Expressions are Equal", :extent => "public", :user => jeff)
 
 teacher_user = Teacher.first
 Label.create(:name => "Intercept from Graphs", :extent => "public", :user => teacher_user)
@@ -181,23 +182,25 @@ mult_and_div_obj = Objective.find_by(:name => "Multiply and Divide Numbers")
 sum_obj = Objective.find_by(:name => "Numbers Summary")
 
 LabelObjective.create(:label => add_label, :objective => add_and_sub_obj,
-    :quantity => 2, :point_value => 2)
+    :quantity => 2, :point_value => 200)
 LabelObjective.create(:label => subtract_label, :objective => add_and_sub_obj,
-    :quantity => 3, :point_value => 1)
+    :quantity => 3, :point_value => 100)
     
 LabelObjective.create(:label => multiply_label, :objective => mult_and_div_obj,
-    :quantity => 3, :point_value => 2)
+    :quantity => 3, :point_value => 200)
 LabelObjective.create(:label => divide_label, :objective => mult_and_div_obj,
-    :quantity => 2, :point_value => 2)
+    :quantity => 2, :point_value => 200)
     
 LabelObjective.create(:label => add_label, :objective => sum_obj,
-    :quantity => 2, :point_value => 1)
+    :quantity => 2, :point_value => 100)
 LabelObjective.create(:label => subtract_label, :objective => sum_obj,
-    :quantity => 1, :point_value => 2)
+    :quantity => 1, :point_value => 200)
 LabelObjective.create(:label => multiply_label, :objective => sum_obj,
-    :quantity => 2, :point_value => 3)
+    :quantity => 2, :point_value => 300)
 LabelObjective.create(:label => divide_label, :objective => sum_obj,
-    :quantity => 1, :point_value => 4)
+    :quantity => 1, :point_value => 400)
+LabelObjective.create(:label => select_many_label, :objective => add_and_sub_obj,
+    :quantity -> 1, :point_value => 200)
 
 pic_array = [["Labels", "app/assets/images/labels.png"],
     ["Objectives", "app/assets/images/objectives.png"],
@@ -221,10 +224,7 @@ Label.second.pictures << Picture.third
     s = rand(6 * n)
     prompt_string = "What is #{r} + #{s} ?"
     question.prompt = prompt_string
-    question.choice_0 = r + s
-    question.choice_1 = r + s + 1
-    question.choice_2 = r + s - 1
-    question.choice_3 = r - s
+    question.choices = [r + s, r + s + 1, r + s - 1, r - s]
     question.correct_answers = ["#{r + s}"]
     question.label = add_label
     question.save
@@ -234,10 +234,7 @@ Label.second.pictures << Picture.third
     s = rand(5 * n)
     prompt_string = "What is #{r} - #{s} ?"
     question.prompt = prompt_string
-    question.choice_0 = r - s
-    question.choice_1 = r + 1 - s
-    question.choice_2 = (r - 1) - s 
-    question.choice_3 = r + s
+    question.choices = [r - s, r + 1 - s, (r - 1) + s, r + s]
     question.correct_answers = ["#{r - s}"]
     question.label = subtract_label
     question.save
@@ -246,11 +243,7 @@ Label.second.pictures << Picture.third
     r = rand(12)
     prompt_string = "What is #{n} x #{r} ?"
     question.prompt = prompt_string
-    question.choice_0 = n * r
-    question.choice_1 = n * (r + 1)
-    question.choice_2 = n * (r - 1) 
-    question.choice_3 = n * r
-    question.choice_4 = (n - 1) * r
+    question.choices = [n * r, n * (r + 1), n * (r - 1), (n - 1) * r]
     question.correct_answers = ["#{(n) * r}"]
     question.label = multiply_label
     question.save
@@ -259,11 +252,7 @@ Label.second.pictures << Picture.third
     r = rand(12)
     prompt_string = "What is #{n * r} / #{n} ?"
     question.prompt = prompt_string
-    question.choice_0 = r
-    question.choice_1 = r + 1
-    question.choice_2 = r - 1
-    question.choice_3 = r - 2
-    question.choice_4 = 2 * r
+    question.choices = [r, r + 1, r - 1, r - 2, 2 * r]
     question.correct_answers = ["#{r}"]
     question.label = divide_label
     question.save
@@ -275,6 +264,14 @@ Label.second.pictures << Picture.third
     question.prompt = prompt_string
     question.correct_answers = ["#{r + s}"]
     question.label = add_label
+    question.save
+    
+    question = Question.new(:user => jeff, :extent => "public", :style => "select_many")
+    r = rand(12)
+    question.prompt = "Which of these expressions are equal to #{n} - #{r}"
+    question.choices = ["#{n} + -(#{r})", "-(#{r}) + #{n}", "-(#{n}) + #{r}"]
+    question.correct_answers = ["#{n} + -(#{r})", "-(#{r}) + #{n}"]
+    question.label = select_many_label
     question.save
 end
 

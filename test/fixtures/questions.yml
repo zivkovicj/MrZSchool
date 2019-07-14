@@ -3,12 +3,7 @@
 
   
 five_choices: &base_choices
-  choice_0: 0
-  choice_1: 1
-  choice_2: 2
-  choice_3: 3
-  choice_4: 4
-  choice_5: 5
+  choices: ["0","1","2","3","4","5"]
 
 one:
   style: multiple_choice

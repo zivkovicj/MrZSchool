@@ -27,7 +27,7 @@ class RipostesController < ApplicationController
                         backend_answer = stud_answer.map{|e| e.downcase.gsub(/\s+/, "")}
                     else
                         params[:stud_answer].each do |this_answer|
-                            stud_answer << @question.read_attribute(:"choice_#{this_answer}")
+                            stud_answer << @question.choices[this_answer.to_i]
                         end
                         correct_array = @question.correct_answers
                         backend_answer = stud_answer
@@ -38,7 +38,7 @@ class RipostesController < ApplicationController
                 end
             else
                 is_graded = 0
-                stud_answer = params[:stud_answer]
+                stud_answer = [params[:stud_answer]]
             end
         
             @riposte.update(:stud_answer => stud_answer, :tally => perc, :graded => is_graded)

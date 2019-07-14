@@ -259,7 +259,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         riposte_1 = quiz_1_ripostes[1]
         assert @quiz.points_still_to_grade > 0
         assert_equal 5, @quiz.total_score
-        assert_equal "Yesiree Bob", riposte_0.stud_answer
+        assert_equal ["Yesiree Bob"], riposte_0.stud_answer
         assert @seminar.reload.grading_needed
         
         assert_selector('h3', :text => "Your final score will be at least 5 stars.")

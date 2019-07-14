@@ -11,6 +11,7 @@ class QuestionsController < ApplicationController
     @labels = labels_to_offer()
     @created_by = current_user.full_name_with_title
     @grade_type = "computer"
+    @extent = "private"
   end
   
   def details
@@ -29,8 +30,7 @@ class QuestionsController < ApplicationController
       if params["questions"][n][:prompt].present?
         @question = Question.new(multi_params(params["questions"][n]))
         @question.user = current_user
-        ensure_essentials
-        set_correct_answers(params["questions"][n])
+        set_answers_and_choices(params["questions"][n])
         one_saved = true if @question.save
       end
     end
@@ -83,11 +83,10 @@ class QuestionsController < ApplicationController
 
   def update
     @question = Question.find(params[:id])
-    ensure_essentials
     @question.label_id = params[:label]
     @question.extent = params[:extent]
     @question.grade_type = params[:grade_type]
-    set_correct_answers(params["questions"]["0"])
+    set_answers_and_choices(params["questions"]["0"])
     if @question.update_attributes(multi_params(params["questions"]["0"]))
       flash[:success] = "Question Updated"
       redirect_to questions_path
@@ -109,8 +108,7 @@ class QuestionsController < ApplicationController
   
   private
     def multi_params(my_params)
-      my_params.permit(:prompt, :choice_0, :choice_1, :choice_2, :choice_3,
-        :choice_4, :choice_5, :user_id, :label_id, :extent, :style, :picture_id, :grade_type)
+      my_params.permit(:prompt, :user_id, :label_id, :extent, :style, :picture_id, :grade_type)
     end
     
     def create_question_group
@@ -120,27 +118,26 @@ class QuestionsController < ApplicationController
       end
     end
     
-    def ensure_essentials
-      @question.update(:choice_0 => "First Choice") if @question.choice_0.blank?
-      @question.update(:choice_1 => "Second Choice") if @question.choice_1.blank? if @question.style == "multiple-choice"
-    end
-    
-    def set_correct_answers(these_params)
+    def set_answers_and_choices(these_params)
       correct_array = []
+      choice_array = []
       if @question.style == "fill_in"
-        correct_array = (0..5).map { |n| these_params[:"choice_#{n}"] }.select(&:present?)
+        correct_array = these_params["choices"].reject { |c| c.empty? }
       else
-        these_params["is_correct"]&.each do |n|
-          correct_array << these_params["choice_#{n}"]
+        choice_array = these_params["choices"].reject { |c| c.empty? } # Removes the blank elements from the array
+        these_params["is_correct"]&.each do |correct_num|
+          this_answer = these_params["choices"][correct_num.to_i]
+          correct_array << this_answer unless this_answer.empty?
         end
       end
-      @question.update(:correct_answers => correct_array)
+      @question.update(:correct_answers => correct_array, :choices => choice_array)
     end
     
     def set_edit_variables
       @style = @question.style
       @grade_type = @question.grade_type
       @labels = labels_to_offer
+      @extent = @question.extent
       @pictures = @question.label.pictures
       set_permissions(@question)
     end

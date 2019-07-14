@@ -19,13 +19,13 @@
             <table>
                 <tr>
                     <td width="10%">
-                        <%= radio_button_tag "extent", "public", pub_check %>
+                        <%= radio_button_tag "extent", "public", @extent=="public" %>
                     </td>
                     <td>Public <%= "Question".pluralize(q_num) %></td>
                 </tr>
                 <tr>
                     <td width="10%">
-                        <%= radio_button_tag "extent", "private", priv_check %>    
+                        <%= radio_button_tag "extent", "private", @extent=="private" %>    
                     </td>
                     <td>Private <%= "Question".pluralize(q_num) %></td>
                 </tr>

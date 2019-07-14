@@ -44,8 +44,7 @@
             </tr>
             <tr>
               <td colspan = "3">
-                <% 6.times do |n| %>
-                  <% this_choice = question.read_attribute(:"choice_#{n}") %>
+                <% question.choices&.each_with_index do |this_choice, n| %>
                   <% if !(this_choice.blank?) %>
                     <% if n > 0 %>
                       , &nbsp;
