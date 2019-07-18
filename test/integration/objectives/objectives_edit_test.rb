@@ -38,7 +38,10 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     
     test "edit objective basic info" do 
         setup_objectives
+        
         assert_equal "public", @assign_to_add.extent
+        assert_equal topics(:integers), @assign_to_add.topic
+        root_topic = topics(:roots)
         
         capybara_login(@teacher_1)
         go_to_objective_show_page(@assign_to_add)
@@ -46,14 +49,36 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         fill_in "name", with: "Bunsen Burritos"
         find("#private_objective").choose
+        choose("topic_#{root_topic.id}")
         click_on "Save Changes"
         
         @assign_to_add.reload
-        
-        assert_on_objective_show_page(@assign_to_add)
-        
         assert_equal "Bunsen Burritos", @assign_to_add.name
         assert_equal "private", @assign_to_add.extent
+        assert_equal root_topic, @assign_to_add.topic
+        
+        assert_on_objective_show_page(@assign_to_add)
+    end
+    
+    test "default editing" do
+        setup_objectives 
+        
+        assert_equal "add integers on a number line", @assign_to_add.name
+        assert_equal "public", @assign_to_add.extent
+        assert_equal topics(:integers), @assign_to_add.topic
+        
+        capybara_login(@teacher_1)
+        go_to_objective_show_page(@assign_to_add)
+        click_on "Basic Info"
+        
+        click_on "Save Changes"
+        
+        @assign_to_add.reload
+        assert_equal "add integers on a number line", @assign_to_add.name
+        assert_equal "public", @assign_to_add.extent
+        assert_equal topics(:integers), @assign_to_add.topic
+        
+        assert_on_objective_show_page(@assign_to_add)
     end
     
     test "include files" do
@@ -100,8 +125,8 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     end
     
     test "include labels and quantities" do
-        setup_labels
         setup_objectives
+        setup_labels
         
         old_name = @own_assign.name    # To ensure that name isn't changed.  (That was happening with one version.)
         assert_not @own_assign.labels.include?(@user_l)
@@ -178,6 +203,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         @own_assign.reload
         assert_equal 0, @own_assign.labels.count
+        assert_equal old_label_objective_count - 1, LabelObjective.count
     end
     
     test "include seminars" do
@@ -241,10 +267,10 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         @own_assign.reload
         assert_equal 0, @own_assign.seminars.count
+        assert_equal old_objective_seminar_count - 1, ObjectiveSeminar.count
     end
     
     test "pre reqs" do
-        setup_objectives
         @remove_as_preassign = objectives(:objective_90)
         @sub_preassign = objectives(:objective_100)
         @preassign_to_add = objectives(:objective_110)
@@ -374,6 +400,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     
     test "pre req options 2" do
         setup_objectives
+        
         @super_objective = objectives(:objective_150)
             # But that mainassign SHOULD appear as an option for others
         capybara_login(@admin_user)
@@ -385,8 +412,8 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     end
         
     test "do not add prereq if seminar already has it" do
-        setup_seminars
         setup_objectives
+        setup_seminars
         
         @objective_80 = objectives(:objective_80)
         ObjectiveSeminar.create(:seminar_id => @seminar.id, :objective_id => @objective_80.id)
@@ -428,8 +455,8 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     end
     
     test "teacher views public objective" do
-        setup_seminars
         setup_objectives
+        setup_seminars
         
         assert @seminar.objectives.include?(@objective_20)
         capybara_login(@teacher_1)

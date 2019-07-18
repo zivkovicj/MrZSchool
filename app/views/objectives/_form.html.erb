@@ -1,14 +1,50 @@
 <%= form_for(@objective) do |a| %>
     
     <%= render 'shared/error_messages', object: @objective %>
-  
     <%= a.hidden_field :which_params, :value => "name" %>
   
-    <div class="singleOption">
-      </br>
-      <%= render 'shared/name_in_form', form: a, submitted_placeholder: nil %>
-      <%= render 'shared/user_and_extent', form: a %>
+    <div class="row">
+      <div class="col-sm-5 singleOption">
+        </br>
+        <%= render 'shared/name_in_form', :form => a, :submitted_placeholder => nil %>
+        </br>
+        <%= render 'shared/user_and_extent', form: a %>
+      </div>
+      
+      <div class="col-sm-1"></div>
+      
+      <div class="col-sm-5 singleOption">
+        <h2 class="collapsing_topics">Topic</h2>
+
+          <% @fields.each do |field| %>
+            <% field_name = field.name %>
+            <div class="singleOption field_cell center" which_field="<%= field_name %>">
+              <h3><%= field_name %></h3>
+            </div>
+            <% field.domains.order(:name).each do |domain| %>
+              <% domain_name = domain.name %>
+              <table class="center">
+                <tr>
+                  <td colspan="2" class="center domain_cell domain_from_field_<%= field_name %> currently_hidden" 
+                    style="min-width:200px" which_domain="<%= domain_name %>">
+                    <%= domain_name %>
+                  </td>
+                </tr>
+                <% domain.topics.each do |topic| %>
+                  <tr class="topic_from_field_<%= field_name %> topic_from_domain_<%= domain_name %> topic_row currently_hidden">
+                    <td class="center width="20px">
+                      <%= a.radio_button :topic_id, topic.id, :id => "topic_#{topic.id}" %>
+                    </td>
+                    <td><%= a.label :topic_id, topic.name %></td>
+                  </tr>
+                <% end %>
+              </table>
+              </br>
+            <% end %>
+          <% end %>
+      </div>
     </div>
+    
     </br>
   
     <%= a.submit yield(:button_text), class: "btn btn-primary" %>

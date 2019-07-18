@@ -5,7 +5,7 @@ class Label < ApplicationRecord
   has_many  :pictures, through: :label_pictures
   has_many :label_objectives, dependent: :destroy
   has_many :objectives, through: :label_objectives
-  
+  delegate    :topic, :to => :objective, :allow_nil => false
   
   validates :name, :presence => true
   

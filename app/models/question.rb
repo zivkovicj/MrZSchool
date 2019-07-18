@@ -20,18 +20,6 @@ class Question < ApplicationRecord
     prompt[0,45]
   end
   
-  def fill_new_choices 
-    choice_array = []
-    6.times do |n|
-      choice_array << self.read_attribute(:"choice_#{n}")
-    end
-    self.update(:choices => choice_array)
-  end
-  
   private
-  
-
-        
-  
     
 end

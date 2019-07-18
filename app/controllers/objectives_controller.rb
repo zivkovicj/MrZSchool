@@ -16,6 +16,7 @@ class ObjectivesController < ApplicationController
   
   def create
     @objective = Objective.new(objective_params_basic)
+    
     if @objective.save
       flash[:success] = "Objective Created"
       redirect_to objective_path(@objective)
@@ -49,6 +50,7 @@ class ObjectivesController < ApplicationController
 
   def edit
     @objective = Objective.find(params[:id])
+    @fields = Field.includes(domains: :topics)
     set_permissions(@objective)
   end
 
@@ -73,6 +75,7 @@ class ObjectivesController < ApplicationController
       params_to_use = objective_params_worksheets
       @objective.worksheet_ids = [] if params[:objective][:worksheet_ids].nil?
     end
+    
     
     if @objective.update_attributes(params_to_use)
       pre_reqs_and_set_ready
@@ -148,7 +151,7 @@ class ObjectivesController < ApplicationController
   
   private
     def objective_params_basic
-        params.require(:objective).permit(:name, :extent, :user_id)
+        params.require(:objective).permit(:name, :extent, :user_id, :topic_id)
     end
     
     def objective_params_labels
@@ -190,6 +193,7 @@ class ObjectivesController < ApplicationController
       @objective.name = "Objective #{Objective.count}"
       @objective.user = current_user
       @labels = labels_to_offer
+      @fields = Field.includes(domains: :topics)
       set_permissions(@objective)
       @pre_req_list = build_pre_req_list(@objective)
     end

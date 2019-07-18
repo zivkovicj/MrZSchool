@@ -34,12 +34,15 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     end
     
     test "user creates objective" do
+        first_topic = Topic.first
+        
         capybara_login(@teacher_1)
         go_to_new_objective
         
         name = "009 Compare Unit Rates"
         fill_in "name", with: name
         find("#public_objective").choose
+        choose("topic_#{first_topic.id}")
         click_on('Create a New Objective')
         
         assert_text name
@@ -49,6 +52,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert_equal name, @new_objective.name
         assert_equal @teacher_1, @new_objective.user
         assert_equal "public", @new_objective.extent
+        assert_equal Topic.first, @new_objective.topic
     end
     
     test "admin creates objective" do

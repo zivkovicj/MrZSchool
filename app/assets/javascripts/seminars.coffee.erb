@@ -432,6 +432,32 @@ ready = ->
             callback = -> 
                 $(".r"+next_row+"c"+next_col).select()
             setTimeout callback, 10
+            
+    if $('.collapsing_topics').length > 0
+        $('.topic_row').slideUp()
+        $('.domain_cell').slideUp()
+     
+        $('.field_cell').on "click", ->
+            which_field = $(this).attr('which_field')
+           
+            if ($(this).hasClass('expanded'))
+                $('.topic_from_field_'+which_field).slideUp()
+                $('.domain_from_field_'+which_field).slideUp()
+                $(this).removeClass('expanded')
+            else 
+                $('.domain_from_field_'+which_field).slideDown()
+                $(this).addClass('expanded')
+                
+        $('.domain_cell').on "click", ->
+            which_domain = $(this).attr('which_domain')
+            
+            if ($(this).hasClass('expanded'))
+                $('.topic_from_domain_'+which_domain).slideUp()
+                $(this).removeClass('expanded')
+            else 
+                $('.topic_from_domain_'+which_domain).slideDown()
+                $(this).addClass('expanded')
+            
     
     
 $(document).on('turbolinks:load', ready)

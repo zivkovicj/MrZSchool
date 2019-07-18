@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190709193823) do
+ActiveRecord::Schema.define(version: 20190715041455) do
 
   create_table "checkpoints", force: :cascade do |t|
     t.integer  "goal_student_id"
@@ -29,12 +29,12 @@ ActiveRecord::Schema.define(version: 20190709193823) do
     t.integer  "school_id"
     t.integer  "user_id"
     t.integer  "production_rate"
-    t.decimal  "current_price",      precision: 2, scale: 2
+    t.integer  "current_price"
     t.integer  "production_day"
     t.integer  "quantity"
     t.datetime "date_last_produced"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.boolean  "deliverable"
     t.boolean  "salable"
     t.boolean  "usable"
@@ -79,6 +79,20 @@ ActiveRecord::Schema.define(version: 20190709193823) do
     t.index ["school_id"], name: "index_currencies_on_school_id"
     t.index ["seminar_id"], name: "index_currencies_on_seminar_id"
     t.index ["user_id"], name: "index_currencies_on_user_id"
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "field_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["field_id"], name: "index_domains_on_field_id"
+  end
+
+  create_table "fields", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "goal_students", force: :cascade do |t|
@@ -185,8 +199,13 @@ ActiveRecord::Schema.define(version: 20190709193823) do
     t.string   "name"
     t.string   "extent"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.string   "catchy_name"
+    t.integer  "objective_number"
+    t.integer  "grade_level"
+    t.integer  "topic_id"
+    t.index ["topic_id"], name: "index_objectives_on_topic_id"
     t.index ["user_id"], name: "index_objectives_on_user_id"
   end
 
@@ -214,12 +233,6 @@ ActiveRecord::Schema.define(version: 20190709193823) do
     t.integer  "label_id"
     t.integer  "picture_id"
     t.text     "correct_answers"
-    t.string   "choice_0"
-    t.string   "choice_1"
-    t.string   "choice_2"
-    t.string   "choice_3"
-    t.string   "choice_4"
-    t.string   "choice_5"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "grade_type"
@@ -342,6 +355,12 @@ ActiveRecord::Schema.define(version: 20190709193823) do
     t.index ["team_id"], name: "index_teams_users_on_team_id"
     t.index ["user_id", "team_id"], name: "index_teams_users_on_user_id_and_team_id"
     t.index ["user_id"], name: "index_teams_users_on_user_id"
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.string  "name"
+    t.integer "domain_id"
+    t.index ["domain_id"], name: "index_topics_on_domain_id"
   end
 
   create_table "users", force: :cascade do |t|

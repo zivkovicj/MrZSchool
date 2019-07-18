@@ -1172,26 +1172,61 @@ aqui
 2.97 DOMAINS
 Remove choice columns
 Delete the method for populating the new choice column
-Domain
+VT Field
     Name
-    Has_many subdomains
+    Has_many domains
+    Has_many topics through domains
+VT Domain
+    Name
+    Belongs_to field
+    Has_many topics
     Has_many objectives through subdomains
-Subdomain
+VT Topic
     Name
     Belongs_to domain
     Has_many objectives
-Objective
-    Rename name to formal_name
+VT Objective
     Catchy name
-    Index number
-    Belongs_to subdomain
-Rename label to subobjective
-    Check everywhere in code that "label" is used
-Show domain, sub, and catchy name when a student checks her score
+    Objective number
+    Belongs_to topic
+    Grade Level
+VT Update seeds for all of the above
+VT Choose topic when creating an objective
+VT Edit the topic of an objective.
+VT Default topic when editing
+ 
 
+LABELS BY TOPIC
+Make an extra page for choosing the topic when creating new questions
+On this page, include an expanding label menu, like in the objective form
+
+What if editing an objective fails, where to reroute the user?
+
+Ask on Stack about why includes doesn't seem to make a difference
+
+
+CATCHY NAME IN FORMS 
+Update catchy names of existing objectives
+    For now, just make them all match
+
+
+
+OBJECTIVE INFO ON STUDENT SCORE PAGE
+Show domain, topic, and catchy name when a student checks her score
+
+OBJECTIVE INFO ON CLASS OBJECTIVE SCREEN
 
 CRUD DOMAINS
-Only admin
+Fields
+Domains
+Topics
+    Only admin
+
+ANNOUNCE TO STUDENTS WHEN THEY HAVE UNLOCKED A NEW OBJECTIVE
+
+
+
+
 
 
 NAME-SHOWING OPTION
@@ -1202,13 +1237,14 @@ Option to show either objective name or both names
         In objective-adding-to-class page
         In index
         
-SORT OBJECTIVES BY SUBDOMAIN
+SORT OBJECTIVES BY TOPIC
     Use this in objective index
 
-SORT PICTURES BY SUBDOMAIN
+SORT PICTURES BY TOPIC
     
 OPTION TO NOT SHUFFLE ANSWER CHOICES
 
+RENAME LABEL TO SUBOBJECTIVE ON FRONT END
 
 QUIZ SCORE CALCULATION
 Should calculate the final quiz results before going to the quiz show page.

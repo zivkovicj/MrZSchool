@@ -19,10 +19,12 @@ class Objective < ApplicationRecord
     has_many    :quizzes, dependent: :destroy
     
     belongs_to  :user
+    belongs_to  :topic
+    delegate    :domain, :to => :topic, :allow_nil => false
     
     attribute   :extent, :string, default: "private"
     
-    validates :name, presence: true, length: { maximum: 40 }
+    validates   :name, presence: true, length: { maximum: 40 }
     
     include ModelMethods
     

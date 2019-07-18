@@ -5,7 +5,7 @@ class QuestionTest < ActiveSupport::TestCase
   
   def setup
     @question = Question.new(prompt: "How many how manys?", extent: "private",
-          choice_1: "Beef", choice_2: "Stroganoff")
+          choices: ["Beef", "Stroganoff"])
     
   end
   

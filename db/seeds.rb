@@ -80,17 +80,53 @@ sem_3 = Seminar.create!(name: "Another Teacher, First Period", user_id: 6, consu
 sem_1.teachers << Teacher.find(5)
 sem_2.teachers << Teacher.find(5)
 sem_3.teachers << Teacher.find(6)
-                
-# objectives
 
-assignNameArray = [[1,"Add and Subtract Numbers"],[1,"Multiply and Divide Numbers"],
-    [1,"Numbers Summary"],
-    [1,"Intercept"], [1,"Slope"], [1,"Scatterplots"], [1,"Association"],
-    [1,"One-step Equations"], [2,"Integers"], [2,"Volume"], [2,"Fractions"], [2,"Rationals"], 
-    [2,"Irrationals"], [3,"Volcanos"], [3,"Evolution"], [3,"Taxonomy"], [3,"Cells"], [3,"Anatomy"]]
+# Fields
+
+f1 = Field.create(:name => "Mathematics")
+f2 = Field.create(:name => "Science")
+f3 = Field.create(:name => "Misc.")
+
+# Domains
+
+d1 = Domain.create(:name => "Numbers", :field => f1)
+d2 = Domain.create(:name => "Geometry", :field => f1)
+d3 = Domain.create(:name => "Other Mathematics", :field => f1)
+d4 = Domain.create(:name => "Biology", :field => f2)
+
+# Topics
+
+t1= Topic.create(:name => "Integers", :domain => d1)
+t2 = Topic.create(:name => "Roots", :domain => d1)
+t3 = Topic.create(:name => "Transformations", :domain => d2)
+t4 = Topic.create(:name => "Pythagorean Theorem", :domain => d2)
+t5 = Topic.create(:name => "Other Math Topics", :domain => d3)
+t6 = Topic.create(:name => "Anatomy", :domain => d4)
+t7 = Topic.create(:name => "Cells", :domain => d4)
+       
+# Objectives
+
+assignNameArray = [[1,"Add and Subtract Numbers", "Addy Subby", t1, 7],
+    [1,"Multiply and Divide Numbers", "Multy Divvy", t1, 7],
+    [1,"Numbers Summary", "Numb Sumb", t1, 7],
+    [1,"Intercept", "Catch!", t5, 7],
+    [1,"Slope","Whee!", t5, 8],
+    [1,"Scatterplots", "Bladderspots", t5, 8],
+    [1,"Association", "Don't", t5, 8],
+    [1,"One-step Equations", "One-Steppers", t5, 7],
+    [2,"Integers", "Intergers", t1, 8],
+    [2,"Volume", "Loud!",  t5, 6],
+    [2,"Fractions", "So hard!", t5, 6],
+    [2,"Rationals", "Rats! Rats! Rats!", t5, 8], 
+    [2,"Irrationals", "Eye-Rats!", t5, 8],
+    [3,"Volcanos", "Eldon Volcanado", t5, 8],
+    [3,"Evolution", "is Fake", t5, 10],
+    [3,"Taxonomy", "Tamoxony", t5, 7],
+    [3,"Intro to Cells", "Sales", t7, 7],
+    [3,"Human Anatomy", "A Manatee", t6, 10]]
     
 assignNameArray.each_with_index do |objective, index|
-    @objective = Objective.create(name: objective[1], :user => jeff, :extent => "public")
+    @objective = Objective.create(:name => objective[1], :catchy_name => objective[2], :topic => objective[3], :user => jeff, :extent => "public", :grade_level => objective[4])
     ObjectiveSeminar.create(:seminar_id => objective[0], :objective => @objective, :priority => 2, :pretest => 0)
 end
 
@@ -200,7 +236,7 @@ LabelObjective.create(:label => multiply_label, :objective => sum_obj,
 LabelObjective.create(:label => divide_label, :objective => sum_obj,
     :quantity => 1, :point_value => 400)
 LabelObjective.create(:label => select_many_label, :objective => add_and_sub_obj,
-    :quantity -> 1, :point_value => 200)
+    :quantity => 1, :point_value => 200)
 
 pic_array = [["Labels", "app/assets/images/labels.png"],
     ["Objectives", "app/assets/images/objectives.png"],
