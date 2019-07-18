@@ -1,4 +1,4 @@
-class AddCatchyNameToObjective < ActiveRecord::Migration[5.0]
+class AddCatchyNameToObjectives < ActiveRecord::Migration[5.0]
   def change
     add_column  :objectives, :catchy_name, :string
     add_column  :objectives, :objective_number, :integer
