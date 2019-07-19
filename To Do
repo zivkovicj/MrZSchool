@@ -1167,42 +1167,22 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 
 
 aqui
-
-
-2.97 DOMAINS
-Remove choice columns
-Delete the method for populating the new choice column
-VT Field
-    Name
-    Has_many domains
-    Has_many topics through domains
-VT Domain
-    Name
-    Belongs_to field
-    Has_many topics
-    Has_many objectives through subdomains
-VT Topic
-    Name
-    Belongs_to domain
-    Has_many objectives
-VT Objective
-    Catchy name
-    Objective number
-    Belongs_to topic
-    Grade Level
-VT Update seeds for all of the above
-VT Choose topic when creating an objective
-VT Edit the topic of an objective.
-VT Default topic when editing
  
 
-LABELS BY TOPIC
+2.98 LABELS BY TOPIC
+
 Make an extra page for choosing the topic when creating new questions
 On this page, include an expanding label menu, like in the objective form
 
 What if editing an objective fails, where to reroute the user?
 
 Ask on Stack about why includes doesn't seem to make a difference
+
+Precompile to make sure that javascript works
+
+
+
+
 
 
 CATCHY NAME IN FORMS 

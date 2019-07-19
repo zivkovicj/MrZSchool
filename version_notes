@@ -22,6 +22,35 @@ Between each update, manually test:
 
 
 
+2.97 DOMAINS
+Remove choice columns
+Delete the method for populating the new choice column
+Field
+    Name
+    Has_many domains
+    Has_many topics through domains
+Domain
+    Name
+    Belongs_to field
+    Has_many topics
+    Has_many objectives through subdomains
+Topic
+    Name
+    Belongs_to domain
+    Has_many objectives
+Objective
+    Catchy name
+    Objective number
+    Belongs_to topic
+    Grade Level
+Update seeds for all of the above
+Choose topic when creating an objective
+Edit the topic of an objective.
+Default topic when editing
+
+
+
+
 
 
 2.96 FIX STORAGE OF QUESTION CHOICES
