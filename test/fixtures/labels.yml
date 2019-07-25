@@ -43,3 +43,11 @@ teacher_graded_label_2:
 select_many_label:
   name: select_many_label
   extent: public
+  
+intro_to_pythag:
+  name: Intro to the Pythagorean Theorem
+  extent: public
+  
+rotations:
+  name: Rotations
+  extent: public

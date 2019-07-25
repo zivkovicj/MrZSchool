@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190715041455) do
+ActiveRecord::Schema.define(version: 20190719162757) do
 
   create_table "checkpoints", force: :cascade do |t|
     t.integer  "goal_student_id"
@@ -151,6 +151,13 @@ ActiveRecord::Schema.define(version: 20190715041455) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_labels_on_user_id"
+  end
+
+  create_table "labels_topics", id: false, force: :cascade do |t|
+    t.integer "label_id", null: false
+    t.integer "topic_id", null: false
+    t.index ["label_id", "topic_id"], name: "index_labels_topics_on_label_id_and_topic_id"
+    t.index ["topic_id", "label_id"], name: "index_labels_topics_on_topic_id_and_label_id"
   end
 
   create_table "objective_seminars", force: :cascade do |t|

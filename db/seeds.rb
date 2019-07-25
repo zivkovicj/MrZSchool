@@ -93,6 +93,8 @@ d1 = Domain.create(:name => "Numbers", :field => f1)
 d2 = Domain.create(:name => "Geometry", :field => f1)
 d3 = Domain.create(:name => "Other Mathematics", :field => f1)
 d4 = Domain.create(:name => "Biology", :field => f2)
+d5 = Domain.create(:name => "Functions", :field => f1)
+d6 = Domain.create(:name => "Misc.", :field => f3)
 
 # Topics
 
@@ -103,6 +105,11 @@ t4 = Topic.create(:name => "Pythagorean Theorem", :domain => d2)
 t5 = Topic.create(:name => "Other Math Topics", :domain => d3)
 t6 = Topic.create(:name => "Anatomy", :domain => d4)
 t7 = Topic.create(:name => "Cells", :domain => d4)
+t8 = Topic.create(:name => "Intercept", :domain => d5)
+t9 = Topic.create(:name => "Misc.", :domain => d6)
+
+
+
        
 # Objectives
 
@@ -199,8 +206,8 @@ Student.all.each do |student|
     end
 end
 
-Label.create(:name => "Label for Pictures", :extent => "public", :user => jeff)
-Label.create(:name => "Other Label for Pictures", :extent => "public", :user => jeff)
+label_for_pictures = Label.create(:name => "Label for Pictures", :extent => "public", :user => jeff)
+other_label_for_pictures = Label.create(:name => "Other Label for Pictures", :extent => "public", :user => jeff)
 
 add_label = Label.create(:name => "Adding Numbers", :extent => "public", :user => jeff)
 subtract_label = Label.create(:name => "Subtracting Numbers", :extent => "public", :user => jeff)
@@ -209,9 +216,23 @@ divide_label = Label.create(:name => "Dividing Numbers", :extent => "public", :u
 select_many_label = Label.create(:name => "Which Expressions are Equal", :extent => "public", :user => jeff)
 
 teacher_user = Teacher.first
-Label.create(:name => "Intercept from Graphs", :extent => "public", :user => teacher_user)
-Label.create(:name => "Intercept from Equations", :extent => "public", :user => teacher_user)
-Label.create(:name => "Intercept from Tables", :extent => "public", :user => teacher_user)
+intercept_from_graphs_label = Label.create(:name => "Intercept from Graphs", :extent => "public", :user => teacher_user)
+intercept_from_equations_label = Label.create(:name => "Intercept from Equations", :extent => "public", :user => teacher_user)
+intercept_from_tables_label = Label.create(:name => "Intercept from Tables", :extent => "public", :user => teacher_user)
+
+
+# Add labels to topics
+
+t1.labels << add_label
+t1.labels << subtract_label
+t1.labels << multiply_label
+t1.labels << divide_label
+t2.labels << select_many_label
+t8.labels << intercept_from_graphs_label
+t8.labels << intercept_from_equations_label
+t8.labels << intercept_from_tables_label
+t9.labels << label_for_pictures
+t9.labels << other_label_for_pictures
 
 add_and_sub_obj = Objective.find_by(:name => "Add and Subtract Numbers")
 mult_and_div_obj = Objective.find_by(:name => "Multiply and Divide Numbers")

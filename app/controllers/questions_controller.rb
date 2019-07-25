@@ -10,6 +10,7 @@ class QuestionsController < ApplicationController
   def new
     @labels = labels_to_offer()
     @created_by = current_user.full_name_with_title
+    @fields = fields_list
     @grade_type = "computer"
     @extent = "private"
   end
@@ -139,6 +140,7 @@ class QuestionsController < ApplicationController
       @labels = labels_to_offer
       @extent = @question.extent
       @pictures = @question.label.pictures
+      @fields = fields_list
       set_permissions(@question)
     end
     

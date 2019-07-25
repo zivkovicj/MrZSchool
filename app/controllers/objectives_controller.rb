@@ -50,7 +50,7 @@ class ObjectivesController < ApplicationController
 
   def edit
     @objective = Objective.find(params[:id])
-    @fields = Field.includes(domains: :topics)
+    @fields = fields_list
     set_permissions(@objective)
   end
 

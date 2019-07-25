@@ -1,0 +1,9 @@
+
+<% topic_id = topic.id %>
+
+<tr class="topic_from_field_<%= field_name %> topic_from_domain_<%= domain_name %> topic_cell currently_hidden">
+  <td class="center" width="20px">
+    <%= form.radio_button :topic_id, topic_id, :id => "topic_#{topic_id}" %>
+  </td>
+  <td><%= form.label :topic_id, topic.name %></td>
+</tr>

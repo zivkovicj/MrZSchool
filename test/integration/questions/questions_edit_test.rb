@@ -61,6 +61,9 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert_not @user_q.correct_answers.include?("3")
         assert_equal "private", @user_q.extent
         assert_equal @user_l, @user_q.label
+        t1 = @admin_l.topics.first  # Since this label had two topics, capybara couldn't choose one.  This solution is not ideal.
+        @admin_l.topics.delete(t1)
+
         
         goto_mc_question
         not_on_show_page

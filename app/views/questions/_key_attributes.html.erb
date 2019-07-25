@@ -62,17 +62,9 @@
                 <h3>Style: <%= @question.style.capitalize %></h3>
             <% end %>
         </div>
-        
-        <% default_label = action_name == "new" ? Label.find(1) : @question.label %>
+    
         <div class="col-sm-6">
-            <h2>Label</h2>
-            <table>
-                <% @labels.each do |lab| %><tr>
-                    <% checkery = lab == default_label ? "checked" : "" %>
-                    <td width="20%"><input type="radio" name="label" id="label_<%= lab.id %>" value=<%= lab.id %> <%= checkery %> /></td>
-                    <td><%= lab.name %></td>
-                </tr><% end %>
-            </table>
+            <%= render 'shared/topic_picker/topic_picker', lowest_layer: "label" %>
         </div>
     </div>
 </div>

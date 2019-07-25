@@ -15,3 +15,11 @@ geometry:
 evolution:
     name: Evolution
     field: science
+    
+miscellaneous:
+    name: Miscellaneous
+    field: miscellanous
+    
+test_domain:
+    name: Test Domains
+    field: miscellaneous

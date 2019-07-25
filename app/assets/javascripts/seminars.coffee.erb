@@ -39,7 +39,6 @@ ready = ->
     if $('#add-more-button').length > 0
         timesClicked = 1
         $('#add-more-button').on "click", ->
-            console.log(timesClicked)
             $(".click-" + timesClicked).removeClass("currently_hidden")
             timesClicked = timesClicked + 1
             if timesClicked == 4
@@ -434,15 +433,17 @@ ready = ->
             setTimeout callback, 10
             
     if $('.collapsing_topics').length > 0
-        $('.topic_row').slideUp()
         $('.domain_cell').slideUp()
+        $('.topic_cell').slideUp()
+        $('.label_cell').slideUp()
      
         $('.field_cell').on "click", ->
             which_field = $(this).attr('which_field')
            
             if ($(this).hasClass('expanded'))
-                $('.topic_from_field_'+which_field).slideUp()
                 $('.domain_from_field_'+which_field).slideUp()
+                $('.topic_from_field_'+which_field).slideUp()
+                $('.label_from_field_'+which_field).slideUp()
                 $(this).removeClass('expanded')
             else 
                 $('.domain_from_field_'+which_field).slideDown()
@@ -453,9 +454,21 @@ ready = ->
             
             if ($(this).hasClass('expanded'))
                 $('.topic_from_domain_'+which_domain).slideUp()
+                $('.label_from_domain_'+which_domain).slideUp()
                 $(this).removeClass('expanded')
             else 
                 $('.topic_from_domain_'+which_domain).slideDown()
+                $(this).addClass('expanded')
+                
+        $('.topic_cell').on "click", ->
+            which_topic = $(this).attr('which_topic')
+            console.log(which_topic)
+            
+            if ($(this).hasClass('expanded'))
+                $('.label_from_topic_'+which_topic).slideUp()
+                $(this).removeClass('expanded')
+            else 
+                $('.label_from_topic_'+which_topic).slideDown()
                 $(this).addClass('expanded')
             
     

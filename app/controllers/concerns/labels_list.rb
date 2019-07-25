@@ -6,4 +6,8 @@ module LabelsList
       return labels_list.order(:name)
     end
     
+    def fields_list
+      Field.includes(domains: :topics)
+    end
+    
 end
