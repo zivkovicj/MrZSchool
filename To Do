@@ -1178,54 +1178,21 @@ VT Fixtures for Label and Topic
 VT When creating/editing a question, include an expanding label menu, like in the objective form.
     VT Labels are sorted under topics.
 
- FAIL["test_take_keys_for_perfect_score", Minitest::Result, 17.109091713999987]
- test_take_keys_for_perfect_score#Minitest::Result (17.11s)
-        Expected: 10
-          Actual: 8
-        test/integration/seminars/seminars_scoresheet_test.rb:76:in `block in <class:SeminarsScoresheetTest>'
+
+Might need to update the development database so that I can see how the associations are working before I push again to heroku.
+
+You only have 7.5G of total space. Your /etc folder is using up 3.7G, which seems like waaaay too much, and your home directory is 1.3G. Use du -sh * on each of these directories to find out what is using so much space in them and delete them if they are no longer needed. For example, items in your ~/Downloads folder, old logs in /var/log, or whatever is chewing up so much space in /etc.
 
 
 
 
-one_one:
-    label: admin_label
-    topic: test_topic
-    
-one_two:
-    label: admin_label
-    topic:  transformations
-    
-two_one:
-    label: rotations
-    topic: transformations
-    
-three_whatever:
-    label: user_label
-    topic: test_topic
-    
-other_label_public_labels_topic:
-    label: other_label_public
-    topic: test_topic
-    
-unlabeled_label_labels_topic:
-    label_id: 1
-    topic: test_topic
-    
-fill_in_label_labels_topic:
-    label: fill_in_label
-    topic: test_topic
 
+MATERIALS PAGE ORGANIZES ALL WORKSHEETS BY TOPIC
 
 What if editing an objective fails, where to reroute the user?
 
 Ask on Stack about why includes doesn't seem to make a difference
 
-Precompile to make sure that javascript works
-
-
-TOPIC FOR WORKSHEETS
-
-MATERIALS PAGE ORGANIZES ALL WORKSHEETS BY TOPIC
 
 TOPIC CHECKLIST UPON CREATING/EDITING A LABEL
 
