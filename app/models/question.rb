@@ -47,7 +47,7 @@ class Question < ApplicationRecord
         if Question.where(:prompt => this_prompt).count == 0 then
           Question.create(:style => "fill_in", :prompt => this_prompt,
                           :extent => "public", :label => this_label,
-                          :correct_answers => ["#{first_num * second_num}"], :grade_type => "computer"
+                          :correct_answers => ["#{first_num * second_num}"], :grade_type => "computer",
                           :user_id => 1)
           end
       end
@@ -59,7 +59,7 @@ class Question < ApplicationRecord
         if Question.where(:prompt => this_prompt).count == 0 then
           Question.create(:style => "fill_in", :prompt => this_prompt,
                           :extent => "public", :label => this_label,
-                          :correct_answers => ["#{first_num * second_num}"], :grade_type => "computer"
+                          :correct_answers => ["#{first_num * second_num}"], :grade_type => "computer",
                           :user_id => 1)
           end
       end
