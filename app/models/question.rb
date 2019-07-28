@@ -23,10 +23,18 @@ class Question < ApplicationRecord
   def create_multiplication_questions
     mult_topic = Topic.find_by(:name => "Multiplication")
     
-    [0,1,2,3,4,5,6,7,8,9,10].each do |first_num|
-      this_label = Label.find_or_create_by(:name => "Simple Multiply by #{first_num}")
+    [0,1,2,3,4,5,6,7,8,9,10,11,12].each do |first_num|
+      # Addition for updating
+      label_to_delete = Label.find_by(:name => "Simple Multiply by #{first_num}")
+      if label_to_delete.present?
+        label_to_delete.questions.each do |question|
+          question.destroy
+        end
+        label_to_delete.destroy
+      end
+      this_label = Label.create(:name => "Simple Multiply by #{first_num}")
       mult_topic.labels << this_label if !mult_topic.labels.include?(this_label)
-      [0,1,2,3,4,5,6,7,8,9,10].each do |second_num|
+      [0,1,2,3,4,5,6,7,8,9,10,11,12].each do |second_num|
         this_prompt = "#{first_num} * #{second_num} = ____"
         if Question.where(:prompt => this_prompt).count == 0 then
           Question.create(:style => "fill_in", :prompt => this_prompt,
