@@ -87,23 +87,22 @@ Get in the habit of precompiling before pushing to heroku
 
 
 ******************************************
-IMPORTANT UPDATES FOR SUMMER 2019
+MOST IMPORTANT UPDATES
 ******************************************
 Prepare Pitch Materials
 Decide how/when to approach Instructure or MasteryConnect
 Errors, fixes, and tests (see below)
 Tests to Add
-Market suggestions from Mr. Korn
 Materials Site (Easier browsing of all study guides and Materials)
 Solid plan for public objectives and questions
-Huge list of labels for questions
 Write Update Plan
 Default Term Date Plan
-Teacher-graded questions
-Students can flag a question for the teacher to take another look.  Or suggest an improvement.  
+Students can flag a question for the teacher to take another look.  Or suggest an improvement.
+	Show question number when student sees the question
+	And in index  
 Objectives need official names and catchy names
     And system numbers, and domain labels (Alg, Geom, Elec)
-Allow for teachers to see and edit student passwords
+Allow for teachers to edit student passwords
 Small, important visuals
 Consultant points as a method of determining consultant topics
 Desk Consultants Improvements (See Below)
@@ -113,12 +112,12 @@ Multiple-correct questions
 Reports for quizzes and unused keys
 List of missed questions
 Quiz Editing
-Edit Questions
+Edit Multiple Questions
 Spiral Review
 “I don’t want the rest of my keys to this objective”
 Sign up Mr. Z School to receive BAT
 End-of-term Stuff
-Track teacher supplies to prevent too many consultant groups for a topic that needs supplies. 
+Track teacher supplies to prevent too many consultant groups for a topic that needs supplies
 Archive Classes
 
 
@@ -126,7 +125,7 @@ Archive Classes
 
 
 ****************************************
-UPDATE WISHLIST, SUMMER 2019
+UPDATE WISHLIST
 ****************************************
 
 Less-important small fixes
@@ -1166,32 +1165,10 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 
 
 
-aqui
  
 
-2.98 LABELS BY TOPIC
-
-VT Topic habtm label
-VT Label habtm topic
-VT Seeds for Label and Topic
-VT Fixtures for Label and Topic
-VT When creating/editing a question, include an expanding label menu, like in the objective form.
-    VT Labels are sorted under topics.
 
 
-Might need to update the development database so that I can see how the associations are working before I push again to heroku.
-
-You only have 7.5G of total space. Your /etc folder is using up 3.7G, which seems like waaaay too much, and your home directory is 1.3G. Use du -sh * on each of these directories to find out what is using so much space in them and delete them if they are no longer needed. For example, items in your ~/Downloads folder, old logs in /var/log, or whatever is chewing up so much space in /etc.
-
-
-
-
-
-MATERIALS PAGE ORGANIZES ALL WORKSHEETS BY TOPIC
-
-What if editing an objective fails, where to reroute the user?
-
-Ask on Stack about why includes doesn't seem to make a difference
 
 
 TOPIC CHECKLIST UPON CREATING/EDITING A LABEL
@@ -1199,6 +1176,19 @@ TOPIC CHECKLIST UPON CREATING/EDITING A LABEL
 Offer topic checklist upon creating a label
 Topic checklist upon editing a label
 When a label is added to an objective, add that label to the objective's topic
+
+
+
+
+
+MATERIALS PAGE ORGANIZES ALL WORKSHEETS BY TOPIC
+
+Worksheets are grouped by the topic of their objective
+What if editing an objective fails, where to reroute the user?
+Ask on Stack about why includes doesn't seem to make a difference
+
+
+
 
 
 CATCHY NAME IN FORMS 

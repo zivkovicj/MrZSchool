@@ -22,6 +22,18 @@ Between each update, manually test:
 
 
 
+2.98 LABELS BY TOPIC
+
+Topic habtm label
+Label habtm topic
+Seeds for Label and Topic
+Fixtures for Label and Topic
+When creating/editing a question, include an expanding label menu, like in the objective form.
+Labels are sorted under topics.
+
+
+
+
 2.97 DOMAINS
 Remove choice columns
 Delete the method for populating the new choice column
