@@ -61,10 +61,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert_not @user_q.correct_answers.include?("3")
         assert_equal "private", @user_q.extent
         assert_equal @user_l, @user_q.label
-        t1 = @admin_l.topics.first  # Since this label had two topics, capybara couldn't choose one.  This solution is not ideal.
-        @admin_l.topics.delete(t1)
 
-        
         goto_mc_question
         not_on_show_page
         assert_no_selector('input', :id => "style_multiple-choice") # Counterpart is in the questions_new_test
@@ -73,7 +70,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         fill_prompt(0)
         fill_choice(0,0)
         choose('question_0_is_correct_3')
-        choose("extent_public")
+        choose("questions_0_extent_public")
         choose("label_#{@admin_l.id}")
         choose("question_0_picture_#{@user_p.id}")
         click_on("save_changes_2")

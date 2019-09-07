@@ -21,12 +21,15 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
     end
     
     test "create new label" do
+        setup_topics
         old_label_count = Label.count
         
         capybara_login(@teacher_1)
         go_to_new_label
         
         fill_in "name", with: @new_name
+        check("topic_#{@integers_topic.id}")
+        check("topic_#{@roots_topic.id}")
         click_on("Create This Label")
         
         assert_equal old_label_count + 1, Label.count
@@ -34,8 +37,10 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         assert_equal @new_name, @new_label.name
         assert_equal "private", @new_label.extent
         assert_equal @teacher_1, @new_label.user
+        assert @new_label.topics.include?(@roots_topic)
+        assert @new_label.topics.include?(@integers_topic)
+        assert_not @new_label.topics.include?(@transformations_topic)
         
-        @user_q.reload
         
         # Need to assert redirection soon
     end
@@ -89,8 +94,11 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
     end
     
     test "edit own label" do
+        setup_topics
         new_name = "New name for this label"
         assert_not_equal new_name, @user_l.name
+        @roots_topic.labels << @user_l
+        assert @user_l.topics.include?(@roots_topic)
         
         capybara_login(@teacher_1)
         go_to_all_labels
@@ -99,9 +107,13 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         assert_no_text("You may only edit a label that you have created.")
         
         fill_in "name", with: new_name
+        check("topic_#{@integers_topic.id}")
+        uncheck("topic_#{@roots_topic.id}")
         click_on("Save Changes")
         
         @user_l.reload
         assert_equal new_name, @user_l.name
+        assert_not @user_l.topics.include?(@roots_topic)
+        assert @user_l.topics.include?(@integers_topic)
     end
 end

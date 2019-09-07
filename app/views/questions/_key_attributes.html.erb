@@ -19,13 +19,13 @@
             <table>
                 <tr>
                     <td width="10%">
-                        <%= radio_button_tag "extent", "public", @extent=="public" %>
+                        <%= radio_button_tag "questions[0][extent]", "public", @extent=="public" %>
                     </td>
                     <td>Public <%= "Question".pluralize(q_num) %></td>
                 </tr>
                 <tr>
                     <td width="10%">
-                        <%= radio_button_tag "extent", "private", @extent=="private" %>    
+                        <%= radio_button_tag "questions[0][extent]", "private", @extent=="private" %>
                     </td>
                     <td>Private <%= "Question".pluralize(q_num) %></td>
                 </tr>
@@ -40,7 +40,7 @@
                     <% checkery = @grade_type == z[0] || @question&.grade_type == z[0] %>
                     <tr>
                         <td width="10%">
-                            <%= radio_button_tag "grade_type", z[0], checkery, :id => "grade_type_#{z[0]}" %>
+                            <%= radio_button_tag "questions[0][grade_type]", z[0], checkery, :id => "grade_type_#{z[0]}" %>
                         </td>
                         <td><%= z[1] %></td>
                     </tr>
@@ -54,7 +54,7 @@
                         ["select_many", "Select Many"],
                         ["fill_in", 'Fill in']].each_with_index do |z, index| %><tr>
                         <td width="20%"><% checkery = index == 0 ? "checked='checked'" : "" %>
-                        <input type="radio" name="style" id="style_<%= z[0] %>" value=<%= z[0] %> <%= checkery %> /></td>
+                        <input type="radio" name="questions[0][style]" id="style_<%= z[0] %>" value=<%= z[0] %> <%= checkery %> /></td>
                         <td><%= z[1] %></td>
                     </tr><% end %>
                 </table>

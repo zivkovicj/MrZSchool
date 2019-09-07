@@ -139,6 +139,13 @@ class ActiveSupport::TestCase
     @other_l_pub = labels(:other_label_public)
     @other_l_priv = labels(:other_label_private)
     @fill_in_label = labels(:fill_in_label)
+    
+    @fill_in_label.topics << topics(:test_topic)
+    @unlabeled_l.topics << topics(:test_topic)
+    @admin_l.topics << topics(:test_topic)
+    @user_l.topics << topics(:test_topic)
+    @other_l_pub.topics << topics(:test_topic)
+    @other_l_priv.topics << topics(:test_topic)
   end
   
   def setup_questions
@@ -181,6 +188,12 @@ class ActiveSupport::TestCase
         end
       end
     end
+  end
+  
+  def setup_topics
+      @roots_topic = topics(:roots)
+      @integers_topic = topics(:integers)
+      @transformations_topic = topics(:transformations)
   end
   
   def setup_users

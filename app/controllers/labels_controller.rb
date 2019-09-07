@@ -4,10 +4,13 @@ class LabelsController < ApplicationController
   before_action only: [:delete, :destroy] do
     correct_owner(Label)
   end
+
   include SetPermissions
+  include LabelsList
 
   def new
     @label = Label.new(:user => current_user)
+    @fields = fields_list
     set_permissions(@label)
   end
 
@@ -18,6 +21,7 @@ class LabelsController < ApplicationController
       flash[:success] = "Label Created"
       redirect_to current_user
     else
+      @fields = fields_list
       set_permissions(@label)
       render 'new'
     end
@@ -25,6 +29,7 @@ class LabelsController < ApplicationController
 
   def edit
     @label = Label.find(params[:id])
+    @fields = fields_list
     set_permissions(@label)
   end
 
@@ -73,6 +78,6 @@ class LabelsController < ApplicationController
   private
   
     def label_params
-      params.require(:label).permit(:name, :extent, :user_id, question_ids: [])
+        params.require(:label).permit(:name, :extent, :user_id, question_ids: [], topic_ids: [])
     end
 end

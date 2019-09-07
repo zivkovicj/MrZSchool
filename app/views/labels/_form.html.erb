@@ -6,17 +6,21 @@
   
     <%= form_for(@label) do |lab| %>
     
-      <%= render 'shared/error_messages', object: @label %>
+        <%= render 'shared/error_messages', object: @label %>
       
-      <div class="singleOption">
+        <div class="singleOption">
+            </br>
+            <%= render 'shared/name_in_form', form: lab, submitted_placeholder: nil %>
+            <%= render 'shared/user_and_extent', form: lab %>
+        </div>
         </br>
-        <%= render 'shared/name_in_form', form: lab, submitted_placeholder: nil %>
-        <%= render 'shared/user_and_extent', form: lab %>
-      </div>
-      </br>
+
+        <div class="col-sm-5 singleOption">
+            <%= render 'shared/topic_picker/topic_picker', form: lab, lowest_layer: "topic" %>
+        </div>
       
-      </br>
-      <%= lab.submit yield(:button_text), class: "btn btn-primary" if @assign_permission !="other" %>
+        </br>
+        <%= lab.submit yield(:button_text), class: "btn btn-primary" if @assign_permission !="other" %>
       
     <% end %>
     

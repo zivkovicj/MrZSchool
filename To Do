@@ -474,7 +474,7 @@ But don't fix that until after I implement consultant stars
 
 
 
-ALLOW FOR TEACHERS TO SEE AND EDIT STUDENT PASSWORDS
+ALLOW FOR TEACHERS TO EDIT STUDENT PASSWORDS
 Add a "student_password" column to user.
 This credential can be used to log in for students.  It can be seen and edited by the teacher.
     Login method checks for authenticate on regular password, then for a match on student password
@@ -601,7 +601,6 @@ DELETE COMMODITIES
 Still needs to maintain a record of the commodity_students purchased.  At least until database maintenance.
 
 STUDENT CAN SEE A REPORT OF ALL BUCKS RECEIVED
-
 
 TEACHER CAN SEE A REPORT OF ALL BUCKS GIVEN
 
@@ -1170,11 +1169,22 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 
 
 
+Aqui
 
 TOPIC CHECKLIST UPON CREATING/EDITING A LABEL
 
-Offer topic checklist upon creating a label
-Topic checklist upon editing a label
+VT Topic checklist upon creating a label
+VT Topic checklist upon editing a label
+
+
+
+
+
+STUDENT BLANK ANSWER ERROR
+
+STUDENT SCORE PAGE ERROR
+
+LABEL TOPIC THROUGH OBJECTIVE
 When a label is added to an objective, add that label to the objective's topic
 
 

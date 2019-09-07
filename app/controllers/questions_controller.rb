@@ -16,10 +16,10 @@ class QuestionsController < ApplicationController
   end
   
   def details
-    @extent = params[:extent]
-    @label = Label.find(params[:label])
-    @style = params[:style]
-    @grade_type = params[:grade_type]
+    @extent = params[:questions]["0"][:extent]
+    @label = Label.find(params[:questions]["0"][:label_id])
+    @style = params[:questions]["0"][:style]
+    @grade_type = params[:questions]["0"][:grade_type]
     @pictures = @label.pictures
     create_question_group
   end
@@ -84,9 +84,7 @@ class QuestionsController < ApplicationController
 
   def update
     @question = Question.find(params[:id])
-    @question.label_id = params[:label]
-    @question.extent = params[:extent]
-    @question.grade_type = params[:grade_type]
+    #debugger
     set_answers_and_choices(params["questions"]["0"])
     if @question.update_attributes(multi_params(params["questions"]["0"]))
       flash[:success] = "Question Updated"
@@ -109,7 +107,7 @@ class QuestionsController < ApplicationController
   
   private
     def multi_params(my_params)
-      my_params.permit(:prompt, :user_id, :label_id, :extent, :style, :picture_id, :grade_type)
+        my_params.permit(:prompt, :user_id, :label_id, :extent, :style, :picture_id, :grade_type)
     end
     
     def create_question_group

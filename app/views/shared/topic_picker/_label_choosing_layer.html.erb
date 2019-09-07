@@ -3,11 +3,13 @@
     <td colspan="2"><strong><%= topic_name %></strong></td>
 </tr>
 <% topic.labels.order(:name).each do |lab| %>
-    <tr class="label_cell label_from_domain_<%= domain_name %> label_from_field_<%= field_name %> label_from_topic_<%= topic_name %>">
-        <% checkery = lab == default_label ? "checked" : "" %>
-        <td class="center" width="20px">
-            <input type="radio" name="label" id="label_<%= lab.id %>" value=<%= lab.id %> <%= checkery %> />
-        </td>
-        <td><%= lab.name %></td>
-    </tr>
+    <% if @labels.include?(lab) %>
+        <tr class="label_cell label_from_domain_<%= domain_name %> label_from_field_<%= field_name %> label_from_topic_<%= topic_name %>">
+            <% checkery = lab == default_label ? "checked" : "" %>
+            <td class="center" width="20px">
+                <input type="radio" name="questions[0][label_id]" id="label_<%= lab.id %>" value=<%= lab.id %> <%= checkery %> />
+            </td>
+            <td><%= lab.name %></td>
+        </tr>
+    <% end %>
 <% end %>
