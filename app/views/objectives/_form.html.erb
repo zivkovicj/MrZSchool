@@ -8,6 +8,9 @@
         </br>
         <%= render 'shared/name_in_form', :form => form, :submitted_placeholder => nil %>
         </br>
+        <%= form.label "Catchy Name" %>
+        <%= form.text_field :catchy_name %>
+        </br>
         <%= render 'shared/user_and_extent', form: form %>
       </div>
       

@@ -88,7 +88,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         
         @riposte.reload
         assert_equal 0, @riposte.tally
-        assert_equal "blank", @riposte.stud_answer
+        assert_equal ["blank"], @riposte.stud_answer
         assert_nil @riposte.graded      # Riposte graded should be set back to nil with a blank answer
     end
     
