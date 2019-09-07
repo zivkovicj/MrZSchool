@@ -16,7 +16,7 @@ class RipostesController < ApplicationController
             if @question.grade_type == "computer"
                 is_graded = 1
                 if params[:stud_answer].blank?
-                    stud_answer = "blank"
+                    stud_answer = ["blank"]
                     is_graded = nil
                 else
                     stud_answer = []

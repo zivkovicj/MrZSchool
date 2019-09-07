@@ -92,7 +92,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_nil @riposte.graded      # Riposte graded should be set back to nil with a blank answer
     end
     
-    test "blank fill in" do
+    test "fill in answer left blank" do
         prepare_fill_in
     
         go_to_first_period
@@ -108,8 +108,20 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         
         @riposte.reload
         assert_equal 0, @riposte.tally
-        assert_equal "blank", @riposte.stud_answer
+        assert_equal ["blank"], @riposte.stud_answer
         assert_nil @riposte.graded      # Riposte graded should be set back to nil with a blank answer
+        
+        quest_count = @quiz.ripostes.count - 1
+        quest_count.times do
+            fill_in "stud_answer", with: "ofcourse"
+            click_on "Next Question"
+        end
+        
+        @quiz.reload
+        assert_equal 9, @quiz.total_score
+        assert @quiz.points_still_to_grade == 0
+        assert_not @seminar.reload.grading_needed
+        
     end
     
     test "take multiple choice quiz" do
