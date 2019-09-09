@@ -1175,19 +1175,15 @@ Aqui
 
 
 
-3.0 CATCHY NAME IN FORMS
-Test editing the catchy name
-Update catchy names of existing objectives
-    For now, just make them all match
 
 
 
-SHOW FORMAL NAMES FOR PRETESTS
+3.1 SHOW FORMAL NAMES FOR PRETESTS
 
 
+3.2 SHOW TOPIC, NUMBER, ETC ON SCORE PAGE
 
-SHOW TOPIC, NUMBER, ETC ON SCORE PAGE
-
+3.3 OBJECTIVE INFO IN INDEX
 
 
 LABEL TOPIC THROUGH OBJECTIVE
@@ -1200,7 +1196,7 @@ REMEMBER A LABEL'S TOPICS WHEN EDITING IT
 
 
 
-MATERIALS PAGE ORGANIZES ALL WORKSHEETS BY TOPIC
+MATERIALS PAGE (OBJECTIVE INDEX) ORGANIZES ALL WORKSHEETS BY TOPIC
 
 Worksheets are grouped by the topic of their objective
 What if editing an objective fails, where to reroute the user?
