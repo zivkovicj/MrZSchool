@@ -48,12 +48,14 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         click_on "Basic Info"
         
         fill_in "name", with: "Bunsen Burritos"
+        fill_in "objective[catchy_name]", with: "What, you want to be even catchier?"
         find("#private_objective").choose
         choose("topic_#{root_topic.id}")
         click_on "Save Changes"
         
         @assign_to_add.reload
         assert_equal "Bunsen Burritos", @assign_to_add.name
+        assert_equal "What, you want to be even catchier?", @assign_to_add.catchy_name
         assert_equal "private", @assign_to_add.extent
         assert_equal root_topic, @assign_to_add.topic
         
@@ -64,6 +66,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         setup_objectives 
         
         assert_equal "add integers on a number line", @assign_to_add.name
+        assert_equal "Seagulls", @assign_to_add.catchy_name
         assert_equal "public", @assign_to_add.extent
         assert_equal topics(:integers), @assign_to_add.topic
         
@@ -75,6 +78,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         @assign_to_add.reload
         assert_equal "add integers on a number line", @assign_to_add.name
+        assert_equal "Seagulls", @assign_to_add.catchy_name
         assert_equal "public", @assign_to_add.extent
         assert_equal topics(:integers), @assign_to_add.topic
         

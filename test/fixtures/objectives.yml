@@ -44,6 +44,7 @@ objective_zero_priority:
 
 objective_70:
   name: add integers on a number line
+  catchy_name: Seagulls
   extent: "public"
   user: archer
   topic: integers
