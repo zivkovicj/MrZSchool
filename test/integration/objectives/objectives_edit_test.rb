@@ -49,6 +49,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         fill_in "name", with: "Bunsen Burritos"
         fill_in "objective[catchy_name]", with: "What, you want to be even catchier?"
+        fill_in "objective[objective_number]", with: 950
         find("#private_objective").choose
         choose("topic_#{root_topic.id}")
         click_on "Save Changes"
@@ -56,6 +57,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         @assign_to_add.reload
         assert_equal "Bunsen Burritos", @assign_to_add.name
         assert_equal "What, you want to be even catchier?", @assign_to_add.catchy_name
+        assert_equal 950, @assign_to_add.objective_number
         assert_equal "private", @assign_to_add.extent
         assert_equal root_topic, @assign_to_add.topic
         
@@ -69,6 +71,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert_equal "Seagulls", @assign_to_add.catchy_name
         assert_equal "public", @assign_to_add.extent
         assert_equal topics(:integers), @assign_to_add.topic
+        assert_equal 960, @assign_to_add.objective_number
         
         capybara_login(@teacher_1)
         go_to_objective_show_page(@assign_to_add)
@@ -81,6 +84,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert_equal "Seagulls", @assign_to_add.catchy_name
         assert_equal "public", @assign_to_add.extent
         assert_equal topics(:integers), @assign_to_add.topic
+        assert_equal 960, @assign_to_add.objective_number
         
         assert_on_objective_show_page(@assign_to_add)
     end

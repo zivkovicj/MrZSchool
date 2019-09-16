@@ -94,6 +94,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
     
     test "fill in answer left blank" do
         prepare_fill_in
+        setup_labels
     
         go_to_first_period
         
@@ -121,7 +122,6 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal 9, @quiz.total_score
         assert @quiz.points_still_to_grade == 0
         assert_not @seminar.reload.grading_needed
-        
     end
     
     test "take multiple choice quiz" do

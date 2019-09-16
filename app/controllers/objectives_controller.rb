@@ -151,7 +151,7 @@ class ObjectivesController < ApplicationController
   
   private
     def objective_params_basic
-        params.require(:objective).permit(:name, :catchy_name, :extent, :user_id, :topic_id)
+        params.require(:objective).permit(:name, :catchy_name, :extent, :objective_number, :user_id, :topic_id)
     end
     
     def objective_params_labels

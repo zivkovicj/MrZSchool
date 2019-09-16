@@ -130,7 +130,7 @@ class User < ApplicationRecord
         objective_students
             .select{|x| x.read_attribute(:"#{which_key}_keys") > 0 && x.ready && !one_unfinished(x.objective)}
             .map(&:objective)
-            .sort_by{|e| e[:name]}
+            .sort_by{|e| e.topic_and_number }
     end
     
     def can_edit_this_seminar(seminar)

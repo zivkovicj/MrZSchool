@@ -1179,11 +1179,35 @@ Aqui
 
 
 3.1 SHOW FORMAL NAMES FOR PRETESTS
+VT Show all info for all types of tests
+V Order pretests by taxonomy
+	Don't need to use nested lists, just do multiple order calls in one line
+
+
+ERROR["test_pretest_shows_formal_name", Minitest::Result, 204.4842570000019]
+ test_pretest_shows_formal_name#Minitest::Result (204.48s)
+Capybara::ExpectationNotMet:         Capybara::ExpectationNotMet: expected to find visible css "a" with text "percentages" with id pretest_757861251 but there were no matches. Also found "Percentareenos", which matched the selector but not all filters. 
+            test/integration/quizzes/quizzes_available_test.rb:70:in `block in <class:QuizzesAvailableTest>'
+
+
+MAKE SURE THAT OBJECTIVES HAVE A TOPIC UPON CREATION
+And an objective number
 
 
 3.2 SHOW TOPIC, NUMBER, ETC ON SCORE PAGE
+Taxonomy for all current objectives, topics, fields 
+Order score page by topics, etc.
+They should be expanded by default
+
+
 
 3.3 OBJECTIVE INFO IN INDEX
+
+
+
+EDIT OBJECTIVE NUMBER IN FORM
+Edit objective_number in form
+
 
 
 LABEL TOPIC THROUGH OBJECTIVE
@@ -1203,6 +1227,8 @@ What if editing an objective fails, where to reroute the user?
 Ask on Stack about why includes doesn't seem to make a difference
 
 
+
+ABBREVIATIONS FOR TOPICS AND DOMAINS
 
 
 

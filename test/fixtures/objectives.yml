@@ -4,40 +4,48 @@
 
 objective_10:
   name: percentages
+  catchy_name: Percentareenos
   extent: "public"
   user: michael
+  topic: integers
 
   
 objective_20:
   name: slope
   extent: "public"
   user: michael
+  topic: integers
 
 objective_30:
   name: intercept
   extent: "public"
   user: archer
+  topic: integers
   
 objective_40:
   name: irrational numbers
   extent: "private"
   user: archer
+  topic: integers
   
 objective_50:
   name: pythagorean theorem
   extent: "private"
   user: archer
+  topic: integers
 
   
 objective_60:
   name: volume of cylinders
   extent: "private"
   user: archer
+  topic: integers
   
 objective_zero_priority:
   name: volume of cones
   extent: "private"
   user: archer
+  topic: integers
 
   
 # Second Seminar
@@ -48,18 +56,21 @@ objective_70:
   extent: "public"
   user: archer
   topic: integers
+  objective_number: 960
 
   
 objective_80:
   name: integers block model
   extent: "public"
   user: archer
+  topic: integers
 
   
 objective_90:
   name: subtract integers
   extent: "private"
   user: archer
+  topic: integers
 
 # No seminars yet
 
@@ -67,16 +78,19 @@ objective_100:
   name: equations 1
   extent: "public"
   user: archer
+  topic: integers
   
 objective_110:
   name: equations 2
   extent: "public"
   user: archer
+  topic: integers
 
 objective_120:
   name: equations 3
   extent: "private"
   user: archer
+  topic: integers
   
 objective_130:
   name: equations 4
@@ -87,34 +101,41 @@ objective_140:
   name: equations 5
   extent: "private"
   user: archer
+  topic: integers
   
 objective_150:
   name: equations 6
   extent: "private"
   user: archer
+  topic: integers
   
 # Created by another teacher
 objective_160:
   name: flagellates
   extent: "private"
   user: zacky
+  topic: integers
   
 fill_in:
   name: fill_in Questions Only
   extent: public
   user: archer
+  topic: integers
   
 select_many_objective:
   name: Select-Many Objective
   extent: public
   user: archer
+  topic: integers
   
 teacher_graded_objective_1: 
   name: Teacher-Graded Objective 1
   extent: public
   user: archer
+  topic: integers
   
 teacher_graded_objective_2: 
   name: Teacher-Graded Objective 2
   extent: public
   user: archer
+  topic: integers

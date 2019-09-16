@@ -4,7 +4,8 @@
 
 <% if @assign_permission != "other" %>
     <% this_placeholder = submitted_placeholder ? submitted_placeholder : "Name of this #{class_name}" %>
-    <%= form.label :name %>
+    <% name_to_show = controller_name == "objectives" ? "Formal Name" : "Name" %>
+    <%= form.label name_to_show %>
     <%= form.text_field :name, {class: 'form-control short-field', :id => "name", :placeholder => this_placeholder} %>
 <% else %>
     <h2><%= object.name %></h2>

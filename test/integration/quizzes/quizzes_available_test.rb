@@ -61,16 +61,24 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         make_ready(@student_2, @objective_10)
         try_quiz_twice("pretest")
     end
+
+    test "other quiz shows catchy name" do
+        make_ready(@student_2, @objective_10)
+        @test_os.update(:teacher_granted_keys => 2)
+        go_to_first_period
+        click_on("Quizzes")
+        assert_selector("a", :text => "Percentareenos", :id => "teacher_granted_#{@objective_10.id}")
+    end
     
     test "quiz without questions" do
-        @bad_objective = Objective.create(:name => "Bad Objective")
+        @bad_objective = Objective.create(:name => "Bad Objective", :topic => Topic.first, :catchy_name => "Bad Objective")
         @bad_objective.objective_seminars.create(:seminar => @seminar, :pretest => 1)
         @bad_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
         make_ready(@student_2, @bad_objective)
         
         go_to_first_period
         click_on("Quizzes")
-        click_on(@bad_objective.name)
+        click_on(@bad_objective.catchy_name)
         
         assert_no_text("Question: 1")
     end
@@ -112,7 +120,7 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         click_on("Quizzes")
         assert_text("Unfinished Quizzes")
         assert_no_text("Pretest Objectives")
-        click_link("#{@objective_10.name}", match: :first) # This time the first link should go to the unfinished quiz
+        click_link("#{@objective_10.catchy_name}") # This time the first link should go to the unfinished quiz
         assert_text("Question: 4")                      # A little redundant with the next line, but this assertion is the most important one
        
         7.times do |n|

@@ -9,13 +9,18 @@
         <table>
             <% list.each do |objective| %>
             <% this_os = objective.objective_students.find_by(:user => @student) %>
+                <% obj_name_to_show = id_label == "pretest" ? objective.name : objective.catchy_name %>
                 <tr>
-                    <td><%= link_to objective.name,
+                    <td><%= link_to objective.catchy_name,
                         {controller: :quizzes, action: this_action, :objective_id => objective.id, :origin => id_label}, 
                             :class => 'plain_link',
                             :id => "#{id_label}_#{objective.id}"  %></td>
-                    <td><%= render 'shared/keys/list_of_keys', :this_os => this_os, :this_sem => @seminar %></td>
+                    <%= render 'shared/keys/list_of_keys', :this_os => this_os, :this_sem => @seminar %>
                 </tr>
+                <tr>
+                    <td colspan="2"><%= objective.topic_and_number %> — <%= objective.name %></td>
+                </tr>
+                <tr><td colspan="2" class="highlighted"> &emsp;</td></tr>
             <% end %>
         </table>
     <% end %>

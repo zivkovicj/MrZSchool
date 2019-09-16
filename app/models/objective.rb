@@ -39,4 +39,8 @@ class Objective < ApplicationRecord
     def students_who_requested(seminar)
         seminar.seminar_students.where(:learn_request => self.id).count
     end
+    
+    def topic_and_number
+        "#{topic.name} #{objective_number}"
+    end
 end

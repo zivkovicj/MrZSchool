@@ -42,6 +42,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         name = "009 Compare Unit Rates"
         fill_in "name", with: name
         fill_in "objective[catchy_name]", with: "Don't compare units"
+        fill_in "objective[objective_number]", with: 720
         find("#public_objective").choose
         choose("topic_#{first_topic.id}")
         click_on('Create a New Objective')
@@ -52,6 +53,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert_equal @old_objective_count + 1, Objective.count
         assert_equal name, @new_objective.name
         assert_equal "Don't compare units", @new_objective.catchy_name
+        assert_equal 720, @new_objective.objective_number
         assert_equal @teacher_1, @new_objective.user
         assert_equal "public", @new_objective.extent
         assert_equal Topic.first, @new_objective.topic

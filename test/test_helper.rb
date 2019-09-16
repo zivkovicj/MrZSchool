@@ -140,12 +140,9 @@ class ActiveSupport::TestCase
     @other_l_priv = labels(:other_label_private)
     @fill_in_label = labels(:fill_in_label)
     
-    @fill_in_label.topics << topics(:test_topic)
-    @unlabeled_l.topics << topics(:test_topic)
-    @admin_l.topics << topics(:test_topic)
-    @user_l.topics << topics(:test_topic)
-    @other_l_pub.topics << topics(:test_topic)
-    @other_l_priv.topics << topics(:test_topic)
+    Label.all.each do |lab|
+        lab.topics << topics(:test_topic)
+    end
   end
   
   def setup_questions
