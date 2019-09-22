@@ -1176,37 +1176,55 @@ Aqui
 
 
 
-
-
-3.1 SHOW FORMAL NAMES FOR PRETESTS
-VT Show all info for all types of tests
-V Order pretests by taxonomy
-	Don't need to use nested lists, just do multiple order calls in one line
-
-
-ERROR["test_pretest_shows_formal_name", Minitest::Result, 204.4842570000019]
- test_pretest_shows_formal_name#Minitest::Result (204.48s)
-Capybara::ExpectationNotMet:         Capybara::ExpectationNotMet: expected to find visible css "a" with text "percentages" with id pretest_757861251 but there were no matches. Also found "Percentareenos", which matched the selector but not all filters. 
-            test/integration/quizzes/quizzes_available_test.rb:70:in `block in <class:QuizzesAvailableTest>'
-
-
 MAKE SURE THAT OBJECTIVES HAVE A TOPIC UPON CREATION
 And an objective number
+Update current topic to have the name "General" instead of unlabeled
+
+FAIL["test_take_keys_for_perfect_score", Minitest::Result, 355.24559099999897]
+ test_take_keys_for_perfect_score#Minitest::Result (355.25s)
+        Expected: 10
+          Actual: 8
+        test/integration/seminars/seminars_scoresheet_test.rb:76:in `block in <class:SeminarsScoresheetTest>'
+
+ FAIL["test_admin_creates_objective", Minitest::Result, 9.253624999997555]
+ test_admin_creates_objective#Minitest::Result (9.25s)
+        Expected: 99
+          Actual: nil
+        test/integration/objectives/objectives_new_test.rb:82:in `block in <class:ObjectivesFormTest>'
+
+
+
+TRY TO FIX DC FAILED TESTS
+WHY ARE THERE SO MANY TEAMS WITH ONE STUDENT IF THEY'RE DOING THE SAME OBJECTIVE?
+Also, algorithm doesn't seem to be moving any students to the next level after their pretests.  Is that because they have some unused keys?
+
+
+
+DC SEATING CHART NEEDS TO SHOW TOPIC, NUMBER, AND CATCHY NAME
+
+
+SORT OBJECTIVES BY TAXONOMY
+Objective and priority-choosing screens should use the taxonomy list
+
+
+CREATE TOPICS, FIELDS, AND DOMAINS
+Use the drop-down menus that I've established, but the only bubble to choose is "Create a new field/domain/topic/objective/label"
+Same screen also allows creating the name
+What about the other features of an objective?  Should I use javascript to blank out those features for the other taxonomy levels?
+Don't allow a new topic to be named "General"
+Only admin can create or edit the top three levels
+
 
 
 3.2 SHOW TOPIC, NUMBER, ETC ON SCORE PAGE
 Taxonomy for all current objectives, topics, fields 
 Order score page by topics, etc.
 They should be expanded by default
+Also show catchy name and objective number when a student checks her score
 
 
 
 3.3 OBJECTIVE INFO IN INDEX
-
-
-
-EDIT OBJECTIVE NUMBER IN FORM
-Edit objective_number in form
 
 
 
@@ -1236,16 +1254,10 @@ ABBREVIATIONS FOR TOPICS AND DOMAINS
 
 
 
-OBJECTIVE INFO ON STUDENT SCORE PAGE
-Show domain, topic, and catchy name when a student checks her score
 
 OBJECTIVE INFO ON CLASS OBJECTIVE SCREEN
 
-CRUD DOMAINS
-Fields
-Domains
-Topics
-    Only admin
+   
 
 ANNOUNCE TO STUDENTS WHEN THEY HAVE UNLOCKED A NEW OBJECTIVE
 

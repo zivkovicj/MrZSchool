@@ -23,6 +23,14 @@ Between each update, manually test:
 
 
 
+3.1 SHOW FORMAL NAMES FOR PRETESTS
+Show all info for all types of tests
+Order pretests by taxonomy
+	Don't need to use nested lists, just do multiple order calls in one line
+
+
+
+
 3.0 CATCHY NAME IN FORMS
 Test editing the catchy name
 Update catchy names of existing objectives
