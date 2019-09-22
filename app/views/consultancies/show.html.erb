@@ -46,14 +46,17 @@
   </td>
 <% end %>
 
-<% def objective_cell(objective) %>
-  <td colspan="2"  class="topic center consultant_cell">
-    <% if @group_num < 20 %>
-      <small>Group <%= @letters[@group_num] %></small>&emsp;
-    <% end %>
-    <%= objective.short_name %>
-  </td>
+<% def objective_cells(objective) %>
+    <td colspan="2"  class="topic center consultant_cell">
+        <% if @group_num < 20 %>
+            <small>Group <%= @letters[@group_num] %></small>&emsp;
+        <% end %>
+        <%= objective.topic_and_number %>
+        </br>
+        <%= objective.catchy_name %>
+    </td
 <% end %>
+
 
 <% @unplaced_team = @consultancy.teams.find_by(:bracket => 1) %>
 <% if @unplaced_team %>
@@ -81,7 +84,7 @@
                 <% student_cell(1, @group_num, team) %> 
               </tr>
               <tr>
-                <% objective_cell(team.objective) %>
+                <% objective_cells(team.objective) %>
               </tr>
               <tr>
                 <% student_cell(2, @group_num, team) %> 
