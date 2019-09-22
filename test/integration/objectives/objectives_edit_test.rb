@@ -85,8 +85,22 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert_equal "public", @assign_to_add.extent
         assert_equal topics(:integers), @assign_to_add.topic
         assert_equal 960, @assign_to_add.objective_number
-        
         assert_on_objective_show_page(@assign_to_add)
+    end
+
+    test "ensure objective_number" do
+        setup_objectives
+        assert_equal 960, @assign_to_add.objective_number
+        
+        capybara_login(@teacher_1)
+        go_to_objective_show_page(@assign_to_add)
+        click_on "Basic Info"
+        
+        fill_in "objective[objective_number]", with: ""
+        click_on "Save Changes"
+        
+        @assign_to_add.reload
+        assert_equal 99, @assign_to_add.objective_number
     end
     
     test "include files" do

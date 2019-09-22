@@ -60,6 +60,10 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     end
     
     test "admin creates objective" do
+        # Also makes sure that a default topic and objective_number is set
+        general_topic = Topic.find_by(:name => "General")
+        assert_not_nil general_topic
+        
         capybara_login(@admin_user)
         go_to_new_objective
 
@@ -74,6 +78,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         assert_equal "private", @new_objective.extent
         assert_equal 0, @new_objective.objective_seminars.count
         assert_equal 0, @new_objective.labels.count
+        assert_equal general_topic, @new_objective.topic
+        assert_equal 99, @new_objective.objective_number
     end
-    
 end

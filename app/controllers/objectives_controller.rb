@@ -16,6 +16,7 @@ class ObjectivesController < ApplicationController
   
   def create
     @objective = Objective.new(objective_params_basic)
+    default_topic_and_number
     
     if @objective.save
       flash[:success] = "Objective Created"
@@ -60,6 +61,7 @@ class ObjectivesController < ApplicationController
     @old_pre_reqs = @objective.preassign_ids
     redirect_path = @objective
     
+    default_topic_and_number
     params_to_use = objective_params_basic
     @which_params = params[:objective][:which_params]
     if @which_params == "seminars"
@@ -75,7 +77,6 @@ class ObjectivesController < ApplicationController
       params_to_use = objective_params_worksheets
       @objective.worksheet_ids = [] if params[:objective][:worksheet_ids].nil?
     end
-    
     
     if @objective.update_attributes(params_to_use)
       pre_reqs_and_set_ready
@@ -150,6 +151,13 @@ class ObjectivesController < ApplicationController
   
   
   private
+    def default_topic_and_number
+        @objective.topic = Topic.find_by(:name => "General") if @objective.topic.blank?
+        if params[:objective][:objective_number].blank?
+            params[:objective][:objective_number] = 99
+        end
+    end
+
     def objective_params_basic
         params.require(:objective).permit(:name, :catchy_name, :extent, :objective_number, :user_id, :topic_id)
     end
