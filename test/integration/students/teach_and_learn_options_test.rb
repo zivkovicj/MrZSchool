@@ -60,14 +60,22 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
     
     test "learn options ready and willing" do
         # Objective 10 is a pre-req for mainassign, so mainassign should not appear in the learn_options
+        # Also testing that an objective with nil score for points_all_time is included
         mainassign = @objective_10.mainassigns.first
         set_specific_score(@student_1, @objective_10, 2)
         assert_equal 1, @objective_10.mainassigns.count
         set_specific_score(@student_1, mainassign, 2)
+        
+        other_obj = @seminar.objectives[2]
+        assert_not_equal other_obj, mainassign
+        assert_not_equal other_obj, @objective_10
+        set_specific_score(@student_2, other_obj, nil)
+        
         set_ready_all(@student_1)
         
         assert @student_1.learn_options(@seminar).include?(@objective_10)
         assert_not @student_1.learn_options(@seminar).include?(mainassign)
+        assert @student_1.learn_options(@seminar).include?(other_obj)
         
         # Now the student is ready, so mainassign should appear in learn options
         # But obj_10 should no longer appear

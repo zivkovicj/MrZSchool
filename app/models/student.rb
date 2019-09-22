@@ -85,7 +85,7 @@ class Student < User
             .where("objective_seminars.seminar_id = ?", seminar.id)
             .where("objective_students.user_id = ?", self.id)
             .where("objective_students.ready = ?", true)
-            .where("objective_students.points_all_time <= 7")
+            .where("objective_students.points_all_time <= ? OR objective_students.points_all_time IS NULL", 7)
             .where("objective_seminars.priority > 0")
             .order('objective_seminars.priority DESC')
             .take(10)
