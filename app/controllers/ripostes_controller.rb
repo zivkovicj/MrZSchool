@@ -91,8 +91,6 @@ class RipostesController < ApplicationController
     end
 
     private
-    
-
         
         def take_post_req_keys
             if @this_obj_stud.total_keys == 0 && !@this_obj_stud.passed

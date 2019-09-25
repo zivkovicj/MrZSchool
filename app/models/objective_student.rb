@@ -18,7 +18,7 @@ class ObjectiveStudent < ApplicationRecord
     end
     
     def obj_willing?(max)
-        points_all_time.to_i < max
+        (points_all_time.to_i < max) && total_keys == 0
     end
     
     def obj_ready_and_willing?(max)

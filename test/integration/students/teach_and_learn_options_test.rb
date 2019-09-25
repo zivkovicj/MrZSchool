@@ -70,6 +70,7 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
         assert_not_equal other_obj, mainassign
         assert_not_equal other_obj, @objective_10
         set_specific_score(@student_2, other_obj, nil)
+        ObjectiveStudent.find_by(:objective => other_obj, :user => @student_1).update(:teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0)
         
         set_ready_all(@student_1)
         
