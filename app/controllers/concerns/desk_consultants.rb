@@ -93,6 +93,7 @@ module DeskConsultants
         establish_new_group(student, obj, true) if obj
       end
     end
+    
 
     ## SORT APPRENTICES INTO CONSULTANT GROUPS ##
     

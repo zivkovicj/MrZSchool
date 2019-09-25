@@ -84,7 +84,6 @@ class QuestionsController < ApplicationController
 
   def update
     @question = Question.find(params[:id])
-    #debugger
     set_answers_and_choices(params["questions"]["0"])
     if @question.update_attributes(multi_params(params["questions"]["0"]))
       flash[:success] = "Question Updated"

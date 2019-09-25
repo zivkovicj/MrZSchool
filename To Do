@@ -1172,37 +1172,39 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 Aqui
 
 
+Objective.joins(objective_seminars: :seminar, objective_students: :user)
+            .where("objective_seminars.seminar_id = ?", seminar.id)
+            .where("objective_students.user_id = ?", self.id)
+            .where("objective_seminars.priority > 0")
+            .where("objective_students.points_all_time BETWEEN 6 AND 9")
+            .order('objective_seminars.priority DESC')
+            .take(10)
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user).where("objective_seminars.seminar_id = ?", seminar.id).where("objective_students.user_id = ?", self.id).where("objective_seminars.priority > 0").where("objective_students.points_all_time BETWEEN 6 AND 9").order('objective_seminars.priority DESC').take(10)
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user).where("objective_seminars.seminar_id = ?", seminar.id).where("objective_students.user_id = ?", self.id).where("objective_seminars.priority > 0").where("objective_students.points_all_time BETWEEN 6 AND 9").order('objective_seminars.priority DESC')
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user).where("objective_seminars.seminar_id = ?", seminar.id).where("objective_students.user_id = ?", self.id).where("objective_seminars.priority > 0").where("objective_students.points_all_time BETWEEN 6 AND 9")
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user).where("objective_seminars.seminar_id = ?", seminar.id).where("objective_students.user_id = ?", self.id).where("objective_seminars.priority > 0")
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user).where("objective_seminars.seminar_id = ?", seminar.id).where("objective_students.user_id = ?", self.id)
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user).where("objective_seminars.seminar_id = ?", seminar.id)
+
+Objective.joins(objective_seminars: :seminar, objective_students: :user)
 
 
 
 
-MAKE SURE THAT OBJECTIVES HAVE A TOPIC UPON CREATION
-And an objective number
-Update current topic to have the name "General" instead of unlabeled
 
-FAIL["test_take_keys_for_perfect_score", Minitest::Result, 355.24559099999897]
- test_take_keys_for_perfect_score#Minitest::Result (355.25s)
-        Expected: 10
-          Actual: 8
-        test/integration/seminars/seminars_scoresheet_test.rb:76:in `block in <class:SeminarsScoresheetTest>'
-
- FAIL["test_admin_creates_objective", Minitest::Result, 9.253624999997555]
- test_admin_creates_objective#Minitest::Result (9.25s)
-        Expected: 99
-          Actual: nil
-        test/integration/objectives/objectives_new_test.rb:82:in `block in <class:ObjectivesFormTest>'
-
-NEVER FIXED THESE TWO TESTS!!
-
-
+I just added some lines to learn_options to eliminate obj_studs that are holding keys.
+Re-insert tests for those.
 
 TRY TO FIX DC FAILED TESTS
 WHY ARE THERE SO MANY TEAMS WITH ONE STUDENT IF THEY'RE DOING THE SAME OBJECTIVE?
-Also, algorithm doesn't seem to be moving any students to the next level after their pretests.  Is that because they have some unused keys?
+Try reloading the consultancy after every loop
 
-
-
-DC SEATING CHART NEEDS TO SHOW TOPIC, NUMBER, AND CATCHY NAME
 
 
 SORT OBJECTIVES BY TAXONOMY

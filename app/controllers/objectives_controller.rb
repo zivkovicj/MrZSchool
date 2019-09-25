@@ -155,6 +155,7 @@ class ObjectivesController < ApplicationController
         @objective.topic = Topic.find_by(:name => "General") if @objective.topic.blank?
         if params[:objective][:objective_number].blank?
             params[:objective][:objective_number] = 99
+            @objective.objective_number = 99
         end
     end
 
