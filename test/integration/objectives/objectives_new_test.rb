@@ -3,6 +3,7 @@ require 'test_helper'
 class ObjectivesFormTest < ActionDispatch::IntegrationTest
     
     def setup
+        debugger
         setup_users
         
         @old_objective_count = Objective.count

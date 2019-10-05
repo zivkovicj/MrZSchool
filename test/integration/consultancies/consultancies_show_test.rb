@@ -129,7 +129,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
     def test_all_consultants
         @consultancy.teams.each do |team|
             if team.consultant.present?
-                assert team.consultant.score_on(team.objective) >= @seminar.consultantThreshold
+                assert team.consultant.score_on(team.objective) >= 6
             end
         end
     end
@@ -483,11 +483,11 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         
         @students = setup_present_students 
         @need_hash = setup_need_hash
-        assert_nil find_placement(@c_stud_4)
+        assert_nil find_placement(@c_stud_4,7)
         
-        assert_equal t1, find_placement(@c_stud_9)
+        assert_equal t1, find_placement(@c_stud_9,7)
         
-        assert_equal t2, find_placement(@c_stud_10)
+        assert_equal t2, find_placement(@c_stud_10,7)
         
         # Now make a team available for @c_obj_2
         # Also adds student to that team
@@ -495,7 +495,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         t4.users << @c_stud_8
         
         assert_equal 1, t4.users.count
-        assert_equal t4, find_placement(@c_stud_4)
+        assert_equal t4, find_placement(@c_stud_4, 7)
         assert_equal 2, t4.users.count
         assert t4.users.include?(@c_stud_4)
         test_all_apprentices
@@ -577,11 +577,11 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         set_specific_score(@c_stud_7, @c_obj_4, 7)
         set_specific_score(@c_stud_7, @c_obj_5, 0)
         
-        set_specific_score(@c_stud_6, @c_obj_1, 7)
-        set_specific_score(@c_stud_6, @c_obj_2, 7)
-        set_specific_score(@c_stud_6, @c_obj_3, 7)
-        set_specific_score(@c_stud_6, @c_obj_4, 7)
-        set_specific_score(@c_stud_6, @c_obj_5, 7)
+        set_specific_score(@c_stud_6, @c_obj_1, 10)
+        set_specific_score(@c_stud_6, @c_obj_2, 10)
+        set_specific_score(@c_stud_6, @c_obj_3, 10)
+        set_specific_score(@c_stud_6, @c_obj_4, 10)
+        set_specific_score(@c_stud_6, @c_obj_5, 10)
         
         method_setup
         
@@ -596,9 +596,10 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         
         assert_equal 3, @consultancy.teams.count
         new_place_for_lone_students
+        @consultancy.reload
         
         # One student is placed in an existing group
-        assert t1.users.include?(@c_stud_10)
+        assert @consultancy.users.include?(@c_stud_10)
         
         # Another student receives her learn_request
         assert @consultancy.teams.count > 3
@@ -609,8 +610,9 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         assert t4.users.include?(@c_stud_8)
         
         # Fourth student starts a new group with her first learn option (Because she has no learn request.)
-        t5 = @c_stud_7.teams.find_by(:consultancy => @consultancy)
-        assert_equal @c_obj_5, t5.objective
+        this_team = @c_stud_7.teams.find_by(:consultancy => @consultancy)
+        learn_opt_1 = @c_stud_7.learn_options(@consultancy.seminar)[0]
+        assert_equal learn_opt_1, this_team.objective
 
         # Last student is still unplaced
         assert_not @consultancy.users.include?(@c_stud_6)

@@ -6,20 +6,20 @@
 #
 numbers: 
     name: Numbers
-    field: mathematics
-#
+    field_id: 1
+
 geometry: 
     name: Geometry
-    field: mathematics
+    field_id: 1
     
 evolution:
     name: Evolution
-    field: science
+    field_id: 2
     
 miscellaneous:
     name: Miscellaneous
-    field: miscellanous
+    field_id: 3
     
 test_domain:
     name: Test Domains
-    field: miscellaneous
+    field_id: 3

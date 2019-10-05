@@ -70,7 +70,7 @@ module DeskConsultants
         hp_consult_list.take(still_needed(obj)).each do |student|
           establish_new_group(student, obj, true)
         end
-        # Can probably get reid of the next block
+        # Can probably get rid of the next block
         consult_list_still_needed.select{|x| x.score_on(obj) >= @cThresh && x.student_has_keys(obj) == 0}.take(still_needed(obj)).each do |student|
           establish_new_group(student, obj, true)
         end
@@ -115,12 +115,12 @@ module DeskConsultants
     # Most students probably won't be placed by their requests. 
     def place_apprentices_by_mastery()
       prof_list_still_needed.each do |stud|
-        find_placement(stud)
+        find_placement(stud, 7)
       end
     end
     
-    def find_placement(student)
-      team = @consultancy.teams.detect{|x| x.has_room && student.objective_students.find_by(:objective => x.objective).obj_ready_and_willing?(@cThresh)}
+    def find_placement(student, max)
+      team = @consultancy.teams.detect{|x| x.has_room && student.objective_students.find_by(:objective => x.objective).obj_ready_and_willing?(max)}
       team.users << student if team
       return team
     end
@@ -133,7 +133,7 @@ module DeskConsultants
     def new_place_for_lone_students
       prof_list_still_needed.reverse.each do |student|
         # First, check whether lone student can be placed into an established group
-        if find_placement(student) == nil
+        if find_placement(student, 9) == nil
           
           # If not, try establishing a new group for that student. This function is smelly, but I'm doing it in this order so that other
           # lone students might also join this group.

@@ -5,10 +5,13 @@
 # below each fixture, per the syntax in the comments below
 #
 mathematics:
+    id: 1
     name: Mathematics
     
 science:
+    id: 2
     name: Science
     
 miscellaneous:
+    id: 3 
     name: Miscellaneous
