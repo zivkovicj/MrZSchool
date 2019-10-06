@@ -9,10 +9,11 @@
 <%= render 'seminar_submenus' %>
 <%= render 'shared/headline' %>
 
+
 <% if @this_teacher_can_edit %>
     <%= form_for(@seminar) do |f| %>
         <%= render :partial => 'shared/include_checks', 
-            :locals => {:list_for_checks => Objective.all.order(:name), 
+            :locals => {:list_for_checks => @objectives, 
             :check_box_name => "seminar[objective_ids][]", 
             :inclusion_var => @seminar.objectives, :boulderfist => true, 
             :include_word => "objectives", :include_on => "in this class",

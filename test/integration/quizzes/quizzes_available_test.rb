@@ -132,7 +132,7 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
        assert_text("Previous score this term")
     end
     
-    test "not ready for quiz" do
+    test "not ready for pretest" do
         @test_os.update(:pretest_keys => 2)
         set_specific_score(@test_os.user, @objective_10, 2)
         assert @objective_20.preassigns.include?(@objective_10)
@@ -145,8 +145,22 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         
         assert_no_selector('a', :id => "pretest_#{@objective_20.id}")
     end
+
+    test "not ready doesnt matter for nonpretest" do
+        @test_os.update(:teacher_granted_keys => 2)
+        set_specific_score(@test_os.user, @objective_10, 2)
+        assert @objective_20.preassigns.include?(@objective_10)
+        main_assign_os = @objective_20.objective_students.find_by(:user => @student_2)
+        main_assign_os.set_ready
+        main_assign_os.update(:teacher_granted_keys => 2)
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        assert_selector('a', :id => "teacher_granted_#{@objective_20.id}")
+    end
     
-    test "yes ready for quiz" do
+    test "yes ready for pretest" do
         main_assign_os = @objective_20.objective_students.find_by(:user => @student_2)
         main_assign_os.update(:pretest_keys => 2)
         make_ready(@student_2, @objective_20)

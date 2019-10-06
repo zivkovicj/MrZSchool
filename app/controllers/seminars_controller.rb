@@ -117,7 +117,7 @@ class SeminarsController < ApplicationController
     def objectives
         @seminar = Seminar.find(params[:id])
         set_editing_privilege
-        @objectives = @seminar.objectives
+        @objectives = Objective.where("extent = ? OR user_id = ?","public",current_user.id).order(:name)
     end
     
     def pretests

@@ -278,7 +278,30 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_selector('div', :text => "Class Updated")
         assert_selector('h2', :text => "Edit #{@seminar.name}")
     end
-    
+
+    test "objectives private dont show" do
+        @priv_obj = Objective.where(:extent => "private").where.not(:user => @teacher_1).first
+        assert_not_nil @priv_obj
+        @seminar.objectives << @priv_obj
+        
+        capybara_login(@teacher_1)
+        go_to_seminar
+        click_on("Objectives")
+        
+        assert_no_selector("input", :id => "check_#{@priv_obj.id}")
+        
+        logout
+        
+        other_user = @priv_obj.user
+        
+        capybara_login(other_user)
+        click_on("seminar_#{other_user.seminars.first.id}")
+        click_on("Objectives")
+        
+        assert_selector("input", :id => "check_#{@priv_obj.id}")
+        
+    end
+
     test "pretests" do
         setup_scores
         ObjectiveStudent.update_all(:pretest_keys => 0)
@@ -372,8 +395,12 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         
         assert_selector('div', :id => "owner_message")
     end
+
+    test "remove seminar when alone" do
     
-    test "remove seminar" do
+    end
+
+    test "remove seminar when sharing" do
         assert @teacher_1.seminars.include?(@avcne_seminar)
         assert @avcne_seminar.teachers.include?(@teacher_1)
         
@@ -389,6 +416,8 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_not @teacher_1.seminars.include?(@avcne_seminar)
         assert_not @avcne_seminar.teachers.include?(@teacher_1)
     end
+
+
     
     
 end

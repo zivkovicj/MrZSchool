@@ -1177,14 +1177,11 @@ Aqui
 I just added some lines to learn_options to eliminate obj_studs that are holding keys.
 Re-insert tests for those.
 
-Student names in ZSchool DB
-
 CAN I FIGURE OUT WHAT IS CAUSING THE ERRORS FOR MY CLASSROOM DESKTOP?
 
-IGNORE READINESS FOR WHOLE-CLASS KEYS
-	Then re-implement the pre-reqs that I deleted recently.
-
 PRIVATE OBJECTIVES SHOULDN'T SHOW UP IN THE CLASS OBJECTIVE EDIT SCREEN
+In tests, replace click("Log out") with logout
+
 
 UPDATE STUDENT READINESS WHEN OBJECTIVES GET DELETED
 

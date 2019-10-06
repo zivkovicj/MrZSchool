@@ -255,6 +255,10 @@ class ActiveSupport::TestCase
     click_on('Log In')
   end
   
+  def logout
+      click_on("Log out")
+  end
+  
   def go_to_first_period
     capybara_login(@student_2)
     click_on('1st Period')
