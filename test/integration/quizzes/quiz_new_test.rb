@@ -232,7 +232,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         # Student_2 gets keys for two different quizzes.  Student_3 only needs keys for the first quiz.
         ObjectiveStudent.find_by(:objective => @tg_objective_1, :user => @student_2).update(:teacher_granted_keys => 2)
         ObjectiveStudent.find_by(:objective => @tg_objective_2, :user => @student_2).update(:teacher_granted_keys => 2)
-        ObjectiveStudent.find_by(:objective => @tg_objective_1, :user => @student_3).update(:teacher_granted_keys => 2)
+        obj_stud_2_1 = ObjectiveStudent.find_by(:objective => @tg_objective_1, :user => @student_3)
+        obj_stud_2_1.update(:teacher_granted_keys => 2)
         
         # TEACHER DOESN'T HAVE ANY QUESTIONS TO GRADE RIGHT NOW
         assert_not @seminar.grading_needed
@@ -295,6 +296,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         click_on("Log out")
         
         # SECOND STUDENT TAKES QUIZ FOR OBJECTIVE 1
+        # Scores 100% on computer-graded questions, which takes the second key.
         capybara_login(@student_3)
         click_on('1st Period')
         click_on("Quizzes")
@@ -311,6 +313,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         end
         
         assert_equal 6, @quiz_3.reload.total_score
+        assert_equal 0, obj_stud_2_1.reload.teacher_granted_keys
         
         click_on("Log out")
         
@@ -367,7 +370,9 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_text("All quizzes in this class are fully graded.")
     end
     
-    test "100 total score" do
+    test "take keys for 100 percent" do
+        # Counterpart is that the program does NOT take keys if student scores less.
+        # That test is in "improving points"
         @test_obj_stud.update(:dc_keys => 2)
         setup_consultancies
         
@@ -412,6 +417,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         @test_obj_stud.reload
         assert_equal 3, @test_obj_stud.points_all_time
         assert_equal 3, @test_obj_stud.points_this_term
+        assert_equal 1, @test_obj_stud.teacher_granted_keys
         assert_nil @test_obj_stud.pretest_score
         assert_equal old_stud_need_count, this_obj_sem.students_needed
         

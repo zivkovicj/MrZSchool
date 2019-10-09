@@ -115,7 +115,7 @@ module DeskConsultants
     # Most students probably won't be placed by their requests. 
     def place_apprentices_by_mastery()
       prof_list_still_needed.each do |stud|
-        find_placement(stud, 7)
+        find_placement(stud, 6)
       end
     end
     
@@ -133,7 +133,7 @@ module DeskConsultants
     def new_place_for_lone_students
       prof_list_still_needed.reverse.each do |student|
         # First, check whether lone student can be placed into an established group
-        if find_placement(student, 9) == nil
+        if find_placement(student, 6) == nil
           
           # If not, try establishing a new group for that student. This function is smelly, but I'm doing it in this order so that other
           # lone students might also join this group.

@@ -27,8 +27,8 @@ class SeminarsScoresheetTest < ActionDispatch::IntegrationTest
         assert_equal 4, @test_obj_stud.pretest_score
         assert_equal 8, @test_obj_stud.points_all_time
         assert_equal 8, @test_obj_stud.points_this_term
-        assert_equal 2, @test_obj_stud.teacher_granted_keys  #Counterpart to the tests that take keys away.
-        assert_equal 2, @test_obj_stud.dc_keys
+        assert_equal 0, @test_obj_stud.teacher_granted_keys  #Counterpart to the tests that take keys away.
+        assert_equal 0, @test_obj_stud.dc_keys
     end
     
     test "lower previous teacher score" do  # But quizzes cannot lower scores.  They can only raise them.
@@ -62,20 +62,6 @@ class SeminarsScoresheetTest < ActionDispatch::IntegrationTest
         @test_obj_stud.reload
         assert_equal 2, @test_obj_stud.pretest_score
         assert_equal 6, @test_obj_stud.points_all_time
-    end
-    
-    test "take keys for perfect score" do
-        @test_obj_stud.update(:teacher_granted_keys => 2, :dc_keys => 2, :points_all_time => 8)
-        
-        capybara_login(@teacher_1)
-        click_on("scoresheet_seminar_#{@seminar.id}")
-        fill_in "scores[#{@student_2.id}][#{@objective_10.id}]", with: 10
-        click_on("Save Scores")
-        
-        @test_obj_stud.reload
-        assert_equal 10, @test_obj_stud.points_all_time
-        assert_equal 0, @test_obj_stud.teacher_granted_keys
-        assert_equal 0, @test_obj_stud.dc_keys
     end
     
     test "bad score data" do

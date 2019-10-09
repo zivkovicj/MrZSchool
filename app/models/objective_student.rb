@@ -39,15 +39,15 @@ class ObjectiveStudent < ApplicationRecord
         self.points_all_time = new_score_all_time
         
         if origin == "pretest" || origin == "manual_pretest_score"
-            self.pretest_score = this_score if this_score > self.pretest_score.to_i
+            self.pretest_score = this_score if this_score > pretest_score.to_i
         elsif origin == "manual_points_this_term"
             self.points_this_term = this_score
         elsif origin != "manual_points_all_time"
             self.points_this_term = [points_this_term.to_i, this_score].max
         end
         
+        
         self.save
-        self.take_all_keys if points_all_time == 10
         
         # Set ready for all mainassigns
         if old_score_all_time < 6 && new_score_all_time >= 6
@@ -68,7 +68,7 @@ class ObjectiveStudent < ApplicationRecord
     end
     
     def take_all_keys
-        self.update(:teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0)
+        update(:teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0)
     end
     
     def total_keys

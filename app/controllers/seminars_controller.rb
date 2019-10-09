@@ -183,16 +183,17 @@ class SeminarsController < ApplicationController
         old_scores = eval(params[:old_scores])
         which_scores = params[:which_scores]
         buncha_scores.each do |key_x|
-            stud_id = key_x.to_i
+            @stud_id = key_x.to_i
             buncha_scores[key_x].each do |key_y, value|
-                obj_id = key_y.to_i
-                this_val = Integer(value) rescue nil
-                if this_val && this_val != old_scores[stud_id][obj_id]
-                    this_quiz = Quiz.find_or_create_by(:user_id => stud_id,
-                        :objective_id => obj_id,
+                @obj_id = key_y.to_i
+                @this_val = Integer(value) rescue nil
+                if @this_val && @this_val != old_scores[@stud_id][@obj_id]
+                    this_quiz = Quiz.find_or_create_by(:user_id => @stud_id,
+                        :objective_id => @obj_id,
                         :origin => "manual_#{which_scores}")
-                    this_quiz.update(:total_score => this_val,
+                    this_quiz.update(:total_score => @this_val,
                         :seminar => @seminar)
+                    ObjectiveStudent.find_by(:objective_id => @obj_id, :user_id => @stud_id).take_all_keys
                 end
             end
         end

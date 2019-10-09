@@ -40,10 +40,18 @@ class Quiz < ApplicationRecord
         return total_percentage(summed_score)
     end
     
+    def take_keys_for_perfect_score
+        comp_graded_questions = ripostes.select{|x| x.question.grade_type != "teacher"}
+        if comp_graded_questions.sum(&:tally) == comp_graded_questions.sum(&:poss)
+            ObjectiveStudent.find_by(:objective => objective, :user => user).take_all_keys
+        end
+    end
+    
     def set_total_score
         summed_score = tally_sum
         new_needs_grading = points_still_to_grade > 0
         update(:total_score => total_percentage(summed_score), :needs_grading => new_needs_grading)
+        take_keys_for_perfect_score
         self.seminar.set_grading_needed
     end
     
