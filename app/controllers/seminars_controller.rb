@@ -154,7 +154,7 @@ class SeminarsController < ApplicationController
         @special_title = "#{param_hash[which_score_param.to_s]} Scores"
         @which_scores = which_score_param.to_sym
         
-        gather_objectives_and_scores
+        gather_objectives
         make_empty_objectives
         @scores = @seminar.obj_studs_for_seminar
             .pluck(:user_id, :objective_id, @which_scores)
@@ -169,6 +169,12 @@ class SeminarsController < ApplicationController
             end
         end
         update_current_class
+    end
+    
+    def reroute_to_student
+        @seminar_id = current_user.current_class
+        @sem_stud = SeminarStudent.find_by(:seminar => @seminar_id, :user_id => params[:id])
+        redirect_to @sem_stud
     end
     
     def shared_teachers
@@ -249,7 +255,7 @@ class SeminarsController < ApplicationController
             @this_teacher_can_edit = current_user.can_edit_this_seminar(@seminar) 
         end
         
-        def gather_objectives_and_scores    
+        def gather_objectives
             if @show_all == "false"
                 pre_objectives = @seminar.obj_studs_for_seminar.where("#{@which_scores} > ?", 0).map(&:objective).uniq
             else

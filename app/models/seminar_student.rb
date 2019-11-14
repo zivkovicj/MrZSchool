@@ -20,6 +20,7 @@ class SeminarStudent < ApplicationRecord
         #new_date = date_of_consultancy - self.pref_request.to_i.days
         #self.update(:last_consultant_day => new_date)
     #end
+
     
     private
         def add_student_stuff

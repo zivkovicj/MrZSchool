@@ -68,11 +68,9 @@
           <%# OBJECTIVE HEADER %>
           <table >
             <tr>
-              <% ["Quiz Stars", "Stars Used", "Total Stars"].each do |col_header| %>
-                <td class="score_table_piece">
-                  <div class="score_header_div center"><%= col_header %></div>
-                </td>
-              <% end %>
+              <td class="score_table_piece">
+                 <div class="score_header_div center">Total Stars</div>
+              </td>
               <% @objectives.each_with_index do |objective, indexy| %>
                 <td class="score_table_piece col_<%= indexy %>">
                   <% if objective.id != nil %>
@@ -96,13 +94,12 @@
           <%# STUDENT NAME COLUMN %>
           <table>
             <% @students.each_with_index do |student, indexx| %>
-              <% this_ss = SeminarStudent.find_by(:seminar => @seminar, :user => student) %>
               <tr>
                 <td class="score_table_piece row_<%= indexx %> first_col">
                   <div class="student_name_header">
-                    <%= link_to student.last_name_first, seminar_student_path(this_ss),
+                    <%= link_to student.last_name_first, reroute_to_student_seminar_path(student.id),
                           :class => "plain_link",
-                          :id => "ss_#{this_ss.id}" %>
+                          :id => "ss_#{student.id}" %>
                   </div>
                 </td>
               </tr>
@@ -119,13 +116,9 @@
               <% stud_id = student.id %>
               <tr>
                 <% stars_this_term = @scores[stud_id].values.inject{|a,b| a.to_i + b.to_i}.to_i %>
-                <% bought_stars = student.stars_used_toward_grade_this_term(@seminar, @term).to_i %>
-                <% total_stars = stars_this_term + bought_stars %>
-                <% [stars_this_term, bought_stars, total_stars].each do |this_var| %>
-                  <td class="score_cell score_table_piece center row_<%= indexx %>" cell_row="<%= indexx %>" >
-                    <div class="score_cell_div"><%= this_var %></div>
-                  </td>
-                <% end %>
+                <td class="score_cell score_table_piece center row_<%= indexx %>" cell_row="<%= indexx %>" >
+                    <div class="score_cell_div"><%= stars_this_term %></div>
+                </td>
                 <% @objectives.each_with_index do |objective, indexy| %>
                   <% obj_id = objective.id %>
                   <% this_points = @scores[stud_id][obj_id] %>

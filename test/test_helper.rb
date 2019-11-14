@@ -59,6 +59,13 @@ class ActiveSupport::TestCase
     ObjectiveStudent.find_or_create_by(:user => student, :objective => objective).set_ready
   end
   
+  def refresh_all_objective_seminars_for_testing
+      # Don't mix-up with refresh_all_obj_sems that only looks at a specific seminar
+      ObjectiveSeminar.all.each do |obj_sem|
+          obj_sem.students_needed_refresh
+      end
+  end
+  
   def search_for(target)
     fill_in "search_field", with: target
     click_on("Search")
@@ -199,11 +206,29 @@ class ActiveSupport::TestCase
     @other_teacher = users(:zacky)
     @unverified_teacher = users(:user_1)
     @teacher_3 = @teacher_1.school.teachers[3]
+    
     @student_1 = users(:student_1)
     @student_2 = users(:student_2)
     @student_3 = users(:student_3)
     @student_4 = users(:student_4)
     @student_5 = users(:student_5)
+    @student_6 = users(:student_6)
+    @student_7 = users(:student_7)
+    @student_8 = users(:student_8)
+    @student_9 = users(:student_9)
+    @student_10 = users(:student_10)
+    @student_11 = users(:student_11)
+    @student_12 = users(:student_12)
+    @student_13 = users(:student_13)
+    @student_14 = users(:student_14)
+    @student_15 = users(:student_15)
+    @student_16 = users(:student_16)
+    @student_17 = users(:student_17)
+    @student_18 = users(:student_18)
+    @student_19 = users(:student_19)
+    @student_20 = users(:student_20)
+    @student_46 = users(:student_46)
+    
     @other_school_student = Student.last
     @other_school_student.update(:school => schools(:school_2))
     @student_90 = users(:student_90)

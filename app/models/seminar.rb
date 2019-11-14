@@ -51,10 +51,6 @@ class Seminar < ApplicationRecord
     objective_seminars.where("priority > ?", 0).map(&:objective)
   end
   
-  def rank_objectives_by_need
-    objectives.select{|z| z.priority_in(self) > 0}.sort_by{|x| [-x.priority_in(self), -x.students_who_requested(self)] }
-  end
-  
   def quizzes_to_grade
     Quiz.where(:objective => objectives, :user => students, :needs_grading => true)
   end

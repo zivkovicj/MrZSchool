@@ -4,25 +4,27 @@ class ConsultanciesController < ApplicationController
 
     def new
         @seminar = Seminar.find(params[:seminar])
-        @students = @seminar.students.order(:last_name)
+        #@library = Library.all.includes( books: :author )
+        @sem_studs = @seminar.seminar_students.includes(:user).sort_by{|x| x.user.last_name}
         current_user.update(:current_class => @seminar.id)
         @consultancy = Consultancy.new()
     end
     
     def create
-        @seminar = Seminar.includes(:seminar_students).find(params[:consultancy][:seminar])
-        
+        @seminar = Seminar.find(params[:consultancy][:seminar])
+       
         check_if_date_already
         check_if_ten
         
-        @cThresh = @seminar.consultantThreshold
-        @consultancy = Consultancy.create(:seminar => @seminar)
-        
-        @students = setup_present_students
-        @rank_objectives_by_need = @seminar.rank_objectives_by_need
+        @sem_studs_hash = setup_sem_studs_hash
         @rank_by_consulting = setup_rank_by_consulting
+        @unplaced_students = @rank_by_consulting.dup
+        @teams = []
+        @unplaced_team = {:consultant_id => nil, :objective_id => nil, :bracket => 1, :user_ids => []}
+        @obj_sems = setup_obj_sems_hash
         @need_hash = setup_need_hash
-        @prof_list = setup_prof_list
+        @objectives = get_objectives
+        @score_hash = setup_score_hash
         
         # Each function in these steps is only called once. But I wrote them as
         # separate functions in order to better test the individual pieces.
@@ -31,7 +33,7 @@ class ConsultanciesController < ApplicationController
         place_apprentices_by_mastery
         check_for_lone_students
         new_place_for_lone_students
-        are_some_unplaced
+        create_consultancy
         
         current_user.update!(:current_class => @seminar.id)
         redirect_to consultancy_path(@consultancy, :consultancy_id => @consultancy.id)
@@ -39,12 +41,18 @@ class ConsultanciesController < ApplicationController
     
     def show
         if params[:consultancy_id].present?
+            #@library = Library.all.includes( :books => { :author => :bio } )
             @consultancy = Consultancy.find(params[:consultancy_id])
+            @teams = @consultancy.teams.includes(:users, :consultant, objective: :topic,)
             @seminar = @consultancy.seminar
         else
             @seminar = Seminar.find(params[:id])
             @consultancy = @seminar.consultancies.order(:created_at).last
-            redirect_to new_consultancy_path(:seminar => @seminar.id) if @consultancy.blank?
+            if @consultancy.blank?
+                redirect_to new_consultancy_path(:seminar => @seminar.id)
+            else
+                @teams = @consultancy.teams.includes(:users, :consultant, objective: :topic)
+            end
         end
     end
     

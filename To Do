@@ -1171,9 +1171,21 @@ But there also needs to be an "Quick Unlock" button so that teacher can quickly 
 
 Aqui
 
+3.16  FIX N+1 ERRORS?
+Made a huge impact in scoresheet.
+Next, do it for DC.  Again.
+
+Check one more time in case ceil caused an error in quiz total score
+
+When teacher logs in, there seems to be too many DB calls to find that teacher's record.
 
 
-TESTS TO UPDATE
+
+Teacher should be able to go back to the scoresheet from viewing a student.
+
+It's separating a bunch of students into different groups again, even though they have the same topic.
+
+
 
 I just added some lines to learn_options to eliminate obj_studs that are holding keys.
 Re-insert tests for those.
@@ -1182,21 +1194,7 @@ In tests, replace click("Log out") with logout
 
 
 
-CAN I FIGURE OUT WHAT IS CAUSING THE ERRORS FOR MY CLASSROOM DESKTOP?
-
-
-
-3.13 UNGRADED QUIZZES, pt 1
-When a student earns 100%, except for teacher-graded questions,
-    delete all other keys
-Take all keys when teacher inputs a score manually
-
-
-
-
-
-
-3.14 UNGRADED QUIZZES, pt 2
+3.15 UNGRADED QUIZZES, pt 2
 When a student earns less than 100%, on a quiz that includes teacher-graded questions
   If the student begins a new quiz, copy the already-completed riposte instead of 
      with the current question and answer

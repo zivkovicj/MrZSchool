@@ -38,10 +38,6 @@
       <% this_student = team.users[num] %>
       <% if this_student %>
         <%= this_student.first_plus_init %>
-        <% this_score = this_student.objective_students.find_or_create_by(:objective => team.objective) %>
-        <% if this_score.passed_with_100 %>
-          </br><small>(100%)</small>
-        <% end %>
       <% end %>
   </td>
 <% end %>
@@ -62,7 +58,7 @@
 <% if @unplaced_team %>
   <div class="singleOption lowSingOpt">
     <h3>These students were not placed in a group:</h3>
-    <h4>(The most common reason is because these students have passed all available objectives)</h4>
+    <h4>(These students have passed all available objectives, or they they already have keys for available objectives.)</h4>
     <% @unplaced_team.users.each do |student| %>
       <p class="studentName"><%= student.first_plus_init %></p>
     <% end %>
@@ -72,7 +68,7 @@
 
 
 <table class='table table-borderless'>
-  <% @consultancy.teams.in_groups_of(3).each do |group| %>
+  <% @teams.in_groups_of(3).each do |group| %>
     <tr>
       <% group.each do |team| %>
         <% if team && team.objective %>

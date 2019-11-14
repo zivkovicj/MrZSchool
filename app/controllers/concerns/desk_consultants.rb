@@ -2,158 +2,296 @@
 module DeskConsultants
     extend ActiveSupport::Concern
     
-    # Populate preList with all students who are present today
-    def setup_present_students
-      @seminar.students.select{|x| x.present_in(@seminar)}
-    end
     
-    def setup_prof_list()
-        # The main array that is actually used is profList, which sorts students
-        # by their total scores
-        @prof_list = @students.sort {|a,b| a.quiz_stars_all_time(@seminar) <=> b.quiz_stars_all_time(@seminar)}
+    # Sem_studs_hash
+    def setup_sem_studs_hash
+        SeminarStudent.where(:seminar => @seminar, :present => true).includes(:user)
+        .pluck(:user_id, :present, :last_consultant_day, :teach_request, :learn_request)
+            .map{|user_id, present, last_consultant_day, teach_request, learn_request| {
+                user: user_id,
+                present: present,
+                last_consultant_day: last_consultant_day,
+                teach_request: teach_request,
+                learn_request: learn_request
+            }}
     end
     
     # Rank students by their adjusted consultant points.
     def setup_rank_by_consulting
-        @seminar.seminar_students.where(:user => @students).order(:last_consultant_day).map(&:user)
+        @sem_studs_hash.sort_by{|x| x[:last_consultant_day]}.map{|x| x[:user]}
     end
     
-    # need_hash
-    def setup_need_hash()
-      become_need_hash = Hash.new
-      @seminar.objective_seminars.each do |obj_sem|
-        become_need_hash[obj_sem.objective.id] = obj_sem.students_needed / 3
-      end
-      return become_need_hash
+    # obj_sems hash
+    def setup_obj_sems_hash
+        @seminar.objective_seminars.includes(:objective).where("priority > ?", 0)
+            .pluck(:objective_id, :priority, :students_needed)
+            .map{|objective_id, priority, students_needed|
+                {obj: objective_id,
+                 priority: priority,
+                 students_needed: students_needed
+                }
+            }
+    end
+    
+    # Need Hash
+    def setup_need_hash
+        need_hash = {}
+        @obj_sems.each{|val| need_hash[val[:obj]] = val[:students_needed]}
+        return need_hash
+    end
+    
+    # Get Objectives
+    def get_objectives
+        @obj_sems.sort_by{|x| -x[:priority]}.map{|x| x.first[1]}
+    end
+    
+    # score_hash
+    def setup_score_hash
+        ObjectiveStudent.where(:objective => @objectives, :user_id => @rank_by_consulting)
+        .pluck(:objective_id, :user_id, :points_all_time, :ready, :teacher_granted_keys, :dc_keys, :pretest_keys)
+        .map{|objective_id, user_id, points_all_time, ready, teacher_granted_keys, dc_keys, pretest_keys| {
+            obj: objective_id,
+            user: user_id,
+            points: points_all_time,
+            ready: ready,
+            total_keys: teacher_granted_keys + dc_keys + pretest_keys
+        }}
     end
   
     # Establish a new consultant group
-    def establish_new_group(stud, obj, isConsult)
+    def establish_new_group(user_id, obj, is_consult)
       # Bracket 0 = normal
       # Bracket 1 = unplaced students
       # Bracket 2 = absent students
-      new_team = @consultancy.teams.build(:objective => obj, :bracket => 0)
-      new_team.consultant = stud if isConsult
-      new_team.save
-      new_team.users << stud
-      @need_hash[obj.id] -= 1 if obj
+      new_team = {}
+      new_team[:consultant_id] = nil
+      new_team[:consultant_id] = user_id if is_consult
+      new_team[:objective_id] = obj
+      new_team[:user_ids] = []
+      new_team[:user_ids] << user_id
+      @teams << new_team
     end
     
-    def need_placement(student)
-      !@consultancy.users.include?(student)
+    def adjust_need_hash(obj)
+        @need_hash[obj] -= 4 if obj
+    end
+    
+    def adjust_unplaced_students(user_id)
+        @unplaced_students.delete(user_id)
     end
     
     # Choose the consultants
-    def choose_consultants
-      classSize = @students.count
-      @consultantsNeeded = (classSize/4.to_f).ceil
-      
-      def consult_list_still_needed
-        @rank_by_consulting.select{|x| need_placement(x)}
-      end
-    
-      def check_for_final_break
-        @consultancy.teams.count >= @consultantsNeeded
-      end
-      
-      def still_needed(obj)
-        [(@consultantsNeeded - @consultancy.teams.count), @need_hash[obj.id]].min
-      end
-      
-      # First look at the priority 5 objectives
-      @seminar.objectives.select{|y| y.priority_in(@seminar) == 5}.each do |obj|
-        temp_consult_list = consult_list_still_needed.select{|x| x.score_on(obj) >= @cThresh}
-        hp_consult_list = temp_consult_list.select{|x| x.score_on(obj) < 10 && x.student_has_keys(obj) == 0}
-        hp_consult_list << temp_consult_list.select{|x| x.student_has_keys(obj) > 0}
-        hp_consult_list << temp_consult_list.select{|x| x.score_on(obj) == 10}
-        hp_consult_list.flatten!
-        hp_consult_list.take(still_needed(obj)).each do |student|
-          establish_new_group(student, obj, true)
-        end
-        # Can probably get rid of the next block
-        consult_list_still_needed.select{|x| x.score_on(obj) >= @cThresh && x.student_has_keys(obj) == 0}.take(still_needed(obj)).each do |student|
-          establish_new_group(student, obj, true)
-        end
-      end
-      
-      # Then look at students in order of increasing consultant points
-      consult_list_still_needed.each do |student|
-        return if check_for_final_break  # Needed in case some potential need to be skipped because they're not qualified
-        
-        # See if student's consultant request will work.
-        this_request = student.teach_request_in(@seminar)
-        obj = Objective.find(this_request) if this_request
-        if obj && @need_hash[this_request] && @need_hash[this_request] > 0 && obj.priority_in(@seminar) > 0
-          establish_new_group(student, obj, true)
-          next  # So that the requested topic isn't replaced with the teach_option topic
-        end
-        
-        # If the request didn't work out, look at the student's teach_options
-        obj = student.teach_options(@seminar).detect{|x| @need_hash[x.id] > 0}
-        establish_new_group(student, obj, true) if obj
-      end
+    def still_needed(obj)
+        groups_need_for_obj = ((@need_hash[obj].to_f/4).to_f).ceil
+        groups_need_for_class = @consultants_needed - @teams.count
+        return [groups_need_for_obj, groups_need_for_class].min
     end
     
+    def choose_consultants
+      
+      def check_for_final_break
+        @teams.count >= @consultants_needed
+      end
+      
+      def check_priority_five_objectives
+          priority_five_objs = @obj_sems.select{|x| x[:priority] == 5}.map{|x| x[:obj]}
+          priority_five_objs.each do |obj|
+              perfect_studs = @score_hash.select{|x|
+                  x[:obj] == obj &&
+                  x[:points].to_i > 4 &&
+                  x[:points].to_i < 9 &&
+                  x[:total_keys] == 0
+              }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
+              
+              nine_star_studs = @score_hash.select{|x|
+                  x[:obj] == obj &&
+                  x[:points].to_i == 9 &&
+                  x[:total_keys] == 0
+              }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
+              
+              ten_star_studs = @score_hash.select{|x|
+                  x[:obj] == obj &&
+                  x[:points].to_i == 10 &&
+                  x[:total_keys] == 0
+              }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
+              
+              studs_with_keys = @score_hash.select{|x|
+                  x[:obj] == obj &&
+                  x[:points].to_i > 4 &&
+                  x[:total_keys] > 0
+              }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
+              
+              qualified_studs = [perfect_studs,nine_star_studs,ten_star_studs,studs_with_keys].flatten
+              
+              qualified_studs.take(still_needed(obj)).each do |user_id|
+                  establish_new_group(user_id, obj, true)
+                  adjust_need_hash(obj)
+                  adjust_unplaced_students(user_id)
+              end
+          end
+      end
+      
+      @consultants_needed = ((@rank_by_consulting.count/4).to_f).ceil
+      check_priority_five_objectives
+      
+      # Then look at students in order of increasing consultant points
+      
+      @unplaced_students.each do |user_id|
+        return if check_for_final_break
+        
+        # See if student's teach_request will work.
+        this_request = @sem_studs_hash.detect{|x| x[:user] == user_id}[:teach_request]
+        if this_request
+            this_obj_sem = @obj_sems.detect{|x| x[:obj] == this_request}
+            if this_obj_sem
+                this_priority = this_obj_sem[:priority]
+                if (@need_hash[this_request] && @need_hash[this_request] > 0 && this_priority > 0)
+                        establish_new_group(user_id, this_request, true)
+                        adjust_need_hash(this_request)
+                        adjust_unplaced_students(user_id)
+                        next
+                end
+            end
+        end
+        
+        # If the request doesn't work, look at the student's teach_options
+        # This method basically emulates the teach_options method
+        qualified_objs = @score_hash.select{|x|
+            x[:user] == user_id &&
+            x[:points].to_i > 4 &&
+            x[:points].to_i < 9 &&
+            x[:total_keys] < 1 &&
+            @need_hash[x[:obj]] > 0
+        }.map{|x| x[:obj]}
+        this_obj = @objectives.detect{|x| qualified_objs.include?(x)}
+        
+        if this_obj
+            establish_new_group(user_id, this_obj, true)
+            adjust_need_hash(this_obj)
+            adjust_unplaced_students(user_id)
+            next
+        end
+      end
+    end
 
     ## SORT APPRENTICES INTO CONSULTANT GROUPS ##
     
-    def prof_list_still_needed
-      @prof_list.select{|x| need_placement(x)}
-    end
-    
     # First, try to place apprentices into groups offering their learn Requests
     def place_apprentices_by_requests
-      prof_list_still_needed.each do |student|
-        this_request = student.learn_request_in(@seminar)
-        if this_request
-          team = @consultancy.teams.detect{|x| x.objective.id == this_request && x.has_room}
-          team.users << student if team
+        def find_student_by_request(team)
+            this_obj = team[:objective_id]
+            these_studs = @sem_studs_hash
+            .select{|x|
+                x[:learn_request] == this_obj &&
+                @unplaced_students.include?(x[:user])
+            }.map{|x| x[:user]}
+            
+            this_score = @score_hash.detect{|x|
+                x[:obj] == this_obj &&
+                these_studs.include?(x[:user]) &&
+                x[:total_keys] < 1
+            }
+            
+            if this_score
+                this_user = this_score[:user]
+                add_to_group(team, this_user)
+                adjust_unplaced_students(this_user)
+            end
         end
-      end
+        
+        4.times do
+            @teams.each do |team|
+                find_student_by_request(team)
+            end
+        end\
     end
     
     # Most students probably won't be placed by their requests. 
-    def place_apprentices_by_mastery()
-      prof_list_still_needed.each do |stud|
-        find_placement(stud, 6)
-      end
+    # Place them by the group that can fit them.
+    
+    # Look for readiness next
+    
+    def add_to_group(team, this_user)
+        team[:user_ids] << this_user
     end
     
-    def find_placement(student, max)
-      team = @consultancy.teams.detect{|x| x.has_room && student.objective_students.find_by(:objective => x.objective).obj_ready_and_willing?(max)}
-      team.users << student if team
-      return team
+    def find_student_by_score(team)
+        this_obj = team[:objective_id]
+        this_score = @score_hash
+            .detect{|x|
+                @unplaced_students.include?(x[:user]) &&
+                x[:obj] == this_obj &&
+                x[:points].to_i < 6 &&
+                x[:ready] == true &&
+                x[:total_keys] < 1
+            }
+        
+        if this_score
+            this_user = this_score[:user]
+            add_to_group(team, this_user)
+            adjust_unplaced_students(this_user)
+        end
+    end
+    
+    def place_apprentices_by_mastery
+        4.times do
+            @teams.each do |team|
+                if team[:user_ids].count < 4
+                    find_student_by_score(team)
+                end
+            end
+        end
     end
     
     def check_for_lone_students
-      @consultancy.teams.joins(:users).group('teams.id').having('count(users.id) < 2').destroy_all
-      @consultancy.reload
+        # If some teams have a consultant, but no teams members, elimiate those teams
+        # And place those students back on the unplaced list
+      @teams.each do |team|
+          if team[:user_ids].count < 2
+              @unplaced_students.push(*team[:user_ids])
+              @teams.delete(team)
+          end
+      end
     end
     
     def new_place_for_lone_students
-      prof_list_still_needed.reverse.each do |student|
-        # First, check whether lone student can be placed into an established group
-        if find_placement(student, 6) == nil
-          
-          # If not, try establishing a new group for that student. This function is smelly, but I'm doing it in this order so that other
-          # lone students might also join this group.
-          
-          # In establishing a new group, try the student's learn_request
-          # This should happen if all goes normal.
-          request_id = student.learn_request_in(@seminar)
-          this_request = Objective.find(request_id) if request_id 
-          if this_request && this_request.priority_in(@seminar) > 0
-            establish_new_group(student, this_request, false)
-          else
-            # Last resort is to start a new group with the student's first learn option
-            # This is mostly for the case where the student doesn't have a learn_request
-            # This can also happen if something happened to the student's learn_request after it was made.
-            # For example, the teacher changed the priority to zero.
-            obj = student.learn_options(@seminar)[0]
-            establish_new_group(student, obj, false) if obj
-          end
+        @unplaced_students.reverse.each do |stud|
+            # First, check whether lone student can be placed into an established group
+            teams_with_room = @teams.select{|x| x[:user_ids].count < 4}
+            suitable_objs = @score_hash.select{|x|
+                x[:user] == stud &&
+                x[:ready] == true &&
+                x[:points].to_i < 6 &&
+                x[:total_keys] == 0
+            }.map{|x| x[:obj]}
+        
+            this_team = teams_with_room.detect{|x| suitable_objs.include?(x[:objective_id])}
+            
+            if this_team
+                add_to_group(this_team, stud)
+                next
+            end
+            
+            # If student can't be placed, try the student's learn request
+            # If there is a request, and the priority is above zero, and the student is ready, make a new group
+            # @objectives.include?(request_id) checks that the request is in the classes' objectives with non-zero priority
+            request_id = @sem_studs_hash.detect{|x| x[:user] == stud}[:learn_request]
+            
+            if request_id && @objectives.include?(request_id) && suitable_objs.include?(request_id)
+                establish_new_group(stud, request_id, false)
+                next  # Moves on to the next student, which prevents looking at learn options
+            end
+            
+            # Third resort is to make a new group with the student's top suitable objective
+            this_obj = @objectives.detect{|x| suitable_objs.include?(x)}
+            if this_obj
+                establish_new_group(stud, this_obj, false)
+                next
+            end
+            
+            # If student is still not placed, add them to the unplaced_students
+            @unplaced_team[:user_ids] << stud
         end
-      end
     end
   
     def assignSGSections()
@@ -161,24 +299,34 @@ module DeskConsultants
       # team member a number, which could correspond to different roles of the
       # activity.
       
-      @consultancy.teams.each do |team|
-        currAssign = 1
-        rev[:group].each_with_index do |groupMember, index|
-          if rev[:consultant][index] == 0
-            rev[:consultant][index] = currAssign
-            currAssign = currAssign + 1
-          end
-        end
-      end
+      #@consultancy.teams.each do |team|
+      #currAssign = 1
+      #rev[:group].each_with_index do |groupMember, index|
+      #if rev[:consultant][index] == 0
+      #rev[:consultant][index] = currAssign
+      #currAssign = currAssign + 1
+      #end
+      #end
+      #end
     end
     
-    def are_some_unplaced
-      if prof_list_still_needed.present?
-        unplaced_team = @consultancy.teams.create(:bracket => 1)
-        prof_list_still_needed.each do |student|
-          unplaced_team.users << student
+    def create_consultancy
+        @consultancy = Consultancy.create(:seminar => @seminar)
+        
+        @teams << @unplaced_team if @unplaced_team[:user_ids].count > 0
+        
+        these_teams = []
+        @teams.each_with_index do |team, index|
+            these_teams[index] = Team.new(:consultancy_id => @consultancy.id, :consultant_id => team[:consultant_id], :objective_id => team[:objective_id], :bracket => team[:bracket])
+            these_teams[index].user_ids = team[:user_ids]
         end
-      end
+        
+        # This method of saving creates all teams in a single db call
+        Team.transaction do
+            these_teams.each do |this_team|
+                this_team.save!
+            end
+        end
     end
     
 

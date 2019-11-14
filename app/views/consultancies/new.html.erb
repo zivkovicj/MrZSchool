@@ -13,20 +13,19 @@
 <div class = "container-fluid">
     <div class="row">
         <div class="seating-block">
-            <% @seminar.students.order(:last_name).in_groups_of(6).each do |group| %>
+            <% @sem_studs.in_groups_of(6).each do |group| %>
                 <div class="row">
-                    <% group.each do |student| %>
-                        <% if student %>
-                            <% this_ss = @seminar.seminar_students.find_by(:user => student) %>
-                            <% if this_ss.present %>
+                    <% group.each do |sem_stud| %>
+                        <% if sem_stud %>
+                            <% if sem_stud.present %>
                                 <% thisClass = "col-md-2 seat clicky_seat" %>
                                 <% thisText = "Present" %>
                             <% else %>
                                 <% thisClass = "col-md-2 seat clicky_seat absent" %>
                                 <% thisText = "Absent" %>
                             <% end %>
-                            <div class = "<%= thisClass %>" id="attendance_div_<%= this_ss.id %>" name="ss_<%= this_ss.id %>">
-                                <%= student.first_plus_init %></br>
+                            <div class = "<%= thisClass %>" id="attendance_div_<%= sem_stud.id %>" name="ss_<%= sem_stud.id %>">
+                                <%= sem_stud.user.first_plus_init %></br>
                                 <p class="presentTag"><%= thisText %></p>
                             </div>
                         <% end %>

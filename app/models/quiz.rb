@@ -32,7 +32,7 @@ class Quiz < ApplicationRecord
     end
     
     def total_percentage(summed_score)
-        ((summed_score * 10)/poss_sum.to_f).round
+        ((summed_score * 10)/poss_sum.to_f).ceil
     end
     
     def max_after_grade

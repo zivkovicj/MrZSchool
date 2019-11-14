@@ -64,6 +64,7 @@ Rails.application.routes.draw do
     get 'priorities', on: :member
     get 'quiz_grading', on: :member
     get 'remove', on: :member
+    get 'reroute_to_student', on: :member
     get 'rewards', on: :member
     get 'scoresheet', on: :member
     get 'shared_teachers', on: :member
