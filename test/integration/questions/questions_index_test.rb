@@ -69,6 +69,19 @@ class QuestionsIndexTest < ActionDispatch::IntegrationTest
         click_on("back_button")
         assert_on_teacher_page
     end
+
+    test "question by id number" do
+        capybara_login(@teacher_1)
+        go_to_all_questions
+        
+        assert_no_selector('a', :id => "edit_#{@admin_q.id}", :text => @admin_q.short_prompt)
+        
+        fill_in "search_field", with: @admin_q.id
+        choose("whichParam_id")
+        click_on("Search")
+        
+        assert_selector('a', :id => "edit_#{@admin_q.id}", :text => @admin_q.short_prompt)
+    end
     
     test "delete question" do
         old_q_count = Question.count

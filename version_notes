@@ -20,7 +20,9 @@ Between each update, manually test:
 
 
 
-
+3.16  FIX N+1 ERRORS?
+Made a huge impact in scoresheet.
+Next, do it for DC.  Again.
 
 
 

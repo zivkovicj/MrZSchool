@@ -8,6 +8,7 @@
 <%= render 'shared/headline' %>
 
 
+<h3>Question ID #<%= @question.id %></h3>
 
 <%= form_for(@question) do |q| %>
   <%= render 'shared/error_messages', object: @question %>

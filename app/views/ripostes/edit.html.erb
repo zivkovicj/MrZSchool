@@ -1,4 +1,7 @@
-<h3>Question: <%= @riposte.position %></h3>
+<h5 style="color:gray">Question ID #<%= @question.id %></h5>
+<h3><strong><%= @riposte.quiz.objective.name %></strong>
+&emsp; &emsp; Question: <%= @riposte.position %></h3>
+
 
 <div class="singleOption">
     <div class="row">
@@ -12,6 +15,7 @@
     </div>
 </div>
 </br>
+
 
 <%= form_for(@riposte) do |r| %>
     <% if @question.grade_type == "teacher" then %>
@@ -44,7 +48,8 @@
             <% end %>
         </div>
     </table>
-    
+
+
     </br>
     <%= r.submit "Next Question", class: "btn btn-primary" %>
 <% end %>

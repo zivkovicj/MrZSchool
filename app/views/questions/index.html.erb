@@ -8,8 +8,8 @@
 
 <%= render :partial => 'shared/search_field', 
   :locals => {:whichPath => questions_path,
-              :attrLabel1 => "Prompt", :attrLabel2 => nil, :attrLabel3 => nil, :attrLabel4 => nil, :attrLabel5 => nil,
-              :attrData1 => :prompt, :attrData2 => nil, :attrData3 => nil, :attrData4 => nil, :attrData5 => nil} %>
+      :attrLabel1 => "Prompt", :attrLabel2 => "ID#", :attrLabel3 => nil, :attrLabel4 => nil, :attrLabel5 => nil,
+      :attrData1 => :prompt, :attrData2 => :id, :attrData3 => nil, :attrData4 => nil, :attrData5 => nil} %>
 
 
 <% if @questions != [0] %>
@@ -49,7 +49,7 @@
                     <% if n > 0 %>
                       , &nbsp;
                     <% end %>
-                    <% conditional_wrapper(question.correct_answers.include?(this_choice)) do %>
+                    <% conditional_wrapper(question.correct_answers.include?(this_choice.to_s)) do %>
                       <%= this_choice %>
                     <% end %>
                   <% end %>

@@ -4,7 +4,7 @@
     <% @quiz.ripostes.each do |riposte| %>
         <% question = riposte.question %>
         <div class="container singleOption topic">
-            </br>
+            <h5 style="color:gray;">Question ID #<%= question.id %></h5>
             <div class="singleOption lowSingOpt">
                 <div class="row">
                     <div class="col-sm-6">
@@ -29,7 +29,7 @@
                     <% end %>
                     <% riposte.stud_answer.each do |response| %>
                         <% if question.grade_type == "computer" then %>
-                            <% fixed_response = response.downcase.gsub(/\s+/, "") %>
+                            <% fixed_response = response.to_s.downcase.gsub(/\s+/, "") %>
                             <% class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
                         <% else %>
                             <% class_type == "" %>

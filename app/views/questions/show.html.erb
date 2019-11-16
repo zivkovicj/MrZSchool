@@ -4,35 +4,44 @@
 <%= render 'shared/back-link' %>
 <%= render 'shared/headline' %>
 
-  <div class="singleOption">
+<div class="singleOption">
     <h2><%= @question.extent.capitalize %> Question Created by: <%= @created_by %></h2>
     </br>
     </br>
     You are viewing the details of this question. You may not make any edits because it was created by another teacher.
-  </div>
-  </br>
-  <div class="singleOption">
-    <div class="container"><div class="row">
-        <div class="col-sm-6">
-          <h4>Label: <%= @question.label.name %></h4>
-          <h4>Style: <%= @question.style.capitalize %></h4>
-          <h2>Prompt &nbsp;</h2>
-          </br>
-          <h5><%= @question.prompt %></h5>
-        </div>
-        <div class="col-sm-6">
-          </br> 
-          <h2>Answer Choices</h2>
-          <ul>
-            <% @question.choices.each do |this_choice| %>
-              <% if this_choice.present? %>
-                <li><% conditional_wrapper(@question.correct_answers.include?(this_choice)) do %>
-                  <%= this_choice %>
-                <% end %></li>
-              <% end %>
-            <% end %>
-          </ul>
-        </div>    
-    </div></div>
-  </div>
 </div>
+
+</br>
+
+<h3>Question ID #<%= @question.id %></h3>
+
+<div class="singleOption">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4><strong> Label </strong><%= @question.label.name %> </h4>
+                <h4><strong> Style </strong><%= @question.style %></h4>
+                <h2>Prompt &nbsp;</h2>
+                </br>
+                <h5><%= @question.prompt %></h5>
+            </div>
+
+            <div class="col-sm-6">
+              </br>
+              <h2>Answer Choices</h2>
+              <ul>
+                <% @question.choices.each do |this_choice| %>
+                  <% if this_choice.present? %>
+                    <li>
+                        <% conditional_wrapper(@question.correct_answers.include?(this_choice.to_s)) do %>
+                            <%= this_choice %>
+                        <% end %>
+                    </li>
+                  <% end %>
+                <% end %>
+              </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
