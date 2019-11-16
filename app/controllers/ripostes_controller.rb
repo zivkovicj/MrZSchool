@@ -23,8 +23,8 @@ class RipostesController < ApplicationController
                     if @question.style == "fill_in"
                         stud_answer = [params[:stud_answer]]
                         correct_poss = 2
-                        correct_array = @question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "")}
-                        backend_answer = stud_answer.map{|e| e.downcase.gsub(/\s+/, "")}
+                        correct_array = @question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
+                        backend_answer = stud_answer.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
                     else
                         params[:stud_answer].each do |this_answer|
                             stud_answer << @question.choices[this_answer.to_i]
