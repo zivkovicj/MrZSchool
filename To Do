@@ -1176,24 +1176,19 @@ Aqui
 
 Teacher should be able to go back to the scoresheet from viewing a student.
 
-3.17 LOCK QUIZZES AT CERTAIN TIMES
-V If quizzes are locked, students will see a "locked quiz" message instead of their keys.
-V Quizzes lock after 4:30
-V And on Saturday and Sunday 
-V Remove the catchy name from the display of quizzes
-V In tests, replace click("Log out") with logout
-V Replace tests for learn_options to eliminate obj_studs that are holding keys.
-V Don't show students "Has scored 100% on this objective"
-V To achieve this, I might need to split the key box into two methods
-
-FAIL["test_choose_consultants", Minitest::Result, 572.363327]
- test_choose_consultants#Minitest::Result (572.36s)
-        Expected false to be truthy.
-        test/integration/consultancies/consultancies_show_test.rb:338:in `block in <class:ConsultanciesShowTest>'
 
 
-Blank out scores where student has no quizzes
+Update the "Proudly Featuring"
 
+
+TOPICS THAT AREN'T SHOWING IN QUESTION-SELECT
+Can't find any problem in the live site. Try using consoles and debuggers in devleopment site
+
+Edit a label, default topic
+Add topics, domains, and fields through app
+Scientific Notation is giving 9 stars when it should give 10
+    Happened to Jonah Critchley
+	I think the problem is because of select-many questions 
 
 
 DB CALLS, PART 2
