@@ -272,7 +272,7 @@ class SeminarsController < ApplicationController
         end
         
         def reset_all_student_grades(seminar)
-            seminar.obj_studs_for_seminar.update_all(:points_this_term => 0) 
+            seminar.obj_studs_for_seminar.update_all(:points_this_term => nil) 
         end
         
         def set_pretests

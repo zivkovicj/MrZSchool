@@ -24,6 +24,8 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         go_to_first_period
         click_on("Quizzes")
         
+        assert_selector("h3", :text => "You have used all of your quiz keys")
+        assert_no_selector("h2", :text => "Quizzes are Closed Right Now")
         assert_no_selector('a', :id => "teacher_granted_#{@objective_10.id}")
     end
     
@@ -53,24 +55,21 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
     
     test "teacher keys" do
+        # Capybara can find the key link named teacher keys
+        
+        travel_to_open_time
         make_ready(@student_2, @objective_10)
         try_quiz_twice("teacher_granted")
     end
     
     test "pretest keys" do
+        travel_to_open_time
         make_ready(@student_2, @objective_10)
         try_quiz_twice("pretest")
     end
-
-    test "other quiz shows catchy name" do
-        make_ready(@student_2, @objective_10)
-        @test_os.update(:teacher_granted_keys => 2)
-        go_to_first_period
-        click_on("Quizzes")
-        assert_selector("a", :text => "Percentareenos", :id => "teacher_granted_#{@objective_10.id}")
-    end
     
     test "quiz without questions" do
+        travel_to_open_time
         @bad_objective = Objective.create(:name => "Bad Objective", :topic => Topic.first, :catchy_name => "Bad Objective")
         @bad_objective.objective_seminars.create(:seminar => @seminar, :pretest => 1)
         @bad_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
@@ -84,6 +83,7 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
     
     test "quiz with questions" do
+        travel_to_open_time
         make_ready(@student_2, @objective_10)
         @test_os.update(:teacher_granted_keys => 2)
         set_specific_score(@test_os.user, @test_os.objective, 4)
@@ -96,6 +96,8 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
     
     test "unfinished quizzes" do
+        travel_to_open_time
+        
         @seminar.objective_seminars.update_all(:pretest => 0)
         make_ready(@student_2, @objective_10)
         @seminar.objective_seminars.find_by(:objective => @objective_10).update(:pretest => 1)
@@ -114,13 +116,13 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
             click_on("Next Question")
         end
        
-        click_on("Log out")
+        logout
        
         go_to_first_period
         click_on("Quizzes")
         assert_text("Unfinished Quizzes")
         assert_no_text("Pretest Objectives")
-        click_link("#{@objective_10.catchy_name}") # This time the first link should go to the unfinished quiz
+        click_link("#{@objective_10.name}") # This time the first link should go to the unfinished quiz
         assert_text("Question: 4")                      # A little redundant with the next line, but this assertion is the most important one
        
         7.times do |n|
@@ -133,6 +135,8 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
     
     test "not ready for pretest" do
+        travel_to_open_time
+        
         @test_os.update(:pretest_keys => 2)
         set_specific_score(@test_os.user, @objective_10, 2)
         assert @objective_20.preassigns.include?(@objective_10)
@@ -147,6 +151,8 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
 
     test "not ready doesnt matter for nonpretest" do
+        travel_to_open_time
+        
         @test_os.update(:teacher_granted_keys => 2)
         set_specific_score(@test_os.user, @objective_10, 2)
         assert @objective_20.preassigns.include?(@objective_10)
@@ -161,6 +167,8 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
     
     test "yes ready for pretest" do
+        travel_to_open_time
+        
         main_assign_os = @objective_20.objective_students.find_by(:user => @student_2)
         main_assign_os.update(:pretest_keys => 2)
         make_ready(@student_2, @objective_20)
@@ -172,6 +180,8 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
     end
     
     test "erase oldest quiz if student has 6" do
+        travel_to_open_time
+        
         @test_os.update(:teacher_granted_keys => 2)
         set_specific_score(@test_os.user, @test_os.objective, 8)  # First instance of quiz
         make_ready(@student_2, @objective_10)
@@ -186,6 +196,55 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
             answer_quiz_randomly
             click_on ("Try this quiz again")   # Third through 5th instances of quiz are added here.
         end
+    end
+
+
+    test "lock in evening" do
+        travel_to Time.zone.local(2019, 12, 07, 0, 15, 44)
+        give_a_key
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        # Attempt quiz on Friday, but too late.
+        # Quiz is not open.
+        assert_equal "Friday", Date.today.strftime("%A")
+        assert_equal "17:15", Time.now.strftime("%k:%M")
+        
+        assert_selector("h2", :text => "Quizzes are Closed Right Now")
+        assert_no_selector("a", :id => "teacher_granted_#{@objective_10.id}")
+    end
+
+    test "dont lock in afternoon" do
+        travel_to_open_time
+        give_a_key
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        # Attempt quiz during open window.
+        # Quiz is available.
+        assert_equal "Friday", Date.today.strftime("%A")
+        assert_equal "16:45", Time.now.strftime("%k:%M")
+        
+        assert_no_selector("h2", :text => "Quizzes are Closed Right Now")
+        assert_selector("a", :id => "teacher_granted_#{@objective_10.id}")
+    end
+
+    test "lock on saturday" do
+        travel_to Time.zone.local(2019, 12, 07, 23, 45, 44)
+        give_a_key
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        # Try to take quiz early enough, but on Saturday.
+        # Quiz is not open
+        assert_equal "Saturday", Date.today.strftime("%A")
+        assert_equal "16:45", Time.now.strftime("%k:%M")
+        
+        assert_selector("h2", :text => "Quizzes are Closed Right Now")
+        assert_no_selector("a", :id => "teacher_granted_#{@objective_10.id}")
     end
     
 end

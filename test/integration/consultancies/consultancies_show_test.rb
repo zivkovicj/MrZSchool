@@ -592,7 +592,6 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         @teams.each do |team|
             team[:user_ids].reject{|x| x == team[:consultant_id]}.each do |stud|
                 this_obj_stud = ObjectiveStudent.find_by(:objective => team[:objective_id], :user_id => stud)
-                debugger if this_obj_stud == nil
                 this_stud_fits = this_obj_stud.points_all_time.to_i < 6 || this_obj_stud.user.seminar_students.find_by(:seminar => @seminar).learn_request == team[:objective_id]
                 assert this_stud_fits
             end
@@ -731,7 +730,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         team_1 = {:consultant_id => @student_4.id, :objective_id => @objective_50.id, :user_ids => [@student_4.id, @student_5.id]}
         team_2 = {:consultant_id => nil, :objective_id => @own_assign.id, :user_ids => [@student_6.id, @student_7.id]}
         team_3 = {:consultant_id => @student_8.id, :objective_id => @objective_40.id, :user_ids => [@student_8.id]}
-        @unplaced_students = [@student_9.id, @student_10.id]
+        @unplaced_team = {:consultant_id => nil, :objective_id => nil, :bracket => 1, :user_ids => [@student_9.id, @student_10.id]}
         @teams = [team_0, team_1, team_2, team_3]
         
         create_consultancy

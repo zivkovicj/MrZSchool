@@ -72,6 +72,14 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
         set_specific_score(@student_2, other_obj, nil)
         ObjectiveStudent.find_by(:objective => other_obj, :user => @student_1).update(:teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0)
         
+        #Make sure seminar doesn't have too many objectives
+        rest_of_objs = @seminar.objectives.select{|x| ![@objective_10, mainassign, other_obj].include?(x)}
+        while @seminar.objectives.count > 6
+            obj_to_delete = rest_of_objs.last
+            @seminar.objectives.delete(obj_to_delete)
+            rest_of_objs.delete(obj_to_delete)
+        end
+        
         set_ready_all(@student_1)
         
         assert @student_1.learn_options(@seminar).include?(@objective_10)
@@ -102,8 +110,7 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
         @seminar.objectives.delete(@objective_10)
         assert_not @student_1.learn_options(@seminar).include?(@objective_10)
     end
-        
-    
+
     test "learn options priority order" do
         assert @student_1.learn_options(@seminar).count < 10
         
@@ -119,6 +126,17 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
         assert_not_equal newest_obj, @student_1.learn_options(@seminar)[0]
         @seminar.objective_seminars.find_by(:objective => newest_obj).update(:priority => 5)
         assert_equal newest_obj, @student_1.learn_options(@seminar)[0]
+    end
+
+    test "learn options already has keys" do
+        this_obj_stud = ObjectiveStudent.find_by(:objective => @objective_10, :user => @student_1)
+        this_obj_stud.update(:points_all_time => 3, :teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0)
+        
+        assert @student_1.learn_options(@seminar).include?(@objective_10)
+        
+        this_obj_stud.update(:teacher_granted_keys => 2)
+        
+        assert_not @student_1.learn_options(@seminar).include?(@objective_10)
     end
     
 end

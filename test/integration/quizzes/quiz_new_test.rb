@@ -12,8 +12,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         setup_scores
         setup_goals
         
-        @test_obj_stud = @objective_10.objective_students.find_by(:user => @student_2)
-        @test_obj_stud.update(:teacher_granted_keys => 2, :ready => true)
+        give_a_key
+        travel_to_open_time
     end
     
     def begin_quiz
@@ -242,7 +242,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         find("#quiz_grading_seminar_#{@seminar.id}").click
         assert_text("All quizzes in this class are fully graded.")
         
-        click_on("Log out")
+        logout
         
         ###  FIRST STUDENT TAKES QUIZ FOR OBJECTIVE 1
         go_to_first_period
@@ -293,7 +293,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         
         assert_equal 0, @quiz_2.reload.total_score
         
-        click_on("Log out")
+        logout
         
         # SECOND STUDENT TAKES QUIZ FOR OBJECTIVE 1
         # Scores 100% on computer-graded questions, which takes the second key.
@@ -315,7 +315,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal 6, @quiz_3.reload.total_score
         assert_equal 0, obj_stud_2_1.reload.teacher_granted_keys
         
-        click_on("Log out")
+        logout
         
         # TEACHER GRADES THOSE QUESTIONS
         capybara_login(@teacher_1)
@@ -551,6 +551,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert os_1.reload.ready
         assert_not os_2.reload.ready
     end
+
     
     
 end

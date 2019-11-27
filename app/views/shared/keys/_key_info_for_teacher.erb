@@ -1,0 +1,7 @@
+
+
+<% if this_os.passed_with_100 %>
+    Has scored 100% on this objective
+<% elsif this_os.ready? == false %>
+    <div id="not_ready_<%= this_os.id %>">Hasn't passed the pre-requisites for this objective.</div>
+<% end %>

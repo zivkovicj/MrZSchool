@@ -32,7 +32,8 @@
                     <tr>
                         <%= render 'shared/keys/add_key_buttons', :this_os => this_os %>
                         <td><%= student.last_name_first %></td>
-                        <td><%= render 'shared/keys/list_of_keys', :this_os => this_os, :this_sem => seminar %></td>
+                        <%= render 'shared/keys/list_of_keys', :this_os => this_os, :this_sem => seminar %>
+                        <td><%= render 'shared/keys/key_info_for_teacher', :this_os => this_os %></td>
                     </tr>
                 <% end %>
             </table>

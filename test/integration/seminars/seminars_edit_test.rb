@@ -124,7 +124,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 3, @seminar.term
         assert_equal 4, @seminar.which_checkpoint
         assert_equal 1, @seminar_2.reload.term    # To make sure that only changes if the repeat choice is checked.
-        assert_equal 0, test_obj_stud.reload.points_this_term
+        assert_equal nil, test_obj_stud.reload.points_this_term
     end
     
     test "change term default" do
@@ -174,8 +174,8 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 3, @seminar.reload.term
         assert_equal 3, @seminar_2.reload.term
         assert_equal 1, @avcne_seminar.reload.term
-        assert_equal 0, test_obj_stud_1.reload.points_this_term
-        assert_equal 0, test_obj_stud_2.reload.points_this_term
+        assert_equal nil, test_obj_stud_1.reload.points_this_term
+        assert_equal nil, test_obj_stud_2.reload.points_this_term
     end
     
     test "due dates" do

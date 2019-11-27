@@ -47,6 +47,11 @@ class ActiveSupport::TestCase
     Question.where.not(:picture_id => nil).update_all(:picture_id => nil) 
   end
   
+  def give_a_key
+      @test_obj_stud = @objective_10.objective_students.find_by(:user => @student_2)
+      @test_obj_stud.update(:teacher_granted_keys => 2, :ready => true)
+  end
+  
   def go_to_seminar
     click_on("seminar_#{@seminar.id}")
   end
@@ -246,6 +251,10 @@ class ActiveSupport::TestCase
     @worksheet_3 = worksheets(:three)
     
     @worksheet_1.objectives << @own_assign
+  end
+  
+  def travel_to_open_time
+      travel_to Time.zone.local(2019, 12, 06, 23, 45, 44)
   end
   
   def is_logged_in?

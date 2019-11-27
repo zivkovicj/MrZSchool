@@ -64,7 +64,7 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         go_to_invite_screen
         send_the_invite
         set_new_seminar_teacher
-        click_on("Log out")
+        logout
         
         capybara_login(@other_teacher)
         find("#accept_invites").click
@@ -83,7 +83,7 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         go_to_invite_screen
         send_the_invite
         set_new_seminar_teacher
-        click_on("Log out")
+        logout
         
         capybara_login(@other_teacher)
         find("#accept_invites").click
@@ -101,7 +101,7 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         send_the_invite
         set_new_seminar_teacher
         send_another_invite
-        click_on("Log out")
+        logout
         
         capybara_login(@other_teacher)
         find("#accept_invites").click
@@ -122,7 +122,7 @@ class SeminarTeachersInviteTest < ActionDispatch::IntegrationTest
         send_the_invite
         set_new_seminar_teacher
         send_another_invite
-        click_on("Log out")
+        logout
         
         capybara_login(@other_teacher)
         find("#accept_invites").click

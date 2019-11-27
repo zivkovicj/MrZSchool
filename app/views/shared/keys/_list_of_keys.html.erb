@@ -1,7 +1,6 @@
 
 <% key_types = [["teacher_granted","key.jpg"], ["dc","key_2.jpg"],[ "pretest","key_3.jpg"]] %>
 
-
 <% key_types.each do |key_type| %>
     <td>
         <div class="key_area key_holder_<%= this_os.id %>_<%= key_type[0] %> sem_<%= this_sem.id %>_<%= key_type[0] %>"
@@ -16,11 +15,3 @@
         </div>
     </td>
 <% end %>
-
-<td>
-    <% if this_os.passed_with_100 %>
-        Has scored 100% on this objective
-    <% elsif this_os.ready? == false %>
-        <div id="not_ready_<%= this_os.id %>">Hasn't passed the pre-requisites for this objective.</div>
-    <% end %>
-</td>

@@ -2,6 +2,17 @@
 <%= render 'shared/back-link' %>
 </br>
 
+<% def quiz_link(objective, this_action, id_label) %>
+    <%= link_to "#{objective.topic_and_number} - #{objective.name}",
+        {controller: :quizzes, action: this_action, :objective_id => objective.id, :origin => id_label},
+        :class => 'plain_link',
+        :id => "#{id_label}_#{objective.id}"  %>
+<% end %>
+
+<% def objective_show_only(objective) %>
+    <%= objective.topic_and_number %> ~ <%= objective.name %>
+<% end %>
+
 <% def list_of_quizzes(list, category, id_label, age) %>
     <% if list.count > 0 %>
     <% this_action = age == "new" ? "new" : "edit" %>
@@ -10,23 +21,26 @@
             <% list.each do |objective| %>
             <% this_os = objective.objective_students.find_by(:user => @student) %>
                 <tr>
-                    <td><%= link_to objective.catchy_name,
-                        {controller: :quizzes, action: this_action, :objective_id => objective.id, :origin => id_label}, 
-                            :class => 'plain_link',
-                            :id => "#{id_label}_#{objective.id}"  %></td>
+                    <td>
+                        <% if @quizzes_open %>
+                            <% quiz_link(objective, this_action, id_label) %>
+                        <% else %>
+                            <% objective_show_only(objective) %>
+                        <% end %>
+                    </td>
                     <%= render 'shared/keys/list_of_keys', :this_os => this_os, :this_sem => @seminar %>
                 </tr>
-                <tr>
-                    <td colspan="4"><%= objective.topic_and_number %> — <%= objective.name %></td>
-                </tr>
-                <tr><td colspan="4" class="highlighted"> &emsp;</td></tr>
             <% end %>
         </table>
     <% end %>
 <% end %>
 
 <% if @show_quizzes %>
-    <h2>Quizzes Available</h2>
+    <% if @quizzes_open %>
+        <h2>Quizzes Available</h2>
+    <% else %>
+        <h2>Quizzes are Closed Right Now</h2>
+    <% end %>
     </br>
     
     <% list_of_quizzes(@unfinished_quizzes, "Unfinished Quizzes", "unfinished", "old") %>

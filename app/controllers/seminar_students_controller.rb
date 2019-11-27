@@ -129,6 +129,12 @@ class SeminarStudentsController < ApplicationController
     @pretest_objectives = @student.quiz_collection(@seminar, "pretest")
     @teacher_granted_quizzes = @student.quiz_collection(@seminar, "teacher_granted")
     @show_quizzes = @desk_consulted_objectives.present? || @pretest_objectives.present? || @unfinished_quizzes.present? || @teacher_granted_quizzes.present?
+    
+    # Lock quiz outside of weekdays during school.
+    @quizzes_open = true
+    timescore = (Time.now.hour * 60) + (Time.now.min)
+    @quizzes_open = false if timescore < 480 or timescore > 1020
+    @quizzes_open = false if Date.today.wday == 6 || Date.today.wday == 0
   end
 
   private
