@@ -1177,21 +1177,13 @@ Aqui
 Teacher should be able to go back to the scoresheet from viewing a student.
 
 
+ERROR["test_create_multiple_choice_questions", Minitest::Result, 570.151141]
+ test_create_multiple_choice_questions#Minitest::Result (570.15s)
+Capybara::ExpectationNotMet:         Capybara::ExpectationNotMet: expected not to find visible css "input" with id label_411104511, found 1 match: ""
+            test/integration/questions/questions_new_test.rb:39:in `block in <class:QuestionsNewTest>'
 
-Update the "Proudly Featuring"
-
-
-TOPICS THAT AREN'T SHOWING IN QUESTION-SELECT
-Can't find any problem in the live site. Try using consoles and debuggers in devleopment site
-
-Edit a label, default topic
-Add topics, domains, and fields through app
-Scientific Notation is giving 9 stars when it should give 10
-    Happened to Jonah Critchley
-	I think the problem is because of select-many questions 
-
-
-DB CALLS, PART 2
+3.19 DB CALLS, PART 2
+Fix topics that aren't showing in question-select
 When teacher logs in, there seems to be too many DB calls to find that teacher's record.
 Look at the scoresheet again
 And in adding new students
@@ -1199,7 +1191,9 @@ And in adding new students
 Adding a new objective to a seminar
 
 
-3.15 UNGRADED QUIZZES, pt 2
+3.20 UNGRADED QUIZZES, pt 2
+Edit a label, default topic
+
 When a student earns less than 100%, on a quiz that includes teacher-graded questions
   If the student begins a new quiz, copy the already-completed riposte instead of 
      with the current question and answer
@@ -1207,6 +1201,11 @@ When a student earns less than 100%, on a quiz that includes teacher-graded ques
   Don't show example answer on answer show page
      (Because the student could copy that answer).
 
+SEARCH BY QUESTION ID
+Search a question by id
+
+SELECT MANY IMPROVEMENT
+On a select-many question, show students which answer choices they were missing
 
 
 

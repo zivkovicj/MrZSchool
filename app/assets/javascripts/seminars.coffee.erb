@@ -462,7 +462,6 @@ ready = ->
                 
         $('.topic_cell').on "click", ->
             which_topic = $(this).attr('which_topic')
-            console.log(which_topic)
             
             if ($(this).hasClass('expanded'))
                 $('.label_from_topic_'+which_topic).slideUp()

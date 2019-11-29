@@ -8,7 +8,7 @@ class QuestionsController < ApplicationController
   include LabelsList
   
   def new
-    @labels = labels_to_offer()
+    @labels = Label.all
     @created_by = current_user.full_name_with_title
     @fields = fields_list
     @grade_type = "computer"
