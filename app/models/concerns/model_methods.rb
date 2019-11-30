@@ -8,16 +8,16 @@ module ModelMethods
     module ClassMethods
         
         # Search for specific records
-        def search(search, whichParam)
+        def search(search, which_param)
             if search
-                if whichParam == "user_number"
-                    results = where(:user_number => search)
+                if ["user_number", "id"].include?(which_param)
+                    results = where(:"#{which_param}" => search)
                 else
                     case ActiveRecord::Base.connection.adapter_name
                     when 'PostgreSQL'
-                        results = where("#{whichParam} ILIKE ?" , "%#{search}%")
+                        results = where("#{which_param} ILIKE ?" , "%#{search}%")
                     else
-                        results = where("#{whichParam} LIKE ?" , "%#{search}%")
+                        results = where("#{which_param} LIKE ?" , "%#{search}%")
                     end
                 end
             end
