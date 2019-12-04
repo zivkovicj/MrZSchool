@@ -14,6 +14,7 @@ class User < ApplicationRecord
     has_many    :goals
     has_many    :currencies
     has_many    :given_currencies, :class_name => "Currency", :as => :giver
+    has_many    :ripostes
     has_and_belongs_to_many  :teams
     belongs_to  :school
     belongs_to   :sponsor,  :class_name => "User"

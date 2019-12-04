@@ -63,17 +63,25 @@ class QuizzesController < ApplicationController
         end
     
         def build_the_quiz
-            quest_collect = []
             @objective.label_objectives.each do |lo|
-                quant = lo.quantity
                 label = lo.label
-                label.questions.order("RANDOM()").limit(quant).each do |quest|
-                    quest_collect.push([quest.id, lo.point_value])
+                
+                # If student has already tried teacher-graded questions, re-use those
+                # Otherwise, choose new questions randomly
+                ungraded_ripostes = Riposte.where(:user => @quiz.user, :question => label.questions, :graded => 0) if label.grade_type == "teacher"
+                
+                if ungraded_ripostes.present?
+                    @quiz.ripostes << ungraded_ripostes
+                else
+                    label.questions.order("RANDOM()").limit(lo.quantity).each do |question|
+                        @quiz.ripostes.create(:question => question, :poss => lo.point_value, :objective => @quiz.objective, :user => @quiz.user)
+                    end
                 end
             end
             
-            quest_collect.shuffle.each_with_index do |q_info, index|
-                @quiz.ripostes.create(:question_id => q_info[0], :position => index+1, :poss => q_info[1]) 
+            # Randomize order of ripostes
+            @quiz.ripostes.each_with_index do |rip, index|
+                rip.update(:position => index + 1)
             end
         end
     

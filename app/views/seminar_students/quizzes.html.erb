@@ -36,6 +36,8 @@
 <% end %>
 
 <% if @show_quizzes %>
+    <%= "Timescore #{@timescore}" %>
+    <%= "Time.now.hour #{Time.now.hour} Time.now.min #{Time.now.min}" %>
     <% if @quizzes_open %>
         <h2>Quizzes Available</h2>
     <% else %>

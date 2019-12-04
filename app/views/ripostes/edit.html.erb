@@ -1,5 +1,5 @@
 <h5 style="color:gray">Question ID #<%= @question.id %></h5>
-<h3><strong><%= @riposte.quiz.objective.name %></strong>
+<h3><strong><%= @riposte.objective.name %></strong>
 &emsp; &emsp; Question: <%= @riposte.position %></h3>
 
 
@@ -18,7 +18,7 @@
 
 
 <%= form_for(@riposte) do |r| %>
-    <% if @question.grade_type == "teacher" then %>
+    <% if @question.label.grade_type == "teacher" then %>
         <h5 id="teacher_graded_tag">Teacher-Graded Question</h5>
     <% end %>
 
@@ -27,7 +27,8 @@
     <table>
         <div class="container">
             <% if @question.style == "fill_in" %>
-                <p>Your Response: <input type="text" name="stud_answer" id="stud_answer" /> </p>
+                <p>Your Response:</p>
+                <%= r.text_field :stud_answer %>
             <% else  %>
                 <% 6.times do |n| %>
                     <% x = this_order[n] %>
@@ -36,9 +37,9 @@
                         <tr>
                             <td width="50%">
                                 <% if @question.style == "multiple_choice" %>
-                                    <%= radio_button_tag "stud_answer[]", x, false, :id => "choice_bubble_#{x}" %>
+                                    <%= radio_button_tag "riposte[stud_answer][]", x, false, :id => "choice_bubble_#{x}" %>
                                 <% elsif @question.style == "select_many" %>
-                                    <%= check_box_tag "stud_answer[]", x, false, :id => "check_box_#{x}" %>
+                                    <%= check_box_tag "riposte[stud_answer][]", x, false, :id => "check_box_#{x}" %>
                                 <% end %>
                             </td>
                             <td><%= answer_text %></td>

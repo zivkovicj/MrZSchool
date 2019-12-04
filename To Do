@@ -1177,10 +1177,59 @@ Aqui
 Teacher should be able to go back to the scoresheet from viewing a student.
 
 
+
+3.20 UNGRADED QUIZZES, pt 2
+
+V Riposte to quiz becomes a habtm
+V Add user to riposte
+V Label needs to include teacher_graded property
+V When a student earns less than 100%, on a quiz that includes teacher-graded questions
+  If the student begins a new quiz, copy the already-completed riposte instead of 
+     with the current question and answer
+     Instead of loading a new one
+Migrate live db
+grade_type for all labels
+
+
+
+ FAIL["test_quiz_with_teacher_graded_question", Minitest::Result, 77.90444100000013]
+ test_quiz_with_teacher_graded_question#Minitest::Result (77.90s)
+        Expected: 0
+          Actual: 1
+        test/integration/quizzes/quiz_new_test.rb:344:in `block in <class:NewQuizTest>'
+
+There are a lot of instances of question.label.
+Should probably bring back the question label and return those.
+Set the question type to match its label, though
+
+Riposte ordering definitely could make fewer db calls
+Don't show example answer on answer show page
+  (Because the student could copy that answer).
+When riposte is created, include the user
+When teacher grades, ripostes are sorted by question
+All quiz scores are updated for all quizzes that include that riposte
+
+When creating questions, don't offer grade type.  That needs to be based on the label.
+On question-creation screen, alert creator which labels are teacher-graded and which 
+    Are computer graded.
+
+Test in development to see the number of db calls.
+Make sure to minimize them.
+
+Edit a label, default topic
+
 ERROR["test_create_multiple_choice_questions", Minitest::Result, 570.151141]
  test_create_multiple_choice_questions#Minitest::Result (570.15s)
 Capybara::ExpectationNotMet:         Capybara::ExpectationNotMet: expected not to find visible css "input" with id label_411104511, found 1 match: ""
             test/integration/questions/questions_new_test.rb:39:in `block in <class:QuestionsNewTest>'
+
+
+
+Update existing db ripostes for user
+Needed for quizzes?
+
+
+
 
 3.19 DB CALLS, PART 2
 Fix topics that aren't showing in question-select
@@ -1191,15 +1240,7 @@ And in adding new students
 Adding a new objective to a seminar
 
 
-3.20 UNGRADED QUIZZES, pt 2
-Edit a label, default topic
 
-When a student earns less than 100%, on a quiz that includes teacher-graded questions
-  If the student begins a new quiz, copy the already-completed riposte instead of 
-     with the current question and answer
-     Instead of loading a new one
-  Don't show example answer on answer show page
-     (Because the student could copy that answer).
 
 SEARCH BY QUESTION ID
 Search a question by id

@@ -28,7 +28,7 @@
                         <% correct_array_fixed = [] %>
                     <% end %>
                     <% riposte.stud_answer.each do |response| %>
-                        <% if question.grade_type == "computer" then %>
+                        <% if question.label.grade_type == "computer" then %>
                             <% fixed_response = response.to_s.downcase.gsub(/\s+/, "").gsub(/[()]/, "") %>
                             <% class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
                         <% else %>
@@ -38,7 +38,7 @@
                     <% end %>
                 </div>
                 <div class="col-sm-6">
-                    <% if question.grade_type == "computer" %>
+                    <% if question.label.grade_type == "computer" %>
                         <% first_phrase = "Correct Responses" %>
                     <% else %>
                         <% first_phrase = "Example Responses" %>

@@ -14,7 +14,6 @@ one:
   user: michael
   label: admin_label
   picture: cheese_logo
-  grade_type: computer
 
 two:
   style: multiple_choice
@@ -24,7 +23,6 @@ two:
   label: user_label
   extent: private
   user: archer
-  grade_type: "computer"
   
 three:
   style: multiple_choice
@@ -34,7 +32,6 @@ three:
   extent: public
   label: other_label_public
   user: zacky
-  grade_type: "computer"
   
 four:
   style: multiple_choice
@@ -44,7 +41,6 @@ four:
   label: other_label_private
   extent: private
   user: zacky
-  grade_type: "computer"
   
 five:
   style: multiple_choice
@@ -54,7 +50,6 @@ five:
   label: user_label
   extent: public
   user: archer
-  grade_type: "computer"
   
 teacher_graded_question_1:
   style: fill_in
@@ -62,7 +57,6 @@ teacher_graded_question_1:
   extent: public
   label: teacher_graded_label_1
   user: archer
-  grade_type: "teacher"
   
 teacher_graded_question_2:
   style: fill_in
@@ -70,7 +64,6 @@ teacher_graded_question_2:
   extent: public
   label: teacher_graded_label_1
   user: archer
-  grade_type: "teacher"
   
 teacher_graded_question_3:
   style: fill_in
@@ -78,7 +71,6 @@ teacher_graded_question_3:
   extent: public
   label: teacher_graded_label_2
   user: archer
-  grade_type: "teacher"
   
 teacher_graded_question_4:
   style: fill_in
@@ -86,7 +78,6 @@ teacher_graded_question_4:
   extent: public
   label: teacher_graded_label_2
   user: archer
-  grade_type: "teacher"
   
 select_many_question:
   style: select_many
@@ -94,7 +85,6 @@ select_many_question:
   extent: public
   label: select_many_label
   user: archer
-  grade_type: "computer"
   <<: *base_choices
   correct_answers: ["0", "2", "3"]
   
@@ -107,7 +97,6 @@ question_<%= n+5 %>:
   extent: public
   label: admin_label
   user: michael
-  grade_type: "computer"
 <% end %>
 
 <% 10.times do |n| %>
@@ -119,7 +108,6 @@ question_<%= n+100 %>:
   extent: public
   label: user_label
   user: archer
-  grade_type: "computer"
 <% end %>
 
 <% 10.times do |n| %>
@@ -130,5 +118,4 @@ question_<%= n+200 %>:
   extent: public
   label: fill_in_label
   user: michael
-  grade_type: "computer"
 <% end %>

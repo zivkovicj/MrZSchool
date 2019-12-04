@@ -8,25 +8,27 @@ class RipostesController < ApplicationController
     def update
         @riposte = Riposte.find(params[:id])
         @question = @riposte.question
-        @quiz = @riposte.quiz
+        @quiz = @riposte.quizzes.last
+        
+        
         if @quiz.total_score == nil
             next_riposte_num = @riposte.position + 1
             
             perc = 0
-            if @question.grade_type == "computer"
+            if @question.label.grade_type == "computer"
                 is_graded = 1
-                if params[:stud_answer].blank?
+                if params[:riposte][:stud_answer].blank?
                     stud_answer = ["blank"]
                     is_graded = nil
                 else
                     stud_answer = []
                     if @question.style == "fill_in"
-                        stud_answer = [params[:stud_answer]]
+                        stud_answer = [params[:riposte][:stud_answer]]
                         correct_poss = 2
                         correct_array = @question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
                         backend_answer = stud_answer.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
                     else
-                        params[:stud_answer].each do |this_answer|
+                        params[:riposte][:stud_answer].each do |this_answer|
                             stud_answer << @question.choices[this_answer.to_i]
                         end
                         correct_array = @question.correct_answers
@@ -38,7 +40,7 @@ class RipostesController < ApplicationController
                 end
             else
                 is_graded = 0
-                stud_answer = [params[:stud_answer]]
+                stud_answer = [params[:riposte][:stud_answer]]
             end
         
             @riposte.update(:stud_answer => stud_answer, :tally => perc, :graded => is_graded)

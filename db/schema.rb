@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190719162757) do
+ActiveRecord::Schema.define(version: 20191201161042) do
 
   create_table "checkpoints", force: :cascade do |t|
     t.integer  "goal_student_id"
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(version: 20190719162757) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "grade_type"
     t.index ["user_id"], name: "index_labels_on_user_id"
   end
 
@@ -242,8 +243,8 @@ ActiveRecord::Schema.define(version: 20190719162757) do
     t.text     "correct_answers"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-    t.string   "grade_type"
     t.text     "choices"
+    t.string   "grade_type"
     t.index ["label_id"], name: "index_questions_on_label_id"
     t.index ["picture_id"], name: "index_questions_on_picture_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
@@ -265,6 +266,11 @@ ActiveRecord::Schema.define(version: 20190719162757) do
     t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
+  create_table "quizzes_ripostes", id: false, force: :cascade do |t|
+    t.integer "quiz_id",    null: false
+    t.integer "riposte_id", null: false
+  end
+
   create_table "ripostes", force: :cascade do |t|
     t.integer  "quiz_id"
     t.integer  "question_id"
@@ -272,11 +278,15 @@ ActiveRecord::Schema.define(version: 20190719162757) do
     t.integer  "position"
     t.string   "stud_answer"
     t.integer  "poss"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "graded"
+    t.integer  "user_id"
+    t.integer  "objective_id"
+    t.index ["objective_id"], name: "index_ripostes_on_objective_id"
     t.index ["question_id"], name: "index_ripostes_on_question_id"
     t.index ["quiz_id"], name: "index_ripostes_on_quiz_id"
+    t.index ["user_id"], name: "index_ripostes_on_user_id"
   end
 
   create_table "schools", force: :cascade do |t|

@@ -17,6 +17,7 @@ class Objective < ApplicationRecord
     has_many    :questions, through: :labels
     has_many    :teams, dependent: :destroy
     has_many    :quizzes, dependent: :destroy
+    has_many    :ripostes, dependent: :destroy
     
     belongs_to  :user
     belongs_to  :topic

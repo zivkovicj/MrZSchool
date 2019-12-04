@@ -7,47 +7,58 @@ unlabeled_label:
   user: michael
   name: Unlabeled
   extent: public
+  grade_type: "computer"
   
 admin_label:
   user: michael
   name: Admin_label
   extent: public
+  grade_type: "computer"
 
 user_label:
   user: archer
   name: User_label
   extent: private
+  grade_type: "computer"
   
 other_label_public:
   user: zacky
   name: Other_Label_Public
   extent: public
+  grade_type: "computer"
   
 other_label_private:
   user: zacky
   name: Other_Label_Private
   extent: private
+  grade_type: "computer"
 
 fill_in_label:
   name: fill_in Label
   extent: public
+  grade_type: "computer"
   
 teacher_graded_label_1:
   name: teacher_graded_label_1
   extent: public
+  grade_type: "teacher"
   
 teacher_graded_label_2:
   name: teacher_graded_label_2
   extent: public
+  grade_type: "teacher"
   
 select_many_label:
   name: select_many_label
   extent: public
+  grade_type: "computer"
   
 intro_to_pythag:
   name: Intro to the Pythagorean Theorem
   extent: public
+  grade_type: "computer"
   
 rotations:
   name: Rotations
   extent: public
+  grade_type: "computer"

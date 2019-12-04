@@ -1,12 +1,13 @@
 class Quiz < ApplicationRecord
-    has_many :ripostes, dependent: :destroy, foreign_key: :quiz_id
+    has_and_belongs_to_many :ripostes
     has_many :questions, through: :ripostes
     belongs_to  :seminar
+    belongs_to :user
+    belongs_to :objective
     
     after_save    :set_points_for_obj_stud
     
-    belongs_to :user
-    belongs_to :objective
+    
     
     def added_stars
         [self.total_score - self.old_stars, 0].max
@@ -41,7 +42,7 @@ class Quiz < ApplicationRecord
     end
     
     def take_keys_for_perfect_score
-        comp_graded_questions = ripostes.select{|x| x.question.grade_type != "teacher"}
+        comp_graded_questions = ripostes.select{|x| x.question.label.grade_type != "teacher"}
         if comp_graded_questions.sum(&:tally) == comp_graded_questions.sum(&:poss)
             ObjectiveStudent.find_by(:objective => objective, :user => user).take_all_keys
         end
