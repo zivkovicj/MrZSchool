@@ -85,9 +85,12 @@ class QuestionsController < ApplicationController
   def update
     @question = Question.find(params[:id])
     set_answers_and_choices(params["questions"]["0"])
+    @question.grade_type = @question.label.grade_type
+    debugger
     if @question.update_attributes(multi_params(params["questions"]["0"]))
       flash[:success] = "Question Updated"
       redirect_to questions_path
+      debugger
     else
       set_edit_variables
       render 'edit'

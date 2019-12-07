@@ -78,6 +78,7 @@ Rails.application.routes.draw do
     get 'move_or_remove', on: :member
     get 'star_market', on: :member
     get 'quizzes', on: :member
+    put 'quizzes', on: :member
   end
   resources :seminar_teachers do
     get 'accept_invitations', on: :collection

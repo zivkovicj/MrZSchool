@@ -36,12 +36,16 @@
 <% end %>
 
 <% if @show_quizzes %>
-    <%= "Timescore #{@timescore}" %>
-    <%= "Time.now.hour #{Time.now.hour} Time.now.min #{Time.now.min}" %>
     <% if @quizzes_open %>
         <h2>Quizzes Available</h2>
     <% else %>
         <h2>Quizzes are Closed Right Now</h2>
+<%= form_tag("/seminar_students/#{@ss_id}/quizzes", {:method => :put}) do %>
+            <%= label_tag "Teacher Password" %>
+            <%= hidden_field_tag :override, :value => true %>
+            <%= password_field_tag :password, class: 'form-control', :placeholder => "Password" %>
+            <%= submit_tag "Enter" %>
+        <% end %>
     <% end %>
     </br>
     

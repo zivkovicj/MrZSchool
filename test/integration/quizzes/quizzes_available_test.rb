@@ -246,5 +246,36 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         assert_selector("h2", :text => "Quizzes are Closed Right Now")
         assert_no_selector("a", :id => "teacher_granted_#{@objective_10.id}")
     end
+
+    test "teacher override" do
+        # Teacher allows student to quiz after hours
+        travel_to Time.zone.local(2019, 12, 07, 0, 15, 44)
+        give_a_key
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        fill_in "password", :with => "password"
+        click_on("Enter")
+        
+        assert_no_selector("h2", :text => "Quizzes are Closed Right Now")
+        assert_selector("a", :id => "teacher_granted_#{@objective_10.id}")
+    end
+
+    test "teacher override wrong password" do
+        # Teacher allows student to quiz after hours
+        travel_to Time.zone.local(2019, 12, 07, 0, 15, 44)
+        give_a_key
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        fill_in "password", :with => "picklerick"
+        click_on("Enter")
+        
+        assert_selector("h2", :text => "Quizzes are Closed Right Now")
+        assert_no_selector("a", :id => "teacher_granted_#{@objective_10.id}")
+    end
+        
     
 end

@@ -2,6 +2,7 @@ class Student < User
     
     has_many    :seminar_students, dependent: :destroy, foreign_key: :user_id
     has_many    :seminars, through: :seminar_students
+    has_many    :teachers, through: :seminars
     has_many    :commodity_students, dependent: :destroy, foreign_key: :user_id
     has_many    :objective_students, dependent: :destroy, foreign_key: :user_id
     has_many    :objectives, through: :objective_students

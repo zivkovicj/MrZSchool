@@ -1192,15 +1192,17 @@ grade_type for all labels
 
 
 
- FAIL["test_quiz_with_teacher_graded_question", Minitest::Result, 77.90444100000013]
- test_quiz_with_teacher_graded_question#Minitest::Result (77.90s)
-        Expected: 0
-          Actual: 1
-        test/integration/quizzes/quiz_new_test.rb:344:in `block in <class:NewQuizTest>'
+
+
+
+
+
 
 There are a lot of instances of question.label.
 Should probably bring back the question label and return those.
 Set the question type to match its label, though
+
+Get user's local time zone
 
 Riposte ordering definitely could make fewer db calls
 Don't show example answer on answer show page

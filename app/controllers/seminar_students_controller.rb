@@ -132,10 +132,16 @@ class SeminarStudentsController < ApplicationController
     
     # Lock quiz outside of weekdays during school.
     @quizzes_open = true
-    timescore = (Time.now.hour * 60) + (Time.now.min)
-    @quizzes_open = false if timescore < 480 or timescore > 1020
-    @timescore = timescore
-    @quizzes_open = false if Date.today.wday == 6 || Date.today.wday == 0
+    @timescore = 500
+    if params[:override]
+        password = params[:password]
+        @quizzes_open = false if !current_user.teachers.any?{|x| x.authenticate(password)}
+    else
+        timescore = (Time.now.hour * 60) + (Time.now.min)
+        @quizzes_open = false if timescore < 480 or timescore > 1020
+        @timescore = timescore
+        @quizzes_open = false if Date.today.wday == 6 || Date.today.wday == 0
+    end
   end
 
   private
