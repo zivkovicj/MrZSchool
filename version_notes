@@ -22,6 +22,22 @@ Between each update, manually test:
 
 
 
+3.20 UNGRADED QUIZZES, pt 2
+
+Riposte to quiz becomes a habtm
+Add user to riposte
+Label needs to include teacher_graded property
+When a student earns less than 100%, on a quiz that includes teacher-graded questions
+  If the student begins a new quiz, copy the already-completed riposte instead of 
+     with the current question and answer
+     Instead of loading a new one
+Migrate live db
+grade_type for all labels
+
+
+
+
+
 3.17 LOCK QUIZZES AT CERTAIN TIMES
 If quizzes are locked, students will see a "locked quiz" message instead of their keys.
 Quizzes lock after 4:30

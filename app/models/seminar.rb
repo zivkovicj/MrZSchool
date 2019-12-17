@@ -51,12 +51,12 @@ class Seminar < ApplicationRecord
     objective_seminars.where("priority > ?", 0).map(&:objective)
   end
   
-  def quizzes_to_grade
-    Quiz.where(:objective => objectives, :user => students, :needs_grading => true)
+  def ripostes_to_grade
+    Riposte.where(:objective => objectives, :user => students, :graded => 0)
   end
   
   def set_grading_needed
-    self.update(:grading_needed => (quizzes_to_grade.count > 0))
+    self.update(:grading_needed => (ripostes_to_grade.count > 0))
   end
   
   def set_random_goals

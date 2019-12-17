@@ -134,7 +134,8 @@ class SeminarsController < ApplicationController
     
     def quiz_grading
         @seminar = Seminar.find(params[:id])
-        @quizzes_to_grade = @seminar.quizzes_to_grade
+        @ripostes_to_grade = @seminar.ripostes_to_grade
+        @questions = @ripostes_to_grade.map(&:question).uniq
     end
     
     def remove

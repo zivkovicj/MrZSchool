@@ -17,7 +17,7 @@ class RipostesController < ApplicationController
             perc = 0
             if @question.label.grade_type == "computer"
                 is_graded = 1
-                if params[:riposte][:stud_answer].blank?
+                if params[:riposte].nil? || params[:riposte][:stud_answer].blank?
                     stud_answer = ["blank"]
                     is_graded = nil
                 else
@@ -80,15 +80,12 @@ class RipostesController < ApplicationController
                 new_tally = ((value.to_i/10.to_f)*@riposte.poss).round
                 graded_now = value.present? ? 1 : 0  # If the value is blank, leave the riposte marked ungraded
                 @riposte.update(:tally => new_tally, :graded => graded_now)
+                @riposte.quizzes.each do |quiz|
+                    quiz.set_total_score
+                end
             end
         end
         
-        if params[:quizzes]
-            params[:quizzes].each do |key|
-                @quiz = Quiz.find(key)
-                @quiz.set_total_score
-            end
-        end
         redirect_to current_user
     end
 

@@ -1159,8 +1159,6 @@ Main Goal: Teacher can lock and unlock quizzes
         Unlock time
         Re-lock time
     Teacher can set this up in class attributes once. So that quizzes are open on a certain day between a certain start and end time.
-Students cannot take the quiz outside of the open time.
-But there also needs to be an "Quick Unlock" button so that teacher can quickly allow quiz-taking on an off-day.
 
 
 
@@ -1173,29 +1171,24 @@ Aqui
 
 
 
+3.22 TEACHER GRADING QUESTION UPDATES SCORE FOR ALL RELEVANT QUIZZES
+
+V Test that all students' answers are sorted by question
+V Make score box less wide
+
+Test a question with a picture to make sure that it works in the student's view and the teacher's view.
+
+
+
+Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
+Add teacher_graded questions to db seed
+Very important to choose a grade_type when creating a new label
+When creating questions, don't offer grade type.  That needs to be based on the label.
+On question-creation screen, alert creator which labels are teacher-graded and which 
+    Are computer graded.
+
 
 Teacher should be able to go back to the scoresheet from viewing a student.
-
-
-
-3.20 UNGRADED QUIZZES, pt 2
-
-V Riposte to quiz becomes a habtm
-V Add user to riposte
-V Label needs to include teacher_graded property
-V When a student earns less than 100%, on a quiz that includes teacher-graded questions
-  If the student begins a new quiz, copy the already-completed riposte instead of 
-     with the current question and answer
-     Instead of loading a new one
-Migrate live db
-grade_type for all labels
-
-
-
-
-
-
-
 
 
 There are a lot of instances of question.label.
@@ -1211,9 +1204,7 @@ When riposte is created, include the user
 When teacher grades, ripostes are sorted by question
 All quiz scores are updated for all quizzes that include that riposte
 
-When creating questions, don't offer grade type.  That needs to be based on the label.
-On question-creation screen, alert creator which labels are teacher-graded and which 
-    Are computer graded.
+
 
 Test in development to see the number of db calls.
 Make sure to minimize them.

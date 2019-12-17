@@ -66,6 +66,7 @@ class Question < ApplicationRecord
       
     end
   end
+
   
   private
     

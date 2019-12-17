@@ -277,7 +277,6 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal ["Yesiree Bob"], riposte_0.stud_answer
         assert @quiz.needs_grading
         assert @seminar.reload.grading_needed
-        assert @seminar.reload.quizzes_to_grade
         
         assert_selector('h3', :text => "Your final score will be at least 5 stars.")
         assert_selector('h3', :text => "The highest you could earn is 9 stars.")
@@ -289,22 +288,20 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         click_on("Back to Your Class Page")
         click_on("Quizzes")
         find("#teacher_granted_#{@tg_objective_1.id}").click
-        @quiz_2 = Quiz.last
-        assert_equal @quiz.ripostes.count, @quiz_2.ripostes.count
+        @quiz_1_1 = Quiz.last
+        assert_equal @quiz.ripostes.count, @quiz_1_1.ripostes.count
         
         # On the second try, include the already-answered riposte
-        assert @quiz_2.ripostes.include?(riposte_0)
-        assert @quiz_2.ripostes.include?(riposte_1)
+        assert @quiz_1_1.ripostes.include?(riposte_0)
+        assert @quiz_1_1.ripostes.include?(riposte_1)
         
-        @quiz_2.update(:origin => "Beef")
-        
-        @quiz_2.ripostes.count.times do
+        @quiz_1_1.ripostes.count.times do
             teacher_graded_tags = all('#teacher_graded_tag')
             answer_question_correctly if !teacher_graded_tags.present?
             click_on "Next Question"
         end
         
-        @quiz_2.reload
+        @quiz_1_1.reload
         riposte_0.reload
         riposte_1.reload
         assert_equal ["Yesiree Bob"], riposte_0.stud_answer
@@ -365,17 +362,20 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert @quiz_3.needs_grading
         
         # Need to bring this one back after I fix the teacher view.
-        #fill_in "score_for_#{riposte_0.id}", with: 0
-        #fill_in "score_for_#{riposte_1.id}", with: 10
-        # Score_2 left blank on purpose.  This question is still marked ungraded.
-        #fill_in "score_for_#{riposte_3.id}", with: 10
-        #fill_in "score_for_#{riposte_4.id}", with: 5
-        #fill_in "score_for_#{riposte_5.id}", with: 10
+        fill_in "score_for_#{riposte_0.id}", with: 0
+        fill_in "score_for_#{riposte_1.id}", with: 10
+        # Score_2 left blank for testing
+        # This question should still be marked ungraded.
+        fill_in "score_for_#{riposte_3.id}", with: 10
+        fill_in "score_for_#{riposte_4.id}", with: 5
+        fill_in "score_for_#{riposte_5.id}", with: 10
         click_on("Submit These Scores")
         
         assert_equal 1, riposte_0.reload.graded  # Should be marked graded now
+        assert_equal 1, riposte_1.reload.graded
         assert_equal 0, riposte_2.reload.graded  # Still not graded
         assert_equal 7, @quiz.reload.total_score
+        assert_equal 8, @quiz_1_1.reload.total_score
         assert_equal 5, @quiz_2.reload.total_score
         assert_equal 9, @quiz_3.reload.total_score
         assert_not @quiz.needs_grading
@@ -397,8 +397,6 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_text("Teacher Since:")
         find("#quiz_grading_seminar_#{@seminar.id}").click
         assert_text("All quizzes in this class are fully graded.")
-
-        
     end
     
     test "take keys for 100 percent" do

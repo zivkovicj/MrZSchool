@@ -12,30 +12,22 @@
     <h3>Important Note: All scores should be on a scale of 1-10</h3>
     
     <%= form_tag teacher_grading_ripostes_path do %>
-        <% @quizzes_to_grade.each do |quiz| %>
-            <input type="hidden" name="quizzes[]" value="<%= quiz.id %>" />
-            <table>
-                <thead>
+        <% @questions.each do |quest| %>
+            <%= image_tag(quest.picture.image_url(:quiz_size).to_s) if quest.picture.present? %>
+            <%= quest.prompt %>
+
+            <% @ripostes_to_grade.where(:question => quest).each do |rip| %>
+                <table>
                     <tr>
-                        <td colspan=3>
-                            <strong>Student</strong> <%= quiz.user.last_name_first %>
-                            &emsp; <strong>Objective</strong> <%= quiz.objective.name %></td>
+                    <td>&nbsp;<%= rip.user.last_name_first %>&nbsp;</td>
+                        <td><input type="text" name="ripostes[<%= rip.id %>]" id="score_for_<%= rip.id %>" class="score_cell" /></td>
                     </tr>
                     <tr>
-                        <th class="center">Prompt</th>
-                        <th class="center">Student Response</th>
-                        <th class="center">Score</th>
+                        <td colspan=2>&nbsp;<%= rip.stud_answer.first %></td>
                     </tr>
-                </thead>
-                
-                <% quiz.ripostes.where(:graded => false).each do |riposte| %>
-                    <tr>
-                        <td><%= riposte.question.prompt %></td>
-                        <td><%= riposte.stud_answer %></td>
-                        <td><input type="text" name="ripostes[<%= riposte.id %>]" id="score_for_<%= riposte.id %>" /></td>
-                    </tr>
-                <% end %>
-            </table>
+                </table>
+                </br>
+            <% end %>
             </br>
         <% end %>
         
