@@ -1171,21 +1171,24 @@ Aqui
 
 
 
-3.22 TEACHER GRADING QUESTION UPDATES SCORE FOR ALL RELEVANT QUIZZES
 
-V Test that all students' answers are sorted by question
-V Make score box less wide
+
+3.23 QUESTION-CREATING AND EDITING WHEN LABEL HOLDS GRADE_TYPE
+
+Term updating includes turning old keys to pretest keys.
+And also deleting unfinished quizzes.
 
 Test a question with a picture to make sure that it works in the student's view and the teacher's view.
 
-
-
-Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
-Add teacher_graded questions to db seed
 Very important to choose a grade_type when creating a new label
 When creating questions, don't offer grade type.  That needs to be based on the label.
 On question-creation screen, alert creator which labels are teacher-graded and which 
     Are computer graded.
+
+Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
+Add teacher_graded questions to db seed
+
+
 
 
 Teacher should be able to go back to the scoresheet from viewing a student.

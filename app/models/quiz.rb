@@ -43,7 +43,7 @@ class Quiz < ApplicationRecord
     
     def take_keys_for_perfect_score
         comp_graded_questions = ripostes.select{|x| x.question.label.grade_type != "teacher"}
-        if comp_graded_questions.sum(&:tally) == comp_graded_questions.sum(&:poss)
+        if comp_graded_questions.to_a.sum{|e| e.tally.to_i} == comp_graded_questions.sum(&:poss)
             ObjectiveStudent.find_by(:objective => objective, :user => user).take_all_keys
         end
     end

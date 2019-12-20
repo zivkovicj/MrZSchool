@@ -22,6 +22,13 @@ Between each update, manually test:
 
 
 
+
+3.22 TEACHER GRADING QUESTION UPDATES SCORE FOR ALL RELEVANT QUIZZES
+
+Test that all students' answers are sorted by question
+Make score box less wide
+
+
 3.20 UNGRADED QUIZZES, pt 2
 
 Riposte to quiz becomes a habtm
