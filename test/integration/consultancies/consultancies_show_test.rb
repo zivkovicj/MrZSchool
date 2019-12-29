@@ -197,7 +197,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         first_consultant_ss.reload
         assert_equal 2, this_obj_stud.dc_keys
         assert_equal "permanent", @consultancy.duration
-        assert_equal Date.today, first_consultant_ss.last_consultant_day
+        assert_equal @consultancy.created_at.to_date, first_consultant_ss.last_consultant_day
         
         # View for Permanent
         assert_text(show_consultancy_headline(@consultancy))

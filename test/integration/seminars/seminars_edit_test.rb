@@ -109,7 +109,30 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 1, @seminar.term
         assert_equal 1, @seminar.which_checkpoint
         setup_scores
-        test_obj_stud = set_score_for_random_student(@seminar)
+        this_obj = @seminar.objectives.first
+        
+        # Give a student a score that will be reset
+        stud_5 = @seminar.students[5]
+        obj_stud_5 = ObjectiveStudent.find_by(:user => stud_5, :objective => this_obj)
+        obj_stud_5.update(:points_all_time => 4, :points_this_term => 4)
+        
+        # Give some other key types that will turn into pretest keys
+        stud_6 = @seminar.students[6]
+        obj_stud_6 = ObjectiveStudent.find_by(:user => stud_6, :objective => this_obj)
+        obj_stud_6.update(:teacher_granted_keys => 2, :pretest_keys => 0)
+        
+        stud_7 = @seminar.students[7]
+        obj_stud_7 = ObjectiveStudent.find_by(:user => stud_7, :objective => this_obj)
+        obj_stud_7.update(:dc_keys => 1, :pretest_keys => 0)
+        
+        stud_8 = @seminar.students[8]
+        obj_stud_8 = ObjectiveStudent.find_by(:user => stud_8, :objective => this_obj)
+        obj_stud_8.update(:teacher_granted_keys => 0, :pretest_keys => 1)
+        
+        # Student 8 has a finished quiz and an unfisished quiz
+        q1 = Quiz.create(:user => stud_8, :objective => this_obj, :total_score => nil)
+        q2 = Quiz.create(:user => stud_8, :objective => this_obj, :total_score => 8)
+        assert_equal 2, Quiz.where(:user => stud_8, :objective => this_obj).count
         
         capybara_login(@teacher_1)
         go_to_seminar
@@ -124,7 +147,23 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 3, @seminar.term
         assert_equal 4, @seminar.which_checkpoint
         assert_equal 1, @seminar_2.reload.term    # To make sure that only changes if the repeat choice is checked.
-        assert_equal nil, test_obj_stud.reload.points_this_term
+        
+        # Score has been reset
+        assert_nil obj_stud_5.reload.points_this_term
+        assert_equal 4, obj_stud_5.points_all_time
+        
+        # Other key types have turned into pretest keys
+        obj_stud_6.reload
+        obj_stud_7.reload
+        obj_stud_8.reload
+        assert_equal 0, obj_stud_6.teacher_granted_keys
+        assert_equal 0, obj_stud_7.dc_keys
+        assert_equal 0, obj_stud_8.teacher_granted_keys
+        assert_equal 1, obj_stud_8.pretest_keys
+        
+        # Unfinished quizzes have been deleted, but not finished quizzes
+        q2.reload
+        assert_equal 1, Quiz.where(:user => stud_8, :objective => this_obj).count
     end
     
     test "change term default" do

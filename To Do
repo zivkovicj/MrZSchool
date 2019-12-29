@@ -1173,10 +1173,30 @@ Aqui
 
 
 
-3.23 QUESTION-CREATING AND EDITING WHEN LABEL HOLDS GRADE_TYPE
+3.23 TERM UPDATING
 
-Term updating includes turning old keys to pretest keys.
-And also deleting unfinished quizzes.
+V Term updating includes turning old keys to pretest keys.
+V And also deleting unfinished quizzes.
+
+
+QUESTION-CREATING AND EDITING WHEN LABEL HOLDS GRADE_TYPE
+
+Error after student makes 6th try on quiz
+
+
+I hope you have left school and are enjoying the beginning of a relaxing Winter Break.  I wanted to email you with a couple of issue that have come up on this round of testing. Students who tried the  Collect Like Terms Level 2 quiz, were getting error messages and unable to access their quiz.  Also, several students who were taking the 2 Step Solving Equations (I think) , came across questions that didn't have the square that they were being asked for the value for.  For example, question 1631, didn't show a box E, even though that is the box that the question asked about.  Juan Ponce and Noah Lovato both ran into this problem.
+
+Figure out why some students have an unfinished quiz and a finished quiz.
+
+
+
+Make sure to test in live environment, because deleting the ripostes might cause a problem.  With a fake class.  Don't delete scores for my real students.
+
+Erase the stuff about checkpoints
+
+Add a button that allows students to enter >= in their form.
+
+
 
 Test a question with a picture to make sure that it works in the student's view and the teacher's view.
 
@@ -1214,10 +1234,6 @@ Make sure to minimize them.
 
 Edit a label, default topic
 
-ERROR["test_create_multiple_choice_questions", Minitest::Result, 570.151141]
- test_create_multiple_choice_questions#Minitest::Result (570.15s)
-Capybara::ExpectationNotMet:         Capybara::ExpectationNotMet: expected not to find visible css "input" with id label_411104511, found 1 match: ""
-            test/integration/questions/questions_new_test.rb:39:in `block in <class:QuestionsNewTest>'
 
 
 
@@ -1228,7 +1244,6 @@ Needed for quizzes?
 
 
 3.19 DB CALLS, PART 2
-Fix topics that aren't showing in question-select
 When teacher logs in, there seems to be too many DB calls to find that teacher's record.
 Look at the scoresheet again
 And in adding new students
@@ -1237,9 +1252,6 @@ Adding a new objective to a seminar
 
 
 
-
-SEARCH BY QUESTION ID
-Search a question by id
 
 SELECT MANY IMPROVEMENT
 On a select-many question, show students which answer choices they were missing
@@ -1300,18 +1312,20 @@ Ask on Stack about why includes doesn't seem to make a difference
 ABBREVIATIONS FOR TOPICS AND DOMAINS
 
 
-
-
-
-
-
-
 OBJECTIVE INFO ON CLASS OBJECTIVE SCREEN
 
    
 
 ANNOUNCE TO STUDENTS WHEN THEY HAVE UNLOCKED A NEW OBJECTIVE
 
+
+SMALL FIXES
+Am I able to delete objectives?
+    Check one that has quizzes, ripostes, label_objectives, objective_students, etc.
+If students move class, update the quiz needs grading mark
+Some objectives should never receive keys
+Don’t take away keys until student FINISHES the test. (Stop taking them when the student begins the test)
+Edit files from the file index menu
 
 
 

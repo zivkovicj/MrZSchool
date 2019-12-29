@@ -60,7 +60,11 @@ class SeminarsController < ApplicationController
             these_sems = current_user.seminars_i_can_edit if params[:repeat]
             these_sems.each do |sem|
                 sem.update(seminar_params)
-                reset_all_student_grades(sem) if params[:reset]
+                if params[:reset]
+                    reset_all_student_grades(sem)
+                    turn_other_keys_into_pretest_keys(sem)
+                    delete_unfinished_quizzes(sem)
+                end
             end
         else
             @old_objectives = @seminar.objective_ids
@@ -274,6 +278,14 @@ class SeminarsController < ApplicationController
         
         def reset_all_student_grades(seminar)
             seminar.obj_studs_for_seminar.update_all(:points_this_term => nil) 
+        end
+        
+        def turn_other_keys_into_pretest_keys(seminar)
+            ObjectiveStudent.where(:user => seminar.students, :objective => seminar.objectives).update_all(:teacher_granted_keys => 0, :dc_keys => 0)
+        end
+        
+        def delete_unfinished_quizzes(seminar)
+            Quiz.where(:user => seminar.students, :objective => seminar.objectives, :total_score => nil).destroy_all
         end
         
         def set_pretests
