@@ -33,10 +33,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         go_to_new_questions
         
         assert_selector('input', :id => "style_multiple_choice") # Counterpart to a line in the questions_edit_test
-        assert_selector('input', :id => "label_#{@admin_l.id}")
-        assert_selector('input', :id => "label_#{@user_l.id}")
-        assert_selector('input', :id => "label_#{@other_l_pub.id}")
-        assert_no_selector('input', :id => "label_#{@other_l_priv.id}")
+        
         choose("label_#{@user_l.id}")
         
         click_on("Create Some Questions")
@@ -77,7 +74,6 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
             assert_not @new_question.correct_answers.include?(@new_choice[0][n]) if n != 2
         end
         assert @new_question.picture.blank?
-        assert_equal "computer", @new_question.grade_type  # Not selected, but should be computer-graded by default
         
         @new_question_2 = Question.all[-4]
         assert_equal "Are there two questions?", @new_question_2.prompt
@@ -87,7 +83,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_not @new_question_2.correct_answers.include?(@new_choice[1][1])
         assert_equal @user_p, @new_question_2.picture
         
-        # Need to assert redirection soon
+        assert_selector('p', :text => "Teacher Since:")
     end
     
     test "create select many questions" do
@@ -123,7 +119,6 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         go_to_new_questions
         
         choose("style_fill_in")
-        choose("grade_type_computer")
         choose("label_#{@user_l.id}")
         click_on("Create Some Questions")
         
@@ -152,7 +147,6 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert @new_question.correct_answers.include?(@new_choice[0][1])
         assert_not @new_question.correct_answers.include?("")
         assert_equal 2, @new_question.correct_answers.length
-        assert_equal "computer", @new_question.grade_type
         
         @new_question_2 = Question.all[-1]
         assert_equal @teacher_1, @new_question_2.user
@@ -172,8 +166,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         go_to_new_questions
         
         choose("style_fill_in")
-        choose("grade_type_teacher")
-        choose("label_#{@user_l.id}")
+        choose("label_#{@teacher_graded_l.id}")
         click_on("Create Some Questions")
         
         assert_text("This question needs to be graded by a person. ")
@@ -187,12 +180,11 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_equal @teacher_1, @new_question.user
         assert_equal "private", @new_question.extent
         assert_equal "fill_in", @new_question.style
-        assert_equal @user_l, @new_question.label
+        assert_equal @teacher_graded_l, @new_question.label
         assert_equal "Prompt for teacher-graded question", @new_question.prompt
         assert @new_question.correct_answers.include?("Your answer should be good.")
         assert_equal [], @new_question.choices
         assert_equal 1, @new_question.correct_answers.length
-        assert_equal "teacher", @new_question.grade_type
     end
     
     test "dont create with empty prompt" do

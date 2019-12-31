@@ -8,6 +8,9 @@
         <td class="center" width="20px">
             <input type="radio" name="questions[0][label_id]" id="label_<%= lab.id %>" value=<%= lab.id %> <%= checkery %> />
         </td>
-        <td><%= lab.name %></td>
+        <td>
+            <%= "(T)" if lab.grade_type == "teacher" %>
+            <%= lab.name %>
+        </td>
     </tr>
 <% end %>

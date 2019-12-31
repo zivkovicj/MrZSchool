@@ -32,20 +32,7 @@
             </table>
             
             </br>
-            <h3>Grade Type</h3>
-            <table>
-                <% [["computer", 'Computer Graded Responses'],
-                    ["teacher", 'Teacher-Graded In-App Response'],
-                    ["none", 'Teacher-Graded, No In-App Response']].each_with_index do |z, index| %>
-                    <% checkery = @grade_type == z[0] || @question&.grade_type == z[0] %>
-                    <tr>
-                        <td width="10%">
-                            <%= radio_button_tag "questions[0][grade_type]", z[0], checkery, :id => "grade_type_#{z[0]}" %>
-                        </td>
-                        <td><%= z[1] %></td>
-                    </tr>
-                <% end %>
-            </table>
+
             
             <% if action_name == "new" %>
                 <h3>Style</h3>

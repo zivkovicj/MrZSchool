@@ -78,6 +78,6 @@ class LabelsController < ApplicationController
   private
   
     def label_params
-        params.require(:label).permit(:name, :extent, :user_id, question_ids: [], topic_ids: [])
+        params.require(:label).permit(:name, :extent, :user_id, :grade_type, question_ids: [], topic_ids: [])
     end
 end

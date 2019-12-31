@@ -149,7 +149,6 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         fill_prompt(0)
         fill_choice(0,0)
         fill_choice(0,1)
-        choose("grade_type_teacher")
         click_on("save_changes_2")
         
         @fill_q.reload
@@ -160,23 +159,8 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert @fill_q.correct_answers.include?("Test if one choice left alone")
         assert_equal old_label, @fill_q.label
         assert_equal "public", @fill_q.extent
-        assert_equal "teacher", @fill_q.grade_type
         
         assert_selector('h2', :text => "All Questions")
-    end
-    
-    test "default grade type" do
-        this_question = questions(:teacher_graded_question_1)
-        
-        capybara_login(@teacher_1)
-        go_to_all_questions
-        search_for(this_question.prompt)
-        click_on(this_question.short_prompt)
-        
-        click_on("save_changes_2")
-        
-        this_question.reload
-        assert_equal "teacher", this_question.grade_type
     end
     
     test "invalid question edit" do

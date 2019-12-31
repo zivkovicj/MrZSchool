@@ -60,10 +60,9 @@ class ObjectivesController < ApplicationController
     @old_seminars = @objective.seminar_ids
     @old_pre_reqs = @objective.preassign_ids
     redirect_path = @objective
-    
-    default_topic_and_number
-    params_to_use = objective_params_basic
+
     @which_params = params[:objective][:which_params]
+
     if @which_params == "seminars"
       params_to_use = objective_params_seminars
     elsif @which_params == "labels"
@@ -76,6 +75,9 @@ class ObjectivesController < ApplicationController
     elsif @which_params == "worksheets"
       params_to_use = objective_params_worksheets
       @objective.worksheet_ids = [] if params[:objective][:worksheet_ids].nil?
+    else
+      default_topic_and_number
+      params_to_use = objective_params_basic
     end
     
     if @objective.update_attributes(params_to_use)

@@ -153,6 +153,7 @@ class ActiveSupport::TestCase
     @other_l_pub = labels(:other_label_public)
     @other_l_priv = labels(:other_label_private)
     @fill_in_label = labels(:fill_in_label)
+    @teacher_graded_l = labels(:teacher_graded_label_1)
     
     Label.all.each do |lab|
         lab.topics << topics(:test_topic)

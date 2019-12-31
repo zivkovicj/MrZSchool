@@ -151,6 +151,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         setup_labels
         
         old_name = @own_assign.name    # To ensure that name isn't changed.  (That was happening with one version.)
+        old_obj_num = @own_assign.objective_number # To ensure this isn't changed either.
         assert_not @own_assign.labels.include?(@user_l)
         assert_not @own_assign.labels.include?(@admin_l)
         @own_assign.labels << @other_l_pub
@@ -173,6 +174,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         
         @own_assign.reload
         assert_equal old_name, @own_assign.name
+        assert_equal old_obj_num, @own_assign.objective_number
         assert @own_assign.labels.include?(@user_l)
         assert @own_assign.labels.include?(@admin_l)
         assert_not @own_assign.labels.include?(@other_l_pub)

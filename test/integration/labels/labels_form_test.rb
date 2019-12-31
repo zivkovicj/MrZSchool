@@ -26,10 +26,10 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         
         capybara_login(@teacher_1)
         go_to_new_label
-        
         fill_in "name", with: @new_name
         check("topic_#{@integers_topic.id}")
         check("topic_#{@roots_topic.id}")
+        choose("grade_type_computer")
         click_on("Create This Label")
         
         assert_equal old_label_count + 1, Label.count
@@ -39,13 +39,14 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         assert_equal @teacher_1, @new_label.user
         assert @new_label.topics.include?(@roots_topic)
         assert @new_label.topics.include?(@integers_topic)
+        assert_equal "computer", @new_label.grade_type
         assert_not @new_label.topics.include?(@transformations_topic)
         
         
         # Need to assert redirection soon
     end
-    
-     test "admin creates label" do
+
+    test "admin creates label" do
         capybara_login(@admin_user)
         go_to_new_label
         
@@ -99,6 +100,8 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         assert_not_equal new_name, @user_l.name
         @roots_topic.labels << @user_l
         assert @user_l.topics.include?(@roots_topic)
+        assert_not @user_l.topics.include?(@integers_topic)
+        assert_equal "computer", @user_l.grade_type
         
         capybara_login(@teacher_1)
         go_to_all_labels
@@ -109,11 +112,30 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         fill_in "name", with: new_name
         check("topic_#{@integers_topic.id}")
         uncheck("topic_#{@roots_topic.id}")
+        choose("grade_type_teacher")
         click_on("Save Changes")
         
         @user_l.reload
         assert_equal new_name, @user_l.name
         assert_not @user_l.topics.include?(@roots_topic)
         assert @user_l.topics.include?(@integers_topic)
+        assert_equal "teacher", @user_l.grade_type
+    end
+
+    test "default label info" do
+        setup_topics
+        @roots_topic.labels << @user_l
+        old_name = @user_l.name
+        
+        capybara_login(@teacher_1)
+        go_to_all_labels
+        click_on(@user_l.name)
+        
+        click_on("Save Changes")
+        
+        @user_l.reload
+        assert_equal old_name, @user_l.name
+        assert @user_l.topics.include?(@roots_topic)
+        assert_equal "computer", @user_l.grade_type
     end
 end

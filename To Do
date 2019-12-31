@@ -1172,19 +1172,21 @@ Aqui
 
 
 
+3.24 QUESTION EDITING WITH LABEL HOLDING GRADE-TYPE
+V Choose grade_type when creating a new label
+V Choose grade_type when editing a label
+V When creating questions, no longer offer grade type.
+V On question-creation screen, alert creator which labels are teacher-graded
+	TEST THIS MANUALLY
+V Don't change the objective number when editing label etc.
+V When creating a new label, "computer" should be the default
 
-3.23 TERM UPDATING
-
-V Term updating includes turning old keys to pretest keys.
-V And also deleting unfinished quizzes.
-
-
-QUESTION-CREATING AND EDITING WHEN LABEL HOLDS GRADE_TYPE
+I hope you have left school and are enjoying the beginning of a relaxing Winter Break.  I wanted to email you with a couple of issue that have come up on this round of testing. Students who tried the  Collect Like Terms Level 2 quiz, were getting error messages and unable to access their quiz.  Also, several students who were taking the 2 Step Solving Equations (I think) , came across questions that didn't have the square that they were being asked for the value for.  For example, question 1631, didn't show a box E, even though that is the box that the question asked about.  Juan Ponce and Noah Lovato both ran into this problem.
 
 Error after student makes 6th try on quiz
 
 
-I hope you have left school and are enjoying the beginning of a relaxing Winter Break.  I wanted to email you with a couple of issue that have come up on this round of testing. Students who tried the  Collect Like Terms Level 2 quiz, were getting error messages and unable to access their quiz.  Also, several students who were taking the 2 Step Solving Equations (I think) , came across questions that didn't have the square that they were being asked for the value for.  For example, question 1631, didn't show a box E, even though that is the box that the question asked about.  Juan Ponce and Noah Lovato both ran into this problem.
+DON'T SHOW ANSWER FOR FILL-IN QUESTION UPON FIRST SUBMISSION
 
 Figure out why some students have an unfinished quiz and a finished quiz.
 
@@ -1200,10 +1202,7 @@ Add a button that allows students to enter >= in their form.
 
 Test a question with a picture to make sure that it works in the student's view and the teacher's view.
 
-Very important to choose a grade_type when creating a new label
-When creating questions, don't offer grade type.  That needs to be based on the label.
-On question-creation screen, alert creator which labels are teacher-graded and which 
-    Are computer graded.
+
 
 Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
 Add teacher_graded questions to db seed

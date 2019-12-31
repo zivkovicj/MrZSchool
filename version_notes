@@ -23,6 +23,14 @@ Between each update, manually test:
 
 
 
+
+3.23 TERM UPDATING
+
+Term updating includes turning old keys to pretest keys.
+And also deleting unfinished quizzes.
+
+
+
 3.22 TEACHER GRADING QUESTION UPDATES SCORE FOR ALL RELEVANT QUIZZES
 
 Test that all students' answers are sorted by question

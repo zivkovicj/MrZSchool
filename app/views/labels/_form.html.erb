@@ -8,11 +8,29 @@
     
         <%= render 'shared/error_messages', object: @label %>
       
-        <div class="singleOption">
+        <div class="col-sm-5 singleOption">
             </br>
             <%= render 'shared/name_in_form', form: lab, submitted_placeholder: nil %>
             <%= render 'shared/user_and_extent', form: lab %>
+
+            <h3>Grade Type</h3>
+            <table>
+                <% [["computer", 'Computer Graded Responses'],
+                    ["teacher", 'Teacher-Graded In-App Response'],
+                    ["none", 'Teacher-Graded, No In-App Response']].each_with_index do |z, index| %>
+
+                    <% checkery = @grade_type == z[0] || @question&.grade_type == z[0] %>
+
+                    <tr>
+                        <td width="10%">
+                            <%= radio_button_tag "label[grade_type]", z[0], checkery, :id => "grade_type_#{z[0]}" %>
+                        </td>
+                        <td><%= z[1] %></td>
+                    </tr>
+                <% end %>
+            </table>
         </div>
+
         </br>
 
         <div class="col-sm-5 singleOption">

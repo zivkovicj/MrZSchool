@@ -8,7 +8,6 @@ class QuestionsController < ApplicationController
   include LabelsList
   
   def new
-    @labels = Label.all
     @created_by = current_user.full_name_with_title
     @fields = fields_list
     @grade_type = "computer"
@@ -19,7 +18,7 @@ class QuestionsController < ApplicationController
     @extent = params[:questions]["0"][:extent]
     @label = Label.find(params[:questions]["0"][:label_id])
     @style = params[:questions]["0"][:style]
-    @grade_type = params[:questions]["0"][:grade_type]
+    @grade_type = @label.grade_type
     @pictures = @label.pictures
     create_question_group
   end
