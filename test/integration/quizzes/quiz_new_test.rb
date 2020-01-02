@@ -44,6 +44,13 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         end
     end
     
+    def create_ripostes_for(quiz)
+        3.times do |trip|
+            quiz.ripostes.create(:question => Question.all[trip])
+        end
+    end
+        
+    
     def prepare_fill_in
         @fill_in_objective = Objective.find_by(:name => "fill_in Questions Only")
         set_specific_score(@student_2, @fill_in_objective, 4)
@@ -52,11 +59,12 @@ class NewQuizTest < ActionDispatch::IntegrationTest
     
     
     test "setup quiz" do
-        old_riposte_count = Riposte.count
         current_term = @seminar.term
         term_start_date = Date.strptime(@school.term_dates[current_term][0], "%m/%d/%Y")
-        @student_2.quizzes.create(:objective => @objective_10, :origin => "teacher_granted", :total_score => 2, :updated_at => term_start_date + 2.days)
+        new_quiz = @student_2.quizzes.create(:objective => @objective_10, :origin => "teacher_granted", :total_score => 2, :updated_at => term_start_date + 2.days)
+        create_ripostes_for(new_quiz)
         old_quiz_count = Quiz.count
+        old_riposte_count = Riposte.count
         
         go_to_first_period
         begin_quiz
@@ -468,7 +476,9 @@ class NewQuizTest < ActionDispatch::IntegrationTest
     end
     
     test "quizzed better last term" do
-        Quiz.create(:user => @student_2, :objective => @objective_10, :origin => "teacher_granted", :total_score => 8)
+        # Student takes a quiz, but does worse than he did in a previous term.  The points_all_time does not lower.  Points_this_term receives the new value.
+        new_quiz = Quiz.create(:user => @student_2, :objective => @objective_10, :origin => "teacher_granted", :total_score => 8)
+        create_ripostes_for(new_quiz)
         @test_obj_stud.update(:teacher_granted_keys => 2, :points_this_term => nil, :points_all_time => 8)
         
         go_to_first_period
@@ -488,9 +498,11 @@ class NewQuizTest < ActionDispatch::IntegrationTest
     end
     
     test "quizzed better this term" do
+        # Counterpart to "quizzed_better_last_term".  Student improves a score from a previous term.  The new score affects both "points_all_time" and "points_this_term"
         set_specific_score(@student_2, @objective_10, 8)
         @test_obj_stud.update(:teacher_granted_keys => 2, :points_all_time => 8, :points_this_term => 8)
-        @student_2.quizzes.create(:objective => @objective_10, :total_score => 8, :origin => "teacher_granted")
+        new_quiz = @student_2.quizzes.create(:objective => @objective_10, :total_score => 8, :origin => "teacher_granted")
+        create_ripostes_for(new_quiz)
         
         go_to_first_period
         begin_quiz
@@ -581,6 +593,43 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_not os_2.reload.ready
     end
 
+    test "delete oldest upon fifth try" do
+        should_count = [1,2,3,4,5,5,5,5]
+        @test_obj_stud.update(:teacher_granted_keys => 2)
+        
+        go_to_first_period
+        
+        8.times do |trip|
+            begin_quiz
+            10.times do
+                answer_question_incorrectly
+                click_on "Next Question"
+            end
+            click_on("Back to Your Class Page")
+            @test_obj_stud.reload.update(:teacher_granted_keys => 2)
+            
+            these_quizzes = Quiz.where(:user => @test_obj_stud.user, :objective => @test_obj_stud.objective)
+            assert_equal should_count[trip], these_quizzes.count
+        end
+    end
+
+    test "delete quiz with no ripostes" do
+        this_obj = @test_obj_stud.objective
+        this_user = @test_obj_stud.user
+        q1 = Quiz.create(:user => this_user, :objective => this_obj)
+        q2 = Quiz.create(:user => this_user, :objective => this_obj)
+        3.times do
+            q2.ripostes.create(:question => Question.first)
+        end
+        
+        assert_equal 2, Quiz.where(:user => this_user, :objective => this_obj).count
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        assert_equal 1, Quiz.where(:user => this_user, :objective => this_obj).count
+
+    end
     
     
 end

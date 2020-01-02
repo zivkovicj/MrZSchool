@@ -87,6 +87,11 @@ class ActiveSupport::TestCase
   def set_specific_score (student, objective, score)
     ObjectiveStudent.find_or_create_by(:user => student, :objective => objective)
     this_quiz = Quiz.find_or_create_by(:user => student, :objective => objective, :origin => "manual_points_all_time")
+    if this_quiz.ripostes.count == 0
+        3.times do |trip|
+            this_quiz.ripostes.create(:question => Question.all[trip])
+        end
+    end
     this_quiz.update(:total_score => score)
   end
   

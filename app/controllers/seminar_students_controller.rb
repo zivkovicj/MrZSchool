@@ -33,6 +33,7 @@ class SeminarStudentsController < ApplicationController
     #@gs = GoalStudent.find_by(:user => @student, :seminar => @seminar, :term => term)
     #@checkpoint = Checkpoint.find_by(:goal_student => @gs, :sequence => this_sequence)
     #@checkpoint_due_date = @seminar.checkpoint_due_dates[term][this_sequence]
+    delete_broken_quizzes
   
     update_current_class
   end
@@ -154,6 +155,12 @@ class SeminarStudentsController < ApplicationController
         @ss = SeminarStudent.find(params[:id])
         @seminar = Seminar.find(@ss.seminar_id)
         redirect_to login_url unless (current_user && (@ss.user == current_user || current_user.seminars.include?(@seminar))) || user_is_an_admin
+      end
+      
+      def delete_broken_quizzes
+          Quiz.where(:user => @student).select{|x| x.ripostes.count == 0}.each do |quiz|
+              quiz.destroy
+          end
       end
       
       def setup_ss_vars

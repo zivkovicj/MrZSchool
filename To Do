@@ -1172,16 +1172,15 @@ Aqui
 
 
 
-3.24 QUESTION EDITING WITH LABEL HOLDING GRADE-TYPE
-V Choose grade_type when creating a new label
-V Choose grade_type when editing a label
-V When creating questions, no longer offer grade type.
-V On question-creation screen, alert creator which labels are teacher-graded
-	TEST THIS MANUALLY
-V Don't change the objective number when editing label etc.
-V When creating a new label, "computer" should be the default
+3.25 QUIZ FIXING JAN 2020
 
 I hope you have left school and are enjoying the beginning of a relaxing Winter Break.  I wanted to email you with a couple of issue that have come up on this round of testing. Students who tried the  Collect Like Terms Level 2 quiz, were getting error messages and unable to access their quiz.  Also, several students who were taking the 2 Step Solving Equations (I think) , came across questions that didn't have the square that they were being asked for the value for.  For example, question 1631, didn't show a box E, even though that is the box that the question asked about.  Juan Ponce and Noah Lovato both ran into this problem.
+
+V When a student logs in to quizzes, erase quizzes with no ripostes.
+
+
+
+
 
 Error after student makes 6th try on quiz
 

@@ -20,6 +20,14 @@ Between each update, manually test:
 
 
 
+3.24 QUESTION EDITING WITH LABEL HOLDING GRADE-TYPE
+Choose grade_type when creating a new label
+Choose grade_type when editing a label
+When creating questions, no longer offer grade type.
+On question-creation screen, alert creator which labels are teacher-graded
+Don't change the objective number when editing label etc.
+When creating a new label, "computer" should be the default
+
 
 
 

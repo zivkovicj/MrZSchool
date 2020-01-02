@@ -178,25 +178,7 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         
         assert_selector('a', :id => "pretest_#{@objective_20.id}")
     end
-    
-    test "erase oldest quiz if student has 6" do
-        travel_to_open_time
-        
-        @test_os.update(:teacher_granted_keys => 2)
-        set_specific_score(@test_os.user, @test_os.objective, 8)  # First instance of quiz
-        make_ready(@student_2, @objective_10)
-        go_to_first_period
-        
-        begin_quiz("teacher_granted")  # Second instance of quiz
-        
-        should_array = [2,3,4,5,5,5,5,5]
-        8.times do |y|
-            @test_os.reload.update_keys("teacher_granted", 1)
-            assert_equal should_array[y], @student_2.quizzes.where(:objective => @objective_10).count
-            answer_quiz_randomly
-            click_on ("Try this quiz again")   # Third through 5th instances of quiz are added here.
-        end
-    end
+
 
 
     test "lock in evening" do
