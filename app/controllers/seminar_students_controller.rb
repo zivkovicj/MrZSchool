@@ -159,6 +159,7 @@ class SeminarStudentsController < ApplicationController
       
       def delete_broken_quizzes
           Quiz.where(:user => @student).select{|x| x.ripostes.count == 0}.each do |quiz|
+              quiz.quizzes_ripostes.destroy_all
               quiz.destroy
           end
       end
