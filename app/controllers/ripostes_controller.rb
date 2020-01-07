@@ -8,8 +8,7 @@ class RipostesController < ApplicationController
     def update
         @riposte = Riposte.find(params[:id])
         @question = @riposte.question
-        @quiz = @riposte.quizzes.last
-        
+        @quiz = @riposte.quizzes.order(:created_at).last
         
         if @quiz.total_score == nil
             next_riposte_num = @riposte.position + 1

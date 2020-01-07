@@ -59,7 +59,7 @@ class QuizzesController < ApplicationController
             quizzes_with_same_objective = Quiz.where(:user_id => @quiz_taker_id, :objective => @objective).order(:created_at)
             if quizzes_with_same_objective.count > 5
                 quiz_to_kill = quizzes_with_same_objective.first
-                quiz_to_kill.ripostes.destroy_all
+                quiz_to_kill.quizzes_ripostes.destroy_all
                 quiz_to_kill.destroy
             end
         end

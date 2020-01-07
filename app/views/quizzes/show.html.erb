@@ -44,11 +44,15 @@
                         <% first_phrase = "Example Responses" %>
                         <h4>Your teacher will grade this question.</h4>
                     <% end %>
-                    <% if question.correct_answers.present? %>
-                        <%= first_phrase %>
-                        <% question.correct_answers.each do |answer| %>
-                            <li> <%= answer %></li>
+                    <% if @offer_next_try == "none" %>
+                        <% if question.correct_answers.present? %>
+                            <%= first_phrase %>
+                            <% question.correct_answers.each do |answer| %>
+                                <li> <%= answer %></li>
+                            <% end %>
                         <% end %>
+                    <% else %>
+                        <h4>We will show a sample answer after you use your last key for this quiz.</h4>
                     <% end %>
                 </div>
             </div>

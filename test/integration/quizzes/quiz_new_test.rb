@@ -276,6 +276,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             click_on "Next Question"
         end
         
+        new_time = @quiz.created_at - 1.hour
+        @quiz.update(:created_at => new_time) # This fixes an error that the test caused by creating all of the quizzes at the exact same time.
         @quiz.reload
         quiz_1_ripostes = @quiz.ripostes.select{|x| x.question.label.grade_type == "teacher"}
         riposte_0 = quiz_1_ripostes[0]
@@ -289,6 +291,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_selector('h3', :text => "Your final score will be at least 5 stars.")
         assert_selector('h3', :text => "The highest you could earn is 9 stars.")
         assert_selector("h4", :text => "Your teacher will grade this question.")
+        assert_selector("h4", :text => "We will show a sample answer after you use your last key for this quiz.")
+        assert_no_selector("li", :text => "A sample answer to show")
         assert_text("Yesiree Bob")
         
         ###  FIRST STUDENT TRIES OBJECTIVE 1 QUIZ A SECOND TIME
@@ -313,6 +317,9 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         riposte_0.reload
         riposte_1.reload
         assert_equal ["Yesiree Bob"], riposte_0.stud_answer
+        
+        assert_no_selector("h4", :text => "We will show a sample answer after you use your last key for this quiz.")
+        assert_selector("li", :text => "A sample answer to show")
 
         ###  FIRST STUDENT TAKES QUIZ FOR OBJECTIVE 2
         click_on("Back to Your Class Page")

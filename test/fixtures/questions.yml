@@ -57,6 +57,7 @@ teacher_graded_question_1:
   extent: public
   label: teacher_graded_label_1
   user: archer
+  correct_answers: ["A sample answer to show"]
   
 teacher_graded_question_2:
   style: fill_in
@@ -64,6 +65,7 @@ teacher_graded_question_2:
   extent: public
   label: teacher_graded_label_1
   user: archer
+  correct_answers: ["A sample answer to show"]
   
 teacher_graded_question_3:
   style: fill_in
