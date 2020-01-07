@@ -1186,52 +1186,8 @@ V Don't show sample answers the first time a student takes a quiz.
 
 Some students have an unfinished quiz and a finished quiz.  Probably because of the riposte.quizzes.last
 
-ERROR["test_create_new_picture", Minitest::Result, 217.748459000024]
- test_create_new_picture#Minitest::Result (217.75s)
-NoMethodError:         NoMethodError: undefined method `id' for nil:NilClass
-            test/integration/pictures/pictures_new_test.rb:32:in `block in <class:PicturesNewTest>'
 
- FAIL["test_learn_options_ready_and_willing", Minitest::Result, 310.98291900003096]
- test_learn_options_ready_and_willing#Minitest::Result (310.98s)
-        Expected false to be truthy.
-        test/integration/students/teach_and_learn_options_test.rb:87:in `block in <class:StudentsSearchTest>'
 
-/Users/mr.z/.rvm/gems/ruby-2.6.3/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:27: warning: constant ::Fixnum is deprecated
-/Users/mr.z/.rvm/gems/ruby-2.6.3/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:91: warning: constant ::Fixnum is deprecated
- FAIL["test_choose_consultants", Minitest::Result, 501.50755799998296]
- test_choose_consultants#Minitest::Result (501.51s)
-        Expected false to be truthy.
-        test/integration/consultancies/consultancies_show_test.rb:338:in `block in <class:ConsultanciesShowTest>'
-
- FAIL["test_create_consultancy", Minitest::Result, 547.4709670000011]
- test_create_consultancy#Minitest::Result (547.47s)
-        --- expected
-        +++ actual
-        @@ -1 +1 @@
-        -#<Seminar id: 980190962, name: "1st Period", user_id: nil, consultantThreshold: 7, created_at: "2020-01-03 18:52:17", updated_at: "2020-01-03 18:52:17", which_checkpoint: 1, checkpoint_due_dates: [[0], [0, "12/07/2017", "12/14/2017", "12/21/2017", "12/28/2017"], [0, "01/11/2018", "01/21/2018", "01/31/2018", "02/07/2018"], [0, "03/07/2018", "03/14/2018", "03/21/2018", "03/28/2018"], [0, "04/07/2018", "04/14/2018", "04/21/2018", "04/28/2018"]], school_year: 9, default_buck_increment: 5, class_reward: nil, target_rate: nil, school_id: 202630778, term_start_date: nil, term_end_date: nil, term: 1, owner_id: 950961012, grading_needed: false>
-        +nil
-        test/integration/consultancies/consultancies_show_test.rb:742:in `block in <class:ConsultanciesShowTest>'
-
- FAIL["test_destroy_if_date_already", Minitest::Result, 564.4928860000218]
- test_destroy_if_date_already#Minitest::Result (564.49s)
-        Expected: 4
-          Actual: 5
-        test/integration/consultancies/consultancies_show_test.rb:771:in `block in <class:ConsultanciesShowTest>'
-
- SKIP["test_student_edits_self", Minitest::Result, 590.0550420000218]
- test_student_edits_self#Minitest::Result (590.06s)
-        Skipped, no message given
-        test/integration/students/students_edit_test.rb:38:in `block in <class:StudentsEditTest>'
-
-ERROR["test_quiz_with_teacher_graded_question", Minitest::Result, 656.6969149999786]
- test_quiz_with_teacher_graded_question#Minitest::Result (656.70s)
-Capybara::ElementNotFound:         Capybara::ElementNotFound: Unable to find radio button "choice_bubble_A sample answer to show" that is not disabled
-            test/integration/quizzes/quiz_new_test.rb:29:in `answer_question_correctly'
-            test/integration/quizzes/quiz_new_test.rb:310:in `block (2 levels) in <class:NewQuizTest>'
-            test/integration/quizzes/quiz_new_test.rb:308:in `times'
-            test/integration/quizzes/quiz_new_test.rb:308:in `block in <class:NewQuizTest>'
-
-  358/3
 
 
 TEST THIS MANUALLY
