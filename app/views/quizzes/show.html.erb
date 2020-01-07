@@ -38,22 +38,28 @@
                     <% end %>
                 </div>
                 <div class="col-sm-6">
+                    <% show_samples = false %>
+                    <% show_samples = true if @offer_next_try == "none" %>
+
                     <% if question.label.grade_type == "computer" %>
                         <% first_phrase = "Correct Responses" %>
+                        <% show_samples = true %>
                     <% else %>
                         <% first_phrase = "Example Responses" %>
                         <h4>Your teacher will grade this question.</h4>
                     <% end %>
-                    <% if @offer_next_try == "none" %>
-                        <% if question.correct_answers.present? %>
+
+                    <% if question.correct_answers.present? %>
+                        <% if show_samples %>
                             <%= first_phrase %>
                             <% question.correct_answers.each do |answer| %>
                                 <li> <%= answer %></li>
                             <% end %>
+                        <% else %>
+                            <h4>We will show a sample answer after you use your last key for this quiz.</h4>
                         <% end %>
-                    <% else %>
-                        <h4>We will show a sample answer after you use your last key for this quiz.</h4>
                     <% end %>
+
                 </div>
             </div>
         </div>
