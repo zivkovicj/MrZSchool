@@ -160,6 +160,8 @@ class SeminarStudentsController < ApplicationController
       def delete_broken_quizzes
           Quiz.where(:user => @student).select{|x| x.ripostes.count == 0}.each do |quiz|
               quiz.ripostes.delete_all
+              # Can delete this next line after the 2019 school year.  After I'm sure I no longer need the ripostes that still have quiz_ids
+              Riposte.where(:quiz_id => quiz.id).destroy_all
               quiz.destroy
           end
       end

@@ -59,6 +59,8 @@ class QuizzesController < ApplicationController
             quizzes_with_same_objective = Quiz.where(:user_id => @quiz_taker_id, :objective => @objective).order(:created_at)
             if quizzes_with_same_objective.count > 5
                 quiz_to_kill = quizzes_with_same_objective.first
+                # Can delete this next line after the 2019 school year.  After I'm sure I no longer need the ripostes that still have quiz_ids
+                Riposte.where(:quiz_id => quiz_to_kill.id).destroy_all
                 quiz_to_kill.ripostes.delete_all
                 quiz_to_kill.destroy
             end
