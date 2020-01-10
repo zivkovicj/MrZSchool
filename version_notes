@@ -20,6 +20,29 @@ Between each update, manually test:
 
 
 
+
+
+
+
+
+
+3.26 ~ FIRST SUBMISSION ANSWERS
+Don't show sample answers the first time a student takes a quiz.
+Some students have an unfinished quiz and a finished quiz.  Probably because of the riposte.quizzes.last
+
+
+
+
+
+3.25 QUIZ FIXING JAN 2020
+
+(From Chris Schafer). I hope you have left school and are enjoying the beginning of a relaxing Winter Break.  I wanted to email you with a couple of issue that have come up on this round of testing. Students who tried the  Collect Like Terms Level 2 quiz, were getting error messages and unable to access their quiz.  Also, several students who were taking the 2 Step Solving Equations (I think) , came across questions that didn't have the square that they were being asked for the value for.  For example, question 1631, didn't show a box E, even though that is the box that the question asked about.  Juan Ponce and Noah Lovato both ran into this problem.
+When a student logs in to quizzes, erase quizzes with no ripostes.
+Error after student makes 6th try on quiz
+
+
+
+
 3.24 QUESTION EDITING WITH LABEL HOLDING GRADE-TYPE
 Choose grade_type when creating a new label
 Choose grade_type when editing a label

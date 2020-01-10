@@ -1170,48 +1170,29 @@ Main Goal: Teacher can lock and unlock quizzes
 Aqui
 
 
-
-
-3.25 QUIZ FIXING JAN 2020
-
-I hope you have left school and are enjoying the beginning of a relaxing Winter Break.  I wanted to email you with a couple of issue that have come up on this round of testing. Students who tried the  Collect Like Terms Level 2 quiz, were getting error messages and unable to access their quiz.  Also, several students who were taking the 2 Step Solving Equations (I think) , came across questions that didn't have the square that they were being asked for the value for.  For example, question 1631, didn't show a box E, even though that is the box that the question asked about.  Juan Ponce and Noah Lovato both ran into this problem.
-
-V When a student logs in to quizzes, erase quizzes with no ripostes.
-V Error after student makes 6th try on quiz
-
-
-3.26 ~ FIRST SUBMISSION ANSWERS
-
-V Don't show sample answers the first time a student takes a quiz.
-
-Some students have an unfinished quiz and a finished quiz.  Probably because of the riposte.quizzes.last
+3.27 DB CALLS, PART 2
+When teacher logs in, there seems to be too many DB calls to find that teacher's record.
+Look at the scoresheet again
+Adding objective to a class
+Grading questions
+And in adding new students
+    (Possibly too many calls from creating ObjectiveStudents)
+Riposte ordering definitely could make fewer db calls
+When riposte is created, include the user
+All quiz scores are updated for all quizzes that include that riposte
 
 
 
 
 
-TEST THIS MANUALLY
 
-
-
-
-Make sure to test in live environment, because deleting the ripostes might cause a problem.  With a fake class.  Don't delete scores for my real students.
 
 Erase the stuff about checkpoints
 
 Add a button that allows students to enter >= in their form.
 
-
-
-Test a question with a picture to make sure that it works in the student's view and the teacher's view.
-
-
-
 Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
 Add teacher_graded questions to db seed
-
-
-
 
 Teacher should be able to go back to the scoresheet from viewing a student.
 
@@ -1222,22 +1203,10 @@ Set the question type to match its label, though
 
 Get user's local time zone
 
-Riposte ordering definitely could make fewer db calls
-Don't show example answer on answer show page
-  (Because the student could copy that answer).
-When riposte is created, include the user
-When teacher grades, ripostes are sorted by question
-All quiz scores are updated for all quizzes that include that riposte
 
 
-
-Test in development to see the number of db calls.
-Make sure to minimize them.
 
 Edit a label, default topic
-
-
-
 
 Update existing db ripostes for user
 Needed for quizzes?
@@ -1245,12 +1214,7 @@ Needed for quizzes?
 
 
 
-3.19 DB CALLS, PART 2
-When teacher logs in, there seems to be too many DB calls to find that teacher's record.
-Look at the scoresheet again
-And in adding new students
-    (Possibly too many calls from creating ObjectiveStudents)
-Adding a new objective to a seminar
+
 
 
 
