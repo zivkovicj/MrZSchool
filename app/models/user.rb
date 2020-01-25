@@ -1,6 +1,6 @@
 class User < ApplicationRecord
     attr_accessor       :remember_token, :activation_token, :reset_token
-    before_save         :downcase_stuff
+    #before_save         :downcase_stuff
     before_validation   :check_title, :check_user_number, :check_username, :check_password
     before_create       :create_activation_digest
     after_create        :update_last_login
