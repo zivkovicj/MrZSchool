@@ -11,7 +11,7 @@ class TeachersController < ApplicationController
     @teacher = Teacher.new(teacher_params)
     if @teacher.save
       @teacher.send_activation_email
-      log_in @teacher
+      log_in @teacher.id
       flash[:success] = "Welcome to Mr.Z School!"
       redirect_to new_school_path(:teacher_id => @teacher.id)
     else
@@ -20,11 +20,10 @@ class TeachersController < ApplicationController
   end
   
   def show
-    @teacher = Teacher.find(params[:id])
+    @teacher = User.find(params[:id])
     @seminars = @teacher.seminars.order(:name)
     current_user.update(:current_class => nil)
     @school = @teacher.school
-    #create_commodities
     @unverified_teachers = @school.unverified_teachers if @teacher.school_admin > 0
     @unaccepted_classes = @teacher.unaccepted_classes
   end

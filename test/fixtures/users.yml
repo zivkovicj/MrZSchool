@@ -5,6 +5,7 @@ michael:
   first_name: Michael
   last_name: Hartl
   email: michael@example.com
+  username: michael@example.com
   password_digest: <%= User.digest('password') %>
   type: Admin
   activated: true
@@ -20,6 +21,7 @@ archer:
   first_name: Sterling
   last_name: Archer
   email: archer@example.com
+  username: archer@example.com
   password_digest: <%= User.digest('password') %>
   type: Teacher
   activated: true
@@ -35,6 +37,7 @@ zacky:
   first_name: Zacky
   last_name: Vengeance
   email: zacky@example.com
+  username: zacky@example.com
   password_digest: <%= User.digest('password') %>
   type: Teacher
   activated: true
@@ -52,6 +55,7 @@ user_<%= n %>:
   first_name:  <%= "User #{n}" %>
   last_name:  <%= "User #{n}" %>
   email: <%= "user-#{n}@example.com" %>
+  username: <%= "user-#{n}@example.com" %>
   password_digest: <%= User.digest('password') %>
   type: Teacher
   activated: true

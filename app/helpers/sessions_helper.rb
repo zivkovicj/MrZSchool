@@ -1,9 +1,8 @@
 module SessionsHelper
     
     # Logs in the given user.
-    def log_in(user)
-        session[:user_id] = user.id
-        user.update(:last_login => Time.now)
+    def log_in(user_id)
+        session[:user_id] = user_id
     end
     
     # Remembers a user in a persistent session.

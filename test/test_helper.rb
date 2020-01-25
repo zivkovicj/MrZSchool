@@ -292,7 +292,7 @@ class ActiveSupport::TestCase
   def capybara_login(user)
     visit('/')
     click_on('Log In')
-    fill_in('username', :with => user.email)
+    fill_in('username', :with => user.username)
     fill_in('Password', :with => 'password')
     click_on('Log In')
   end
@@ -375,7 +375,7 @@ class ActionDispatch::IntegrationTest
   
   # Log in as a particular user.
   def log_in_as(user, password: 'password', remember_me: '1')
-    post login_path, params: { session: { email: user.email,
+    post login_path, params: { session: { username: user.username,
                                     password: password,
                                     remember_me: remember_me } }
   end

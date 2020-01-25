@@ -79,6 +79,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal old_riposte_count + new_riposte_count, Riposte.count
         # Ripostes should be created with the "graded" value set to nil
         last_riposte = @quiz.ripostes.last
+        assert_equal @student_2, last_riposte.user
         assert_nil last_riposte.graded
     end
     
@@ -256,10 +257,10 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         go_to_first_period
         click_on("Quizzes")
         find("#teacher_granted_#{@tg_objective_1.id}").click
-        @quiz = Quiz.last
+        @quiz_1_0 = Quiz.last
         one_wrong = false
 
-        @quiz.ripostes.count.times do
+        @quiz_1_0.ripostes.count.times do
             teacher_graded_tags = all('#teacher_graded_tag')
             if teacher_graded_tags.present?
                 fill_in "riposte[stud_answer]", with: "Yesiree Bob"
@@ -276,16 +277,16 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             click_on "Next Question"
         end
         
-        new_time = @quiz.created_at - 1.hour
-        @quiz.update(:created_at => new_time) # This fixes an error that the test caused by creating all of the quizzes at the exact same time.
-        @quiz.reload
-        quiz_1_ripostes = @quiz.ripostes.select{|x| x.question.label.grade_type == "teacher"}
+        new_time = @quiz_1_0.created_at - 1.hour
+        @quiz_1_0.update(:created_at => new_time) # This fixes an error that the test caused by creating all of the quizzes at the exact same time.
+        @quiz_1_0.reload
+        quiz_1_ripostes = @quiz_1_0.ripostes.select{|x| x.question.label.grade_type == "teacher"}
         riposte_0 = quiz_1_ripostes[0]
         riposte_1 = quiz_1_ripostes[1]
-        assert @quiz.points_still_to_grade > 0
-        assert_equal 5, @quiz.total_score
+        assert @quiz_1_0.points_still_to_grade > 0
+        assert_equal 5, @quiz_1_0.total_score
         assert_equal ["Yesiree Bob"], riposte_0.stud_answer
-        assert @quiz.needs_grading
+        assert @quiz_1_0.needs_grading
         assert @seminar.reload.grading_needed
         
         assert_selector('h3', :text => "Your final score will be at least 5 stars.")
@@ -301,7 +302,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         click_on("Quizzes")
         find("#teacher_granted_#{@tg_objective_1.id}").click
         @quiz_1_1 = Quiz.last
-        assert_equal @quiz.ripostes.count, @quiz_1_1.ripostes.count
+        assert_equal @quiz_1_0.ripostes.count, @quiz_1_1.ripostes.count
         
         # On the second try, include the already-answered riposte
         assert @quiz_1_1.ripostes.include?(riposte_0)
@@ -342,7 +343,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         click_on("Quizzes")
         find("#teacher_granted_#{@tg_objective_1.id}").click
         @quiz_3 = Quiz.last
-        @quiz.ripostes.count.times do
+        @quiz_3.ripostes.count.times do
             teacher_graded_tags = all('#teacher_graded_tag')
             if teacher_graded_tags.present?
                 fill_in "riposte[stud_answer]", with: "Yes"
@@ -372,9 +373,9 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         
         assert_equal 0, riposte_0.graded
         assert_equal 0, riposte_2.graded
-        assert @quiz.needs_grading
-        assert @quiz_2.needs_grading
-        assert @quiz_3.needs_grading
+        [@quiz_1_0, @quiz_1_1,@quiz_2,@quiz_3].each do |this_quiz|
+            assert this_quiz.needs_grading
+        end
         
         # Need to bring this one back after I fix the teacher view.
         fill_in "score_for_#{riposte_0.id}", with: 0
@@ -389,11 +390,12 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal 1, riposte_0.reload.graded  # Should be marked graded now
         assert_equal 1, riposte_1.reload.graded
         assert_equal 0, riposte_2.reload.graded  # Still not graded
-        assert_equal 7, @quiz.reload.total_score
+        assert_equal 7, @quiz_1_0.reload.total_score
         assert_equal 8, @quiz_1_1.reload.total_score
         assert_equal 5, @quiz_2.reload.total_score
         assert_equal 9, @quiz_3.reload.total_score
-        assert_not @quiz.needs_grading
+        assert_not @quiz_1_0.needs_grading
+        assert_not @quiz_1_1.needs_grading
         assert @quiz_2.needs_grading
         assert_not @quiz_3.needs_grading
         assert @seminar.reload.grading_needed

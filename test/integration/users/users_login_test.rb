@@ -9,7 +9,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   
   test "login/out as admin" do
     get login_path
-    post login_path, params: { session: { email:    @admin_user.email,
+    post login_path, params: { session: { username:    @admin_user.email,
                                           password: 'password' } }
     assert is_logged_in?
     assert_redirected_to @admin_user
@@ -29,7 +29,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   
   test "login/out as teacher" do
     get login_path
-    post login_path, params: { session: { email:    @teacher_1.email,
+    post login_path, params: { session: { username:    @teacher_1.email,
                                           password: 'password' } }
     assert is_logged_in?
     assert_redirected_to @teacher_1
@@ -49,7 +49,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   
   test "login/out as student" do
     get login_path
-    post login_path, params: { session: { email:    @student_1.email,
+    post login_path, params: { session: { username:    @student_1.username,
                                           password: 'password' } }
     assert is_logged_in?
     assert_redirected_to @student_1
@@ -69,7 +69,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   
   test "invalid password" do
     get login_path
-    post login_path, params: { session: { email:    @teacher_1.email,
+    post login_path, params: { session: { username:    @teacher_1.email,
                                           password: 'beer pong' } }
     assert_not is_logged_in?
     assert_template 'sessions/new'

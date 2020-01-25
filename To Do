@@ -1170,16 +1170,26 @@ Main Goal: Teacher can lock and unlock quizzes
 Aqui
 
 
-3.27 DB CALLS, PART 2
-When teacher logs in, there seems to be too many DB calls to find that teacher's record.
+3.27 PERFORMANCE JAN 2020
+V When teacher logs in, there seems to be too many DB calls to find that teacher's record.
+V Check only username.  But for teachers, set the username to be the same as the email.
+
+V When riposte is created, include the user
+V All quiz scores are updated for all quizzes that include that riposte
+
+Set all live teacher usernames to match their email.
+
+3.28 PERFORMANCE FEB 2020
 Look at the scoresheet again
 Adding objective to a class
 Grading questions
 And in adding new students
     (Possibly too many calls from creating ObjectiveStudents)
 Riposte ordering definitely could make fewer db calls
-When riposte is created, include the user
-All quiz scores are updated for all quizzes that include that riposte
+
+
+test_helper has two functions called log_in_as.  Delete one of them.
+
 
 
 
