@@ -1179,6 +1179,90 @@ V All quiz scores are updated for all quizzes that include that riposte
 
 Set all live teacher usernames to match their email.
 
+ 
+
+ FAIL["test_teacher_edits_self", Minitest::Result, 396.97634199999993]
+ test_teacher_edits_self#Minitest::Result (396.98s)
+        Expected: "burgle@cut.com"
+          Actual: "Burgle@Cut.com"
+        test/test_helper.rb:335:in `teacher_assertions'
+        test/integration/teachers/teachers_edit_test.rb:19:in `block in <class:TeachersEditTest>'
+
+/Users/mr.z/.rvm/gems/ruby-2.6.3/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:27: warning: constant ::Fixnum is deprecated
+/Users/mr.z/.rvm/gems/ruby-2.6.3/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:91: warning: constant ::Fixnum is deprecated
+ FAIL["test_admin_edits_teacher", Minitest::Result, 397.92706099999987]
+ test_admin_edits_teacher#Minitest::Result (397.93s)
+        Expected: "burgle@cut.com"
+          Actual: "Burgle@Cut.com"
+        test/test_helper.rb:335:in `teacher_assertions'
+        test/integration/teachers/teachers_edit_test.rb:29:in `block in <class:TeachersEditTest>'
+
+DEPRECATED: Use assert_nil if expecting nil from test/integration/seminars/seminars_edit_test.rb:216. This will fail in Minitest 6.
+DEPRECATED: Use assert_nil if expecting nil from test/integration/seminars/seminars_edit_test.rb:217. This will fail in Minitest 6.
+ FAIL["test_admin_edits_self", Minitest::Result, 468.64087400000017]
+ test_admin_edits_self#Minitest::Result (468.64s)
+        Expected: "spangle@bot.com"
+          Actual: "Spangle@Bot.com"
+        test/integration/admins/admins_edit_test.rb:28:in `block in <class:AdminsEditTest>'
+
+/Users/mr.z/.rvm/gems/ruby-2.6.3/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:27: warning: constant ::Fixnum is deprecated
+/Users/mr.z/.rvm/gems/ruby-2.6.3/gems/will_paginate-3.1.0/lib/will_paginate/view_helpers/link_renderer.rb:91: warning: constant ::Fixnum is deprecated
+ERROR["test_create_new_picture", Minitest::Result, 536.2800649999999]
+ test_create_new_picture#Minitest::Result (536.28s)
+Minitest::UnexpectedError:         NoMethodError: undefined method `id' for nil:NilClass
+            test/integration/pictures/pictures_new_test.rb:32:in `block in <class:PicturesNewTest>'
+
+ERROR["test_delete_picture", Minitest::Result, 546.3611230000001]
+ test_delete_picture#Minitest::Result (546.36s)
+Minitest::UnexpectedError:         Excon::Error::Forbidden: Expected(204) <=> Actual(403 Forbidden)
+        excon.error.response
+          :body          => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>RequestTimeTooSkewed</Code><Message>The difference between the request time and the current time is too large.</Message><RequestTime>20191206T234544Z</RequestTime><ServerTime>2020-01-29T03:08:49Z</ServerTime><MaxAllowedSkewMilliseconds>900000</MaxAllowedSkewMilliseconds><RequestId>C1412F86C8EE5009</RequestId><HostId>1oE78iul4LGJuUxe75UZ9wq7CSFGT4QxxUoGtdQ7PEeL8q0LZ9SHgNjLtaoZzuMuj++iBez77Ac=</HostId></Error>"
+          :cookies       => [
+          ]
+          :headers       => {
+            "Content-Type"     => "application/xml"
+            "Date"             => "Wed, 29 Jan 2020 03:08:47 GMT"
+            "Server"           => "AmazonS3"
+            "x-amz-id-2"       => "1oE78iul4LGJuUxe75UZ9wq7CSFGT4QxxUoGtdQ7PEeL8q0LZ9SHgNjLtaoZzuMuj++iBez77Ac="
+            "x-amz-request-id" => "C1412F86C8EE5009"
+          }
+          :host          => "mrzschoolbucket.s3.amazonaws.com"
+          :local_address => "192.168.0.79"
+          :local_port    => 50115
+          :path          => "/uploads/picture/image/340665903/cheese_logo.jpg"
+          :port          => 443
+          :reason_phrase => "Forbidden"
+          :remote_ip     => "52.216.85.115"
+          :status        => 403
+          :status_line   => "HTTP/1.1 403 Forbidden\r\n"
+        
+            app/controllers/pictures_controller.rb:57:in `destroy'
+            test/integration/pictures/pictures_index_test.rb:53:in `block in <class:PicturesIndexTest>'
+
+ FAIL["test_new_teacher_old_school", Minitest::Result, 547.8933539999998]
+ test_new_teacher_old_school#Minitest::Result (547.89s)
+        Expected: "burgle@cut.com"
+          Actual: "Burgle@Cut.com"
+        test/test_helper.rb:335:in `teacher_assertions'
+        test/integration/teachers/teachers_signup_test.rb:23:in `block in <class:TeachersSignupTest>'
+
+ FAIL["test_new_teacher_new_school", Minitest::Result, 551.0181939999998]
+ test_new_teacher_new_school#Minitest::Result (551.02s)
+        Expected: "burgle@cut.com"
+          Actual: "Burgle@Cut.com"
+        test/test_helper.rb:335:in `teacher_assertions'
+        test/integration/teachers/teachers_signup_test.rb:86:in `block in <class:TeachersSignupTest>'
+
+ FAIL["test_create_new_students", Minitest::Result, 704.8590399999998]
+ test_create_new_students#Minitest::Result (704.86s)
+        Expected: "my_username"
+          Actual: "My_Username"
+        test/integration/students/students_create_test.rb:100:in `block in <class:StudentsNewTest>'
+
+
+
+
+
 3.28 PERFORMANCE FEB 2020
 Look at the scoresheet again
 Adding objective to a class

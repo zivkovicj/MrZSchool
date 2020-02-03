@@ -1,6 +1,6 @@
 class User < ApplicationRecord
     attr_accessor       :remember_token, :activation_token, :reset_token
-    #before_save         :downcase_stuff
+    before_save         :downcase_stuff
     before_validation   :check_title, :check_user_number, :check_username, :check_password
     before_create       :create_activation_digest
     after_create        :update_last_login
@@ -9,12 +9,12 @@ class User < ApplicationRecord
     has_many    :objectives
     has_many    :questions
     has_many    :labels
-    has_many    :quizzes
+    has_many    :quizzes, dependent: :destroy
     has_many    :pictures
     has_many    :goals
     has_many    :currencies
     has_many    :given_currencies, :class_name => "Currency", :as => :giver
-    has_many    :ripostes
+    has_many    :ripostes, dependent: :destroy
     has_and_belongs_to_many  :teams
     belongs_to  :school
     belongs_to   :sponsor,  :class_name => "User"
