@@ -4,7 +4,6 @@
   <% default_label = action_name == "new" ? Label.find(1) : @question.label %>
 <% end %>
 
-
 <h2 class="collapsing_topics"><%= lowest_layer.capitalize %></h2>
 <% @fields.order(:name).each do |field| %>
     <% field_id = field.id %>

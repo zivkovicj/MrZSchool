@@ -1170,35 +1170,44 @@ Main Goal: Teacher can lock and unlock quizzes
 Aqui
 
 
-3.27 PERFORMANCE JAN 2020
-V When teacher logs in, there seems to be too many DB calls to find that teacher's record.
-V Check only username.  But for teachers, set the username to be the same as the email.
+3.29 KEEP TOPIC AND GRADE-TYPE
+When editing a label, current grade-type and topic needs to persist.
 
-V When riposte is created, include the user
-V All quiz scores are updated for all quizzes that include that riposte
-
-Set all live teacher usernames to match their email.
-
-Push latest updates live, then check out logging in on the live site.
+EDIT STUDENT PASSWORDS
 
 
 
 
-3.28 PERFORMANCE FEB 2020
+Update seeds and development db so that adult usernames match their email
+
+COPY OBJECTIVES TO ANOTHER CLASS
+
+STUDENTS REQUEST KEYS
+
+CREATE TOPICS
+Need to be able to create fields, domains, and topics.  
+But do that during the summer, because I will make a big re-structuring.  Instead of having separate field, domain, topic, use only "topic".  Topics can be sub-topics of each other.  But it is allowed to be at any level.  This will allow for needed flexibility. 
+
+IMPORTANT: Make sure that I can still create new labels before pushing.
+
+Would be nice to use drop-down menus.  But if I use REST then I can test.
+
+Don't allow a new topic to be named "General"
+
+Only admin can create or edit the top three levels
+
+
+
+3.29 PERFORMANCE MARCH 2020
 Look at the scoresheet again
 Adding objective to a class
 Grading questions
 And in adding new students
     (Possibly too many calls from creating ObjectiveStudents)
 Riposte ordering definitely could make fewer db calls
-
+Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
 
 test_helper has two functions called log_in_as.  Delete one of them.
-
-
-
-
-
 
 
 
@@ -1206,7 +1215,6 @@ Erase the stuff about checkpoints
 
 Add a button that allows students to enter >= in their form.
 
-Look to improve performance on scoresheet, assignment adding, quiz grading and quiz taking
 Add teacher_graded questions to db seed
 
 Teacher should be able to go back to the scoresheet from viewing a student.
@@ -1229,11 +1237,6 @@ Needed for quizzes?
 
 
 
-
-
-
-
-
 SELECT MANY IMPROVEMENT
 On a select-many question, show students which answer choices they were missing
 
@@ -1251,12 +1254,7 @@ UPDATE STUDENT READINESS WHEN OBJECTIVES GET DELETED
 
 
 
-CREATE TOPICS, FIELDS, AND DOMAINS
-Use the drop-down menus that I've established, but the only bubble to choose is "Create a new field/domain/topic/objective/label"
-Same screen also allows creating the name
-What about the other features of an objective?  Should I use javascript to blank out those features for the other taxonomy levels?
-Don't allow a new topic to be named "General"
-Only admin can create or edit the top three levels
+
 
 
 

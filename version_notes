@@ -23,6 +23,20 @@ Between each update, manually test:
 
 
 
+3.28_username_email
+Set all live teacher usernames to match their email.
+
+Push latest updates live, then check out logging in on the live site.
+
+
+
+3.27 PERFORMANCE JAN 2020
+When teacher logs in, there seems to be too many DB calls to find that teacher's record.
+Check only username.  But for teachers, set the username to be the same as the email.
+
+When riposte is created, include the user
+All quiz scores are updated for all quizzes that include that riposte
+
 
 
 

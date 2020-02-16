@@ -1,10 +1,11 @@
 
 <% topic_id = topic.id %>
 
+
 <tr class="topic_from_field_<%= field_id %> topic_from_domain_<%= domain_id %> topic_cell currently_hidden">
   <td class="center" width="20px">
     <% if controller_name == "labels" %>
-        <%= check_box_tag 'label[topic_ids][]', topic_id, @label.topics.include?(topic_id), {:id => "topic_#{topic_id}"} %>
+        <%= check_box_tag 'label[topic_ids][]', topic_id, @label.topic_ids.include?(topic_id), {:id => "topic_#{topic_id}"} %>
     <% else %>
         <%= form.radio_button :topic_id, topic_id, :id => "topic_#{topic_id}" %>
     <% end %>

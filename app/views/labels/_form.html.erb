@@ -19,7 +19,7 @@
                     ["teacher", 'Teacher-Graded In-App Response'],
                     ["none", 'Teacher-Graded, No In-App Response']].each_with_index do |z, index| %>
 
-                    <% checkery = @grade_type == z[0] || @question&.grade_type == z[0] %>
+                    <% checkery = @label.grade_type == z[0] %>
 
                     <tr>
                         <td width="10%">
