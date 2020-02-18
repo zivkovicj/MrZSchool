@@ -1,5 +1,5 @@
 
-<%= button_to "Profile", current_user, class: "btn btn-lg btn-primary", 
+<%= button_to "Back", current_user, class: "btn btn-lg btn-primary", 
     :method => :get, :id => "back_button" %>
 
 <div class="row">
@@ -24,6 +24,7 @@
 <% quiz_info = [quizzes_seminar_student_path(@ss), "Quizzes", "quiz.png"] %>
 <% goal_info = [goal_reroute_seminar_student_path(@ss), "Edit Goal", "apple.jpg"] %>
 <% grades_info = [grades_seminar_student_path(@ss), "Scores", "apple.jpg"] %>
+<% profile_info = [edit_student_path(@student),"Profile","student.png"] %>
 
 <% if current_user.type == "Teacher" %>
     <% @submenus = [
@@ -31,6 +32,7 @@
         star_market_info,
         give_key_info,
         move_or_remove_info,
+        profile_info
         ]
     %>
 <% elsif current_user.type == "Student" %>

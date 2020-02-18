@@ -23,6 +23,10 @@ Between each update, manually test:
 
 
 
+3.29 KEEP TOPIC AND GRADE-TYPE
+When editing a label, current grade-type and topic needs to persist.
+
+
 3.28_username_email
 Set all live teacher usernames to match their email.
 

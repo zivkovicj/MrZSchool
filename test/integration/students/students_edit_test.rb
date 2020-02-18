@@ -16,6 +16,7 @@ class StudentsEditTest < ActionDispatch::IntegrationTest
         fill_in "student_username", with: "myusername"
         fill_in "student_password", with: "Passy McPasspass"
         fill_in "student_email", with: "my_new_mail@email.com"
+        fill_in "student_user_number", with: 1073514
         click_on("Save Changes")
         
         @student_2.reload
@@ -24,14 +25,7 @@ class StudentsEditTest < ActionDispatch::IntegrationTest
         assert_equal "myusername", @student_2.username
         assert @student_2.authenticate("Passy McPasspass")
         assert_equal "my_new_mail@email.com", @student_2.email
-    end
-    
-    def edit_student_user_number
-        fill_in "student_user_number", with: 1073514
-    end
-    
-    def check_student_user_number
-        assert_equal 1073514, @student_2.user_number 
+        assert_equal 1073514, @student_2.user_number
     end
     
     test "student edits self" do
@@ -41,6 +35,16 @@ class StudentsEditTest < ActionDispatch::IntegrationTest
         assert_no_selector('input', :id => "student_user_number")
         student_edit_stuff
     end
+
+    test "teacher edits student" do
+        capybara_login(@teacher_1)
+        click_on("scoresheet_seminar_#{@seminar.id}")
+        click_on("ss_#{@student_2.id}")
+        click_on("Profile")
+        
+        student_edit_stuff
+    end
+        
     
     test "admin edits student" do
         capybara_login(@admin_user)
@@ -51,9 +55,7 @@ class StudentsEditTest < ActionDispatch::IntegrationTest
         click_on(@student_2.last_name_first)
         assert_selector('input', :id => "student_user_number")
         
-        edit_student_user_number
         student_edit_stuff
-        check_student_user_number
     end
     
     test "edit username to already taken" do
