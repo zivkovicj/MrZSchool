@@ -48,11 +48,12 @@ module DeskConsultants
     # score_hash
     def setup_score_hash
         ObjectiveStudent.where(:objective => @objectives, :user_id => @rank_by_consulting)
-        .pluck(:objective_id, :user_id, :points_all_time, :ready, :teacher_granted_keys, :dc_keys, :pretest_keys)
-        .map{|objective_id, user_id, points_all_time, ready, teacher_granted_keys, dc_keys, pretest_keys| {
+        .pluck(:objective_id, :user_id, :points_all_time, :points_this_term, :ready, :teacher_granted_keys, :dc_keys, :pretest_keys)
+        .map{|objective_id, user_id, points_all_time, points_this_term, ready, teacher_granted_keys, dc_keys, pretest_keys| {
             obj: objective_id,
             user: user_id,
-            points: points_all_time,
+            points_all_time: points_all_time,
+            points_this_term: points_this_term,
             ready: ready,
             total_keys: teacher_granted_keys + dc_keys + pretest_keys
         }}
@@ -98,26 +99,26 @@ module DeskConsultants
           priority_five_objs.each do |obj|
               perfect_studs = @score_hash.select{|x|
                   x[:obj] == obj &&
-                  x[:points].to_i > 4 &&
-                  x[:points].to_i < 9 &&
+                  x[:points_all_time].to_i > 4 &&
+                  x[:points_all_time].to_i < 9 &&
                   x[:total_keys] == 0
               }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
               
               nine_star_studs = @score_hash.select{|x|
                   x[:obj] == obj &&
-                  x[:points].to_i == 9 &&
+                  x[:points_all_time].to_i == 9 &&
                   x[:total_keys] == 0
               }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
               
               ten_star_studs = @score_hash.select{|x|
                   x[:obj] == obj &&
-                  x[:points].to_i == 10 &&
+                  x[:points_all_time].to_i == 10 &&
                   x[:total_keys] == 0
               }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
               
               studs_with_keys = @score_hash.select{|x|
                   x[:obj] == obj &&
-                  x[:points].to_i > 4 &&
+                  x[:points_all_time].to_i > 4 &&
                   x[:total_keys] > 0
               }.map{|x| x[:user]}.sort_by{|x| @rank_by_consulting.index x}
               
@@ -158,8 +159,9 @@ module DeskConsultants
         # This method basically emulates the teach_options method
         qualified_objs = @score_hash.select{|x|
             x[:user] == user_id &&
-            x[:points].to_i > 4 &&
-            x[:points].to_i < 9 &&
+            x[:points_all_time].to_i > 4 &&
+            x[:points_all_time].to_i < 9 &&
+            x[:points_this_term] == nil &&
             x[:total_keys] < 1 &&
             @need_hash[x[:obj]] > 0
         }.map{|x| x[:obj]}
@@ -221,7 +223,8 @@ module DeskConsultants
             .detect{|x|
                 @unplaced_students.include?(x[:user]) &&
                 x[:obj] == this_obj &&
-                x[:points].to_i < 6 &&
+                x[:points_all_time].to_i < 6 &&
+                x[:points_this_term].to_i < 4 &&
                 x[:ready] == true &&
                 x[:total_keys] < 1
             }
@@ -261,7 +264,7 @@ module DeskConsultants
             suitable_objs = @score_hash.select{|x|
                 x[:user] == stud &&
                 x[:ready] == true &&
-                x[:points].to_i < 6 &&
+                x[:points_all_time].to_i < 6 &&
                 x[:total_keys] == 0
             }.map{|x| x[:obj]}
         

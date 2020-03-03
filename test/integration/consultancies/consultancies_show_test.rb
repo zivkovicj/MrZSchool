@@ -13,6 +13,9 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         setup_scores
         setup_objectives
         
+        # Set all points_this_term to nil
+        ObjectiveStudent.all.update_all(:points_this_term => nil)
+        
         @consultancy = @seminar.consultancies.create # Most tests rely on one consultancy already existing.
         @seminar.seminar_students.update_all(:created_at => "2017-07-16 03:10:54")
         @objective_zero_priority = objectives(:objective_zero_priority)
@@ -29,7 +32,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         @ss_10 = SeminarStudent.find_by(:seminar_id => @seminar.id, :user_id => @student_10.id)
         @ss_46 = SeminarStudent.find_by(:seminar_id => @seminar.id, :user_id => @student_46.id)
         
-        # Set a score to nil to make sure that isn't causing errors
+        # Set a score to nil to make sure that nil scores dont cause errors
         stud_to_nil = @seminar.students[rand(@seminar.students.count)]
         obj_to_nil = @seminar.objectives[rand(@seminar.objectives.count)]
         ObjectiveStudent.find_by(:objective => obj_to_nil, :user => stud_to_nil).update(:points_all_time => nil)
@@ -65,8 +68,6 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         # Priorities
         set_priority(@own_assign, 1)
         set_priority(@objective_zero_priority, 0)  # To test that student who requested this doesn't get a group.
-        
-        
     end
     
     def setup_before_rbc
@@ -136,7 +137,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
                     x[:obj] == team[:objective_id] &&
                     x[:user] == consultant
                 }
-                assert this_score[:points] >= 4
+                assert this_score[:points_all_time] >= 4
             end
         end
     end
@@ -334,7 +335,9 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
             @teams.detect{|x| x[:consultant_id] == @rbc_0}[:objective_id]
         
         # Second student in rank_by_consulting gets skipped because she's unqualified
+            # Second student skipped.
         assert_not @teams.any? {|x| x[:user_ids].include?(@rbc_1)}
+        # But third student has a spot
         assert @teams.any? {|x| x[:user_ids].include?(@rbc_2)}
         
         all_consultants_are_qualified
@@ -455,6 +458,46 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
             @teams[0..3].map{|x| x[:consultant_id]}
     end
 
+    test "place if no score in current term" do
+        # Counterpart to the next test.  In the next test, students are not chosen if they already have a score in the current term.
+        
+        set_priority(@objective_40, 4)
+        
+        setup_before_rbc
+        @rbc_0 = @rank_by_consulting[0]
+        @rbc_0_stud = Student.find(@rbc_0)
+        
+        ObjectiveStudent.where(:objective => @objective_40).update_all(:points_all_time => 0)
+        ObjectiveStudent.where(:objective => @objective_40, :user => @rbc_0_stud).update(:points_all_time => 8)
+        
+        setup_after_rbc
+        
+        choose_consultants
+        
+        assert_equal @rbc_0, @teams[0][:consultant_id]
+        assert_equal @objective_40.id, @teams[0][:objective_id]
+    end
+
+    test "dont place if score in current term" do
+        set_priority(@objective_40, 4)
+        
+        setup_before_rbc
+        @rbc_0 = @rank_by_consulting[0]
+        @rbc_0_stud = Student.find(@rbc_0)
+        
+        ObjectiveStudent.where(:objective => @objective_40).update_all(:points_all_time => 0)
+        ObjectiveStudent.where(:objective => @objective_40, :user => @rbc_0_stud).update(:points_all_time => 8, :points_this_term => 8)
+        ObjectiveStudent.where(:objective => @objective_50, :user => @rbc_0_stud).update(:points_all_time => 8, :points_this_term => nil)
+        
+        setup_after_rbc
+        
+        choose_consultants
+        
+        this_team = @teams.detect{|x| x[:consultant_id] == @rbc_0}
+        assert_not_nil this_team
+        assert_not_equal @objective_40.id, this_team[:objective_id]
+    end
+        
     test "number of groups" do
         # Only make one group for an objective if that's all the class needs
         @this_obj = @seminar.objectives.detect{|x| x.preassigns.count == 0}
@@ -581,7 +624,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         choose_consultants
         place_apprentices_by_requests
         
-        # The method places some students
+        # The request method places some students
         old_full_team_count = @teams.select{|x| x[:user_ids].count > 1}.count
         
         # Here's the main function for this test
@@ -589,11 +632,13 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         
         # All apprentices are non-proficient, but ready for the team's objective
         # it could also be that student's learn request
+        # Also check that the student's current term score is less than four
         @teams.each do |team|
             team[:user_ids].reject{|x| x == team[:consultant_id]}.each do |stud|
                 this_obj_stud = ObjectiveStudent.find_by(:objective => team[:objective_id], :user_id => stud)
                 this_stud_fits = this_obj_stud.points_all_time.to_i < 6 || this_obj_stud.user.seminar_students.find_by(:seminar => @seminar).learn_request == team[:objective_id]
                 assert this_stud_fits
+                assert this_obj_stud.points_this_term.to_i < 4
             end
         end
         
@@ -621,6 +666,38 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         @seminar.students.each do |student|
             teams_with_stud = @teams.select{|x| x[:user_ids].include?(student.id)}
             assert teams_with_stud.count < 2
+        end
+    end
+
+    test "current term score" do
+        # Don't place a student into a group if she already has a score this term
+        
+        setup_before_rbc
+        setup_after_rbc
+        choose_consultants
+        place_apprentices_by_requests
+        place_apprentices_by_mastery
+        
+        # Find a student who would have been placed
+        this_team = @teams.detect{|x| x[:user_ids].count > 1}
+        assert_not_nil this_team
+        this_id = this_team[:user_ids][1]
+        assert_not_nil this_id
+        this_obj = this_team[:objective_id]
+
+        # Give points this term and reset the teams
+        ObjectiveStudent.find_by(:user => this_id, :objective => this_obj).update(:points_this_term => 6)
+        
+        setup_before_rbc
+        setup_after_rbc
+        choose_consultants
+        place_apprentices_by_requests
+        place_apprentices_by_mastery
+        
+        place_apprentices_by_mastery
+        this_team = @teams.detect{|x| x[:user_ids].include?(this_id)}
+        unless this_team == nil
+            assert_not_equal this_obj, this_team[:objective_id]
         end
     end
 
@@ -759,8 +836,9 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
     
     test "destroy if date already" do
         consult_count = Consultancy.count
+        travel_to_open_time
         
-        Consultancy.create(:seminar => @seminar)
+        @newest_consult = Consultancy.create(:seminar => @seminar)
         assert_equal consult_count + 1, Consultancy.count
         
         capybara_login(@teacher_1)
