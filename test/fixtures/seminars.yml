@@ -13,6 +13,7 @@ barebones: &minimal
   school_year: 9
   term: 1
   which_checkpoint: 1
+  columns: 3
   grading_needed: false
 
 one:

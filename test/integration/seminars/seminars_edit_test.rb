@@ -66,6 +66,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
     test "basic info change" do
         assert_not_equal 4, @seminar.school_year
         assert_not_equal 8, @seminar.consultantThreshold
+        assert_not_equal 4, @seminar.columns
         
         capybara_login(@teacher_1)
         go_to_seminar
@@ -73,6 +74,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         
         fill_in "seminar[name]", with: "Dangle"
         fill_in "seminar[default_buck_increment]", with: 9
+        find("#seminar_columns").select("4") # Set to four columns
         find("#school_year_1").select("3")  # Choose 3 for 5th grade
         choose("seminar_consultantThreshold_8")
         
@@ -83,6 +85,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 4, @seminar.school_year
         assert_equal 8, @seminar.consultantThreshold
         assert_equal 9, @seminar.default_buck_increment
+        assert_equal 4, @seminar.columns
         
         assert_selector('div', :text => "Class Updated")
         assert_selector('h2', :text => "Edit #{@seminar.name}")

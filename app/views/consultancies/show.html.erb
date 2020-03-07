@@ -68,7 +68,7 @@
 
 
 <table class='table table-borderless'>
-  <% @teams.in_groups_of(3).each do |group| %>
+  <% @teams.in_groups_of(@seminar.columns).each do |group| %>
     <tr>
       <% group.each do |team| %>
         <% if team && team.objective %>

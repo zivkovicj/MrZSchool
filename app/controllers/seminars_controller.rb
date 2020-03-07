@@ -222,7 +222,7 @@ class SeminarsController < ApplicationController
     private 
         def seminar_params
             params.require(:seminar).permit(:name, :consultantThreshold, :default_buck_increment, 
-                :school_year, :term, :which_checkpoint, objective_ids: [], teacher_ids: [])
+                                            :school_year, :term, :columns, :which_checkpoint, objective_ids: [], teacher_ids: [])
         end
         
         def add_pre_reqs_to_seminar
