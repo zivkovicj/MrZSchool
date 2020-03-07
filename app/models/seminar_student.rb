@@ -49,6 +49,4 @@ class SeminarStudent < ApplicationRecord
                 ObjectiveStudent.find_or_create_by(:user => user, :objective => obj)
             end
         end
-        
-        
 end

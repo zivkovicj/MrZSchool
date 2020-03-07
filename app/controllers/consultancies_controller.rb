@@ -76,6 +76,7 @@ class ConsultanciesController < ApplicationController
         @consultancy.update(:duration => "permanent")
         give_dc_keys
         update_all_consultant_days
+        update_last_obj
         redirect_to controller: 'consultancies', action: 'show', id: @consultancy.id, consultancy_id: @consultancy.id
     end
     
@@ -107,5 +108,12 @@ class ConsultanciesController < ApplicationController
             SeminarStudent
                 .where(:seminar => this_seminar, :user => all_consultants)
                 .update_all(:last_consultant_day => this_date)
+        end
+        
+        def update_last_obj
+            this_sem = @consultancy.seminar
+            @consultancy.teams.each do |team|
+                SeminarStudent.where(:user => team.user_ids, :seminar => this_sem).update(:last_obj => team[:objective_id])
+            end
         end
 end

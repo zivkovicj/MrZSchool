@@ -6,13 +6,14 @@ module DeskConsultants
     # Sem_studs_hash
     def setup_sem_studs_hash
         SeminarStudent.where(:seminar => @seminar, :present => true).includes(:user)
-        .pluck(:user_id, :present, :last_consultant_day, :teach_request, :learn_request)
-            .map{|user_id, present, last_consultant_day, teach_request, learn_request| {
+        .pluck(:user_id, :present, :last_consultant_day, :teach_request, :learn_request, :last_obj)
+            .map{|user_id, present, last_consultant_day, teach_request, learn_request, last_obj| {
                 user: user_id,
                 present: present,
                 last_consultant_day: last_consultant_day,
                 teach_request: teach_request,
-                learn_request: learn_request
+                learn_request: learn_request,
+                last_obj: last_obj
             }}
     end
     
@@ -161,7 +162,6 @@ module DeskConsultants
             x[:user] == user_id &&
             x[:points_all_time].to_i > 4 &&
             x[:points_all_time].to_i < 9 &&
-            x[:points_this_term] == nil &&
             x[:total_keys] < 1 &&
             @need_hash[x[:obj]] > 0
         }.map{|x| x[:obj]}
@@ -222,11 +222,11 @@ module DeskConsultants
         this_score = @score_hash
             .detect{|x|
                 @unplaced_students.include?(x[:user]) &&
-                x[:obj] == this_obj &&
-                x[:points_all_time].to_i < 6 &&
-                x[:points_this_term].to_i < 4 &&
-                x[:ready] == true &&
-                x[:total_keys] < 1
+                x[:obj] == this_obj &&  # Only look at scores for the current obj
+                x[:points_all_time].to_i < 6 &&  # That score is less than six
+                x[:ready] == true &&    # The student is marked as ready
+                x[:total_keys] < 1 &&    # The student doesn't currently have keys
+                x[:obj] != @sem_studs_hash.detect{|z| z[:user] == x[:user]}[:last_obj]  # The student isn't repeating the same objective as the last consultnat day.
             }
         
         if this_score

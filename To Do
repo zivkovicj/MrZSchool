@@ -1172,17 +1172,17 @@ Aqui
 
 
 
-3.31 NO DC IF CURRENT TERM SCORES
-When making DC groups, don't include students who already have a score for the current term.
-
-3.32 CUSTOM ROWS IN CLASS
-Teacher can customize columns in dc map
-Edit class columns 
 
 
-3.33 DONT GIVE SAME OBJ CONSEC
 
-Migrate and update columns for all existing classes
+3.33 LAST OBJ
+V Remove the code for the previous update, where assignments wouldn't go to students with current term scores.
+Update last_obj when a consultancy is saved
+	Don't simply use the obj from that consultancy, look at the most recent.
+	This will allow for fixing the situation upon deleting a consultancy.
+Update last_obj when a consultancy is deleted
+In Dc algorithm, try to avoid that last objective, unless needed.
+
 
 
 

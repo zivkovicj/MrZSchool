@@ -182,8 +182,11 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         this_obj_stud = ObjectiveStudent.find_by(:user => stud_to_check, :objective => team_1.objective)
         this_obj_stud.update(:points_this_term => 2) # To ensure that points_this_term is not 10.  If it were, then no keys would be given.
         assert_equal 0, this_obj_stud.dc_keys
-        first_consultant = @consultancy.teams.first.consultant
+        first_team = @consultancy.teams.first
+        first_consultant = first_team.consultant
+        first_obj = first_team.objective
         first_consultant_ss = SeminarStudent.find_by(:user => first_consultant, :seminar => @seminar)
+        assert_not_equal first_obj, first_consultant_ss.last_obj
         assert_not_equal Date.today, first_consultant_ss.last_consultant_day
         
         # Views for Preview
@@ -199,6 +202,7 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         assert_equal 2, this_obj_stud.dc_keys
         assert_equal "permanent", @consultancy.duration
         assert_equal @consultancy.created_at.to_date, first_consultant_ss.last_consultant_day
+        assert_equal first_obj.id, first_consultant_ss.last_obj
         
         # View for Permanent
         assert_text(show_consultancy_headline(@consultancy))
@@ -477,26 +481,6 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         assert_equal @rbc_0, @teams[0][:consultant_id]
         assert_equal @objective_40.id, @teams[0][:objective_id]
     end
-
-    test "dont place if score in current term" do
-        set_priority(@objective_40, 4)
-        
-        setup_before_rbc
-        @rbc_0 = @rank_by_consulting[0]
-        @rbc_0_stud = Student.find(@rbc_0)
-        
-        ObjectiveStudent.where(:objective => @objective_40).update_all(:points_all_time => 0)
-        ObjectiveStudent.where(:objective => @objective_40, :user => @rbc_0_stud).update(:points_all_time => 8, :points_this_term => 8)
-        ObjectiveStudent.where(:objective => @objective_50, :user => @rbc_0_stud).update(:points_all_time => 8, :points_this_term => nil)
-        
-        setup_after_rbc
-        
-        choose_consultants
-        
-        this_team = @teams.detect{|x| x[:consultant_id] == @rbc_0}
-        assert_not_nil this_team
-        assert_not_equal @objective_40.id, this_team[:objective_id]
-    end
         
     test "number of groups" do
         # Only make one group for an objective if that's all the class needs
@@ -638,7 +622,6 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
                 this_obj_stud = ObjectiveStudent.find_by(:objective => team[:objective_id], :user_id => stud)
                 this_stud_fits = this_obj_stud.points_all_time.to_i < 6 || this_obj_stud.user.seminar_students.find_by(:seminar => @seminar).learn_request == team[:objective_id]
                 assert this_stud_fits
-                assert this_obj_stud.points_this_term.to_i < 4
             end
         end
         
@@ -669,8 +652,8 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         end
     end
 
-    test "current term score" do
-        # Don't place a student into a group if she already has a score this term
+    test "dont repeat last obj" do
+        # Don't give an apprentice the same objective she had on the last consultant day
         
         setup_before_rbc
         setup_after_rbc
@@ -685,8 +668,8 @@ class ConsultanciesShowTest < ActionDispatch::IntegrationTest
         assert_not_nil this_id
         this_obj = this_team[:objective_id]
 
-        # Give points this term and reset the teams
-        ObjectiveStudent.find_by(:user => this_id, :objective => this_obj).update(:points_this_term => 6)
+        # Set last_obj and reset the teams
+        SeminarStudent.find_by(:user => this_id, :seminar => @seminar).update(:last_obj => this_obj)
         
         setup_before_rbc
         setup_after_rbc

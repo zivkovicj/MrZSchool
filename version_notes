@@ -22,6 +22,16 @@ Between each update, manually test:
 
 
 
+3.31 NO DC IF CURRENT TERM SCORES
+When making DC groups, don't include students who already have a score for the current term.
+
+3.32 CUSTOM ROWS IN CLASS
+Teacher can customize columns in dc map
+Edit class columns 
+
+
+
+
 3.30 EDIT STUDENT PASSWORDS
 Profile menu accessible from scoresheet
 Only one password field when teacher is editing

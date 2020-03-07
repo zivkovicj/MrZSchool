@@ -60,19 +60,19 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
     
     test "learn options ready and willing" do
         # Objective 10 is a pre-req for mainassign, so mainassign should not appear in the learn_options
-        # Also testing that an objective with nil score for points_all_time is included
         mainassign = @objective_10.mainassigns.first
         set_specific_score(@student_1, @objective_10, 2)
         assert_equal 1, @objective_10.mainassigns.count
         set_specific_score(@student_1, mainassign, 2)
         
+        # Set this objective to have a nil score.  It should also be included in the learn options.
         other_obj = @seminar.objectives[2]
         assert_not_equal other_obj, mainassign
         assert_not_equal other_obj, @objective_10
-        set_specific_score(@student_2, other_obj, nil)
-        ObjectiveStudent.find_by(:objective => other_obj, :user => @student_1).update(:teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0)
+        ObjectiveStudent.find_by(:objective => other_obj, :user => @student_1).update(:teacher_granted_keys => 0, :dc_keys => 0, :pretest_keys => 0, :points_all_time => nil, :points_this_term => nil)
         
         #Make sure seminar doesn't have too many objectives
+        # Select all objectives except for these three.
         rest_of_objs = @seminar.objectives.select{|x| ![@objective_10, mainassign, other_obj].include?(x)}
         while @seminar.objectives.count > 6
             obj_to_delete = rest_of_objs.last
@@ -82,15 +82,19 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
         
         set_ready_all(@student_1)
         
-        assert @student_1.learn_options(@seminar).include?(@objective_10)
-        assert_not @student_1.learn_options(@seminar).include?(mainassign)
-        assert @student_1.learn_options(@seminar).include?(other_obj)
+        current_learn_options = @student_1.learn_options(@seminar)
+        assert current_learn_options.include?(@objective_10)
+        assert_not current_learn_options.include?(mainassign)
+        assert current_learn_options.include?(other_obj)
         
         # Now the student is ready, so mainassign should appear in learn options
         # But obj_10 should no longer appear
         set_specific_score(@student_1, @objective_10, 8)
-        assert @student_1.learn_options(@seminar).include?(mainassign)
-        assert_not @student_1.learn_options(@seminar).include?(@objective_10)
+        
+        current_learn_options = @student_1.learn_options(@seminar)
+        assert_not current_learn_options.include?(@objective_10)
+        assert current_learn_options.include?(mainassign)
+        assert current_learn_options.include?(other_obj)
     end
     
     test "learn options no zero priority" do
