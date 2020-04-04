@@ -17,7 +17,7 @@
     <% @worksheets.each do |worksheet| %>
       <tr>
 <td><%= link_to worksheet.name, edit_worksheet_path(worksheet), :class => "plain_link" %></td>
-        <td><%= link_to "Download File", worksheet.uploaded_file.to_s %></td>
+        <td><%= link_to "Download File", worksheet.uploaded_file.to_s, :class => "plain_link" %></td>
         <td><%= render 'shared/delete_and_confirm', object: worksheet %></td>
       </tr>
     <% end %>

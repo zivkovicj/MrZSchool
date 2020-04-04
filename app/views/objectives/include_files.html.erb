@@ -22,7 +22,7 @@
         <% @current_worksheets.each do |worksheet| %>
           <tr>
             <td><%= worksheet.name %></td>
-            <td><%= link_to "Download File", worksheet.uploaded_file.to_s %></td>
+            <td><%= link_to "Download File", worksheet.uploaded_file.to_s, :class => "plain_link" %></td>
           </tr>
         <% end %>
       </tbody>

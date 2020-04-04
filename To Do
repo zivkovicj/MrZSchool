@@ -1182,9 +1182,9 @@ V Turn "Download File" into a button
 V Fix it so that visited links are visible.
 V Finish test for back buttons
 
+<%= link_to "Download File", worksheet.uploaded_file.to_s %>
 
-
-
+Download link should remain visible as well
 
 
 
