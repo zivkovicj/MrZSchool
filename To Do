@@ -1171,7 +1171,6 @@ Aqui
 
 3.34 MATERIALS PAGE 1
 V Migrate to worksheet
-    V show_on_main_page
     V description
 V Index shows all worksheets that are marked as show_on_main_page
 V Admins can see all, regardless of mark
