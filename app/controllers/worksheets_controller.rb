@@ -30,7 +30,7 @@ class WorksheetsController < ApplicationController
             if current_user.type == "Admin"
                 @worksheets = Worksheet.all
             else
-                @worksheets = Worksheet.where("extent == ? OR user_id == ?", "public", current_user.id)
+                @worksheets = Worksheet.where("extent = ? OR user_id = ?", "public", current_user.id)
             end
         else
             @worksheets = Worksheet.where(:extent => "public")
