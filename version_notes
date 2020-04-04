@@ -22,6 +22,17 @@ Between each update, manually test:
 
 
 
+3.33 LAST OBJ
+Remove the code for the previous update, where assignments wouldn't go to students with current term scores.
+Update last_obj when a consultancy is saved
+	Don't simply use the obj from that consultancy, look at the most recent.
+	This will allow for fixing the situation upon deleting a consultancy.
+Update last_obj when a consultancy is deleted
+In Dc algorithm, try to avoid that last objective, unless needed.
+
+
+
+
 3.31 NO DC IF CURRENT TERM SCORES
 When making DC groups, don't include students who already have a score for the current term.
 

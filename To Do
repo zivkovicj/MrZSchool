@@ -1169,29 +1169,57 @@ Main Goal: Teacher can lock and unlock quizzes
 
 Aqui
 
+3.34 MATERIALS PAGE 1
+V Migrate to worksheet
+    V show_on_main_page
+    V description
+V Index shows all worksheets that are marked as show_on_main_page
+V Admins can see all, regardless of mark
+V Admins can delete, other users cannot
+V Worksheet show page links back to materials index
+V Edit extent and description in worksheet edit page
+V Make an icon for the worksheets show page
+V Turn "Download File" into a button
+V Fix it so that visited links are visible.
+V Finish test for back buttons
 
 
 
 
 
 
-3.33 LAST OBJ
-V Remove the code for the previous update, where assignments wouldn't go to students with current term scores.
-Update last_obj when a consultancy is saved
-	Don't simply use the obj from that consultancy, look at the most recent.
-	This will allow for fixing the situation upon deleting a consultancy.
-Update last_obj when a consultancy is deleted
-In Dc algorithm, try to avoid that last objective, unless needed.
+
+Migrate and update new columns for existing worksheets
+
+Test downloading for a non-login, teacher, student, and admin
 
 
+
+OPTIONS FOR LOCKING QUIZZES
+Give teacher the option to set the lock time for quizzes.
+
+
+3.35 GRADE LEVELS
+Grade_level gets its own table?  Do I need join tables for associations?
+Edit grade levels of files
+Materials page should have buttons for different grades.  Once one of those is clicked, link to all of the materials for that grade
+
+
+
+3.36 MATERIALS PAGE 2
+Pop menu to better organize files by grade level
+Update gems from e-mail notifications
+
+
+
+3.37 MATERIALS PAGE 3
+Pop menu includes submenus for domains
 
 
 
 Update seeds and development db so that adult usernames match their email
 
-COPY OBJECTIVES TO ANOTHER CLASS
 
-STUDENTS REQUEST KEYS
 
 CREATE TOPICS
 Need to be able to create fields, domains, and topics.  
@@ -1205,6 +1233,12 @@ Don't allow a new topic to be named "General"
 
 Only admin can create or edit the top three levels
 
+
+
+
+COPY OBJECTIVES TO ANOTHER CLASS
+
+STUDENTS REQUEST KEYS
 
 
 3.29 PERFORMANCE MARCH 2020

@@ -1,19 +1,26 @@
 
-<% if current_user&.type == "Admin" %>
-    <% back_message = "Admin Page" %>
-    <% this_link = current_user %>
-<% elsif current_user&.current_class %>
-    <% seminar = Seminar.find(current_user.current_class) %>
-    <% if current_user.type == "Teacher" %>
-        <% back_message = "Back to #{seminar.name} Scoresheet" %>
-        <% this_link = scoresheet_seminar_url(seminar) %>
+<% this_user = current_user %>
+
+<% if this_user %>
+    <% if this_user.type == "Admin" %>
+        <% back_message = "Admin Page" %>
+        <% this_link = current_user %>
+    <% elsif current_user.current_class %>
+        <% seminar = Seminar.find(current_user.current_class) %>
+        <% if current_user.type == "Teacher" %>
+            <% back_message = "Back to #{seminar.name} Scoresheet" %>
+            <% this_link = scoresheet_seminar_url(seminar) %>
+        <% else %>
+            <% back_message = "Back to Viewing Your Class" %>
+            <% this_link = seminar_student_path(@ss) %>
+        <% end %>
     <% else %>
-        <% back_message = "Back to Viewing Your Class" %>
-        <% this_link = seminar_student_path(@ss) %>
+        <% back_message = "Profile" %>
+        <% this_link = current_user %>
     <% end %>
 <% else %>
-    <% back_message = "Profile" %>
-    <% this_link = current_user %>
+    <% back_message = "Home" %>
+    <% this_link = root_path %>
 <% end %>
 
 <%= button_to back_message, this_link, class: "btn btn-lg btn-primary", 

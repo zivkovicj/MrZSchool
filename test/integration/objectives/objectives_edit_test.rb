@@ -106,6 +106,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
     test "include files" do
         setup_objectives
         setup_worksheets
+        @worksheet_1.objectives << @own_assign
         
         assert @own_assign.worksheets.include?(@worksheet_1)
         assert_not @own_assign.worksheets.include?(@worksheet_2)
@@ -132,7 +133,7 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         setup_objectives
         setup_worksheets
         
-        assert @own_assign.worksheets.include?(@worksheet_1)
+        @own_assign.worksheets << @worksheet_1
         
         capybara_login(@teacher_1)
         go_to_objective_show_page(@own_assign)

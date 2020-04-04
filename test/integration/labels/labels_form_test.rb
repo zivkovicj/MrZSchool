@@ -79,10 +79,8 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         go_to_all_labels
         click_on(@other_l_pub.name)
         
-        assert_text("You are viewing the details of this label. You may not make any edits because it was created by another teacher.")
         assert_no_selector('textarea', :id => "name", :visible => true)
         assert_no_text("Save Changes")
-        
     end
     
     test "edit admin label" do
@@ -90,7 +88,6 @@ class LabelsFormTest < ActionDispatch::IntegrationTest
         go_to_all_labels
         click_on(@admin_l.name)
         
-        assert_text("You are viewing the details of this label. You may not make any edits because it was created by another teacher.")
         assert_no_selector('textarea', :id => "name", :visible => true)
     end
     

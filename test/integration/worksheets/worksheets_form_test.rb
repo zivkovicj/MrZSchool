@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PicturesNewTest < ActionDispatch::IntegrationTest
+class WorksheetsNewTest < ActionDispatch::IntegrationTest
 
     def setup
         setup_users
@@ -18,7 +18,7 @@ class PicturesNewTest < ActionDispatch::IntegrationTest
         
         fill_in("worksheet[name]", :with => "Brand Spankin New Worksheet")
         attach_file("worksheet[uploaded_file]", Rails.root + 'app/assets/worksheets/Test File for Objective Worksheets.docx')
-        click_on ("Create Worksheet")
+        click_on ("Create File")
         
         assert_equal old_worksheet_count + 1, Worksheet.count
         @new_worksheet = Worksheet.last
@@ -43,7 +43,7 @@ class PicturesNewTest < ActionDispatch::IntegrationTest
         
         fill_in("worksheet[name]", :with => "Newest Worksheet")
         attach_file("worksheet[uploaded_file]", Rails.root + 'app/assets/worksheets/Test File for Objective Worksheets.docx')
-        click_on ("Create Worksheet")
+        click_on ("Create File")
         
         assert_equal old_worksheet_count + 1, Worksheet.count
         @new_worksheet = Worksheet.last
@@ -55,6 +55,43 @@ class PicturesNewTest < ActionDispatch::IntegrationTest
         assert_no_selector('div', :id => "error_explanation")
         assert_text("File Successfully Uploaded")
         assert_text("Teacher Since:")
+    end
+
+    test "edit worksheet" do
+        setup_worksheets
+        
+        @worksheet_2.update(:extent => "private")
+        
+        capybara_login(@admin_user)
+        click_on("Home")
+        click_on("Materials")
+        click_on("#{@worksheet_2.name}")
+        
+        fill_in "worksheet[name]", :with => "Beef blaster"
+        fill_in "worksheet[description]", :with => "This is the new description"
+        find("#public_worksheet").choose
+        attach_file("worksheet[uploaded_file]", Rails.root + 'app/assets/worksheets/Test File for Objective Worksheets.docx')
+        click_on "Update File"
+        
+        @worksheet_2.reload
+        assert_equal "Beef blaster", @worksheet_2.name
+        assert_equal "public", @worksheet_2.extent
+        assert_equal "This is the new description", @worksheet_2.description
+        
+        assert_selector("h2", :text => "All Files")
+    end
+
+    test "edit worksheet back button" do
+        setup_worksheets
+        
+        capybara_login(@admin_user)
+        click_on("Home")
+        click_on("Materials")
+        click_on("#{@worksheet_2.name}")
+        
+        click_on("All Files")
+        
+        assert_selector("h2", :text => "All Files")
     end
     
 end

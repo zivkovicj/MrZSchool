@@ -1,0 +1,16 @@
+<% provide(:title, "#{@worksheet.name}") %>
+
+<% provide(:headerText, "#{@worksheet.name}") %>
+<% provide(:headerPic, 'file_pic.png') %>
+
+<%= button_to "All Files", {:controller => "worksheets", :action => "index"}, :method => :get, class: "btn btn-lg btn-primary" %>
+
+<%= render 'shared/headline' %>
+
+<h5><%= @worksheet.description %></h5>
+</br>
+</br>
+
+<%= button_to "Download File", @worksheet.uploaded_file.to_s,
+class: "btn btn-small btn-primary", :id => "download_#{@worksheet.id}"  %>
+

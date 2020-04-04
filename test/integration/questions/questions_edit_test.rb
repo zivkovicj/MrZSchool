@@ -146,7 +146,6 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         fill_prompt(0)
         fill_choice(0,0)
         fill_choice(0,1)
-        debugger
         click_on("save_changes_2")
         
         @fill_q.reload

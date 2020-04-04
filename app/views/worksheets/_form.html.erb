@@ -1,3 +1,10 @@
+
+<% button_label = "Create File" %>
+<% if action_name == "edit" %>
+    <% button_label = "Update File" %>
+<% end %>
+
+
 <%= form_for(@worksheet) do |f| %>
   <% if @worksheet.errors.any? %>
     <div id="error_explanation">
@@ -15,18 +22,27 @@
     <%= f.hidden_field :objective, :value => @objective.id %>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-  </div>
+    <div class="field">
+        <%= f.label "Upload a File...." %>
+        <%= f.file_field :uploaded_file %>
+    </div>
+
+    <%= render 'shared/user_and_extent', form: f %>
+
+    <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+    </div>
+
+    <div class="field">
+        <%= f.label :description %>
+        <%= f.text_area :description %>
+    </div>
   
-  <div class="field">
-    <%= f.label "Upload a File...." %>
-    <%= f.file_field :uploaded_file %>
-  </div>
+
 
     </br>
   <div class="actions">
-    <%= f.submit :class => "btn btn-lg btn-primary" %>
+    <%= f.submit button_label, :class => "btn btn-lg btn-primary" %>
   </div>
 <% end %>

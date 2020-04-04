@@ -1,6 +1,10 @@
-<%= link_to "New File", new_worksheet_path, class: "btn btn-primary" %>
-<br />
-<br />
+<% provide(:title, 'All Files') %>
+<% provide(:headerText, 'All Files') %>
+<% provide(:headerPic, 'file_pic.png') %>
+
+<%= render 'shared/back-link' %>
+<%= render 'shared/headline' %>
+
 <table class="table table-bordered table-striped">
   <thead>
     <tr>
@@ -12,10 +16,16 @@
   <tbody>
     <% @worksheets.each do |worksheet| %>
       <tr>
-        <td><%= worksheet.name %></td>
-        <td><%= link_to "Download File", worksheet.uploaded_file.to_s %></td>
-        <td><%= button_to "Delete",  worksheet, method: :delete, class: "btn btn-danger", confirm: "Are you sure that you wish to delete #{worksheet.name}?" %></td>
+<td><%= link_to worksheet.name, edit_worksheet_path(worksheet), :class => "plain_link" %></td>
+        <td><%= button_to "Download File", worksheet.uploaded_file.to_s,
+class: "btn btn-small btn-primary", :id => "download_#{worksheet.id}"  %></td>
+        <td><%= render 'shared/delete_and_confirm', object: worksheet %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<br />
+<br />
+<%= link_to "New File", new_worksheet_path, class: "btn btn-primary" %>
+

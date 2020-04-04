@@ -257,8 +257,6 @@ class ActiveSupport::TestCase
     @worksheet_1 = worksheets(:one)
     @worksheet_2 = worksheets(:two)
     @worksheet_3 = worksheets(:three)
-    
-    @worksheet_1.objectives << @own_assign
   end
   
   def travel_to_open_time

@@ -5,14 +5,19 @@ module SetPermissions
     
     def set_permissions(target)
       thisId = target.user_id
-      if current_user.type == "Admin"
-          @assign_permission = "admin"
+      this_user = current_user
+      if this_user
+          if this_user.type == "Admin"
+              @assign_permission = "admin"
+          else
+            if thisId == this_user.id
+              @assign_permission = "this_user"
+            else
+              @assign_permission = "other"
+            end
+          end
       else
-        if thisId == current_user.id
-          @assign_permission = "this_user"
-        else
           @assign_permission = "other"
-        end
       end
 
       if thisId == 0

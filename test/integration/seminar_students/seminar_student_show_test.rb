@@ -62,6 +62,7 @@ class SeminarStudentsShowTest < ActionDispatch::IntegrationTest
     test 'objective downloading screen' do
         setup_objectives
         setup_worksheets
+        @worksheet_1.objectives << @own_assign
         
         capybara_login(@student_2)
         click_on("1st Period")

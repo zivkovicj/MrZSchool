@@ -33,14 +33,12 @@
   <% end %>
 </div>
 
-<div class="center jumbotron">
-  <h1>Materials</h1>
-  <h3>Lesson Plans and Small Assessments that are designed to use with Desk
-  Consultants</h3>
-  <h3>Coming Soon</h3>
-    <%#= button_to "Materials", materials_url, class: "btn btn-primary",
-    :method => :get %>
-</div>
+<%= link_to(worksheets_path) do %>
+    <div class="center jumbotron">
+        <h1>Materials</h1>
+        <h3>Printable Student Work designed for small-group and independent study</h3>
+    </div>
+<% end %>
 
 <div>
   <%= link_to image_tag("spp_logo.png", alt: "Student Privacy Pledge Signatory"),
