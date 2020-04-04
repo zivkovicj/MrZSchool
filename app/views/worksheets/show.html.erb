@@ -11,6 +11,5 @@
 </br>
 </br>
 
-<%= button_to "Download File", @worksheet.uploaded_file.to_s,
-class: "btn btn-small btn-primary", :id => "download_#{@worksheet.id}"  %>
+<%= link_to "Download File", worksheet.uploaded_file.to_s %>
 
