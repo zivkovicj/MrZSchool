@@ -131,17 +131,15 @@ class SeminarStudentsController < ApplicationController
     @teacher_granted_quizzes = @student.quiz_collection(@seminar, "teacher_granted")
     @show_quizzes = @desk_consulted_objectives.present? || @pretest_objectives.present? || @unfinished_quizzes.present? || @teacher_granted_quizzes.present?
     
-    # Lock quiz outside of weekdays during school.
+    # Lock quiz if it's outside seminars set times.
     @quizzes_open = true
-    @timescore = 500
     if params[:override]
         password = params[:password]
         @quizzes_open = false if !current_user.teachers.any?{|x| x.authenticate(password)}
     else
-        timescore = (Time.now.hour * 60) + (Time.now.min)
-        @quizzes_open = false if timescore < 480 or timescore > 1020
-        @timescore = timescore
-        @quizzes_open = false if Date.today.wday == 6 || Date.today.wday == 0
+        @timescore = (Time.now.hour * 60) + (Time.now.min)
+        @quizzes_open = false if @timescore < @seminar.quiz_open_times[0] or @timescore > @seminar.quiz_open_times[1]
+        @quizzes_open = false unless @seminar.quiz_open_days.include?(Date.today.wday)
     end
   end
 

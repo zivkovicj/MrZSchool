@@ -62,6 +62,33 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         
         assert_selector('h2', :text => "Edit #{@seminar.name}")
     end
+
+    test "basic seminar info defaults" do
+        old_name = @seminar.name
+        old_school_year = @seminar.school_year
+        old_thresh = @seminar.consultantThreshold
+        old_buck_inc = @seminar.default_buck_increment
+        old_columns = @seminar.columns
+        old_open_times = @seminar.quiz_open_times
+        old_open_days = @seminar.quiz_open_days
+        
+        capybara_login(@teacher_1)
+        go_to_seminar
+        click_on("Basic Info")
+        click_on("Update This Class")
+        
+        @seminar.reload
+        assert_equal old_name, @seminar.name
+        assert_equal old_school_year, @seminar.school_year
+        assert_equal old_thresh, @seminar.consultantThreshold
+        assert_equal old_buck_inc, @seminar.default_buck_increment
+        assert_equal old_columns, @seminar.columns
+        assert_equal old_open_times, @seminar.quiz_open_times
+        assert_equal old_open_days, @seminar.quiz_open_days
+        
+        assert_selector('div', :text => "Class Updated")
+        assert_selector('h2', :text => "Edit #{@seminar.name}")
+    end
     
     test "basic info change" do
         assert_not_equal 4, @seminar.school_year
@@ -76,6 +103,11 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         fill_in "seminar[default_buck_increment]", with: 9
         find("#seminar_columns").select("4") # Set to four columns
         find("#school_year_1").select("3")  # Choose 3 for 5th grade
+        find("#quiz_open_time").select("2:00")
+        find("#quiz_close_time").select("5:00")
+        check("seminar_quiz_open_days_0")
+        uncheck("seminar_quiz_open_days_2") #Fixture begins with quiz_open_days: [1,2,3,4,5]
+        
         choose("seminar_consultantThreshold_8")
         
         click_on("Update This Class")
@@ -86,6 +118,8 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 8, @seminar.consultantThreshold
         assert_equal 9, @seminar.default_buck_increment
         assert_equal 4, @seminar.columns
+        assert_equal [120,300], @seminar.quiz_open_times
+        assert_equal [0,1,3,4,5], @seminar.quiz_open_days
         
         assert_selector('div', :text => "Class Updated")
         assert_selector('h2', :text => "Edit #{@seminar.name}")

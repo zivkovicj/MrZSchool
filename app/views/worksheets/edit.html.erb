@@ -6,6 +6,6 @@
 <%= button_to "All Files", {:controller => "worksheets", :action => "index"}, :method => :get, class: "btn btn-lg btn-primary" %>
 <%= render 'shared/headline' %>
 
-<%= link_to "Download File", worksheet.uploaded_file.to_s, :class => "plain_link" %>
+<%= link_to "Download File", @worksheet.uploaded_file.to_s, :class => "plain_link", :id => "download_#{@worksheet.id}" %>
 
 <%= render 'form' %>

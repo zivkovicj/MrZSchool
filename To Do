@@ -1169,33 +1169,22 @@ Main Goal: Teacher can lock and unlock quizzes
 
 Aqui
 
-3.34 MATERIALS PAGE 1
-V Migrate to worksheet
-    V description
-V Index shows all worksheets that are marked as show_on_main_page
-V Admins can see all, regardless of mark
-V Admins can delete, other users cannot
-V Worksheet show page links back to materials index
-V Edit extent and description in worksheet edit page
-V Make an icon for the worksheets show page
-V Turn "Download File" into a button
-V Fix it so that visited links are visible.
-V Finish test for back buttons
 
-<%= link_to "Download File", worksheet.uploaded_file.to_s %>
+3.35 QUIZ LOCK OPTIONS
+V Add quiz_time to seminar, string, serialized
+V Use that to check whether quizzes should lock
+V Allow open days
+V Default time 
+V Default days
+V Teacher can change the times in the seminar edit form
 
-Download link should remain visible as well
+Maybe also load only quizzes for the selected class.
+   
+
+Migrate and update all quiz lock times
+Check workings in live site
 
 
-
-Migrate and update new columns for existing worksheets
-
-Test downloading for a non-login, teacher, student, and admin
-
-
-
-OPTIONS FOR LOCKING QUIZZES
-Give teacher the option to set the lock time for quizzes.
 
 
 3.35 GRADE LEVELS

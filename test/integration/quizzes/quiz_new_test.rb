@@ -171,6 +171,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         sm_objective = objectives(:select_many_objective)
         set_specific_score(@student_2, sm_objective, 4)
         sm_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
+        @seminar.objectives << sm_objective
         
         go_to_first_period
         click_on("Quizzes")

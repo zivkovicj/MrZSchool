@@ -179,7 +179,21 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         assert_selector('a', :id => "pretest_#{@objective_20.id}")
     end
 
-
+    test "dont show quizzes from other classes" do
+        travel_to_open_time
+        
+        obj_not_in_this_class = Objective.all.detect{|x| !@seminar.objectives.include?(x)}
+        assert_not_nil obj_not_in_this_class
+        
+        ObjectiveStudent.find_or_create_by(:user => @student_2, :objective => obj_not_in_this_class).update(:teacher_granted_keys => 2)
+        make_ready(@student_2, obj_not_in_this_class)
+        
+        go_to_first_period
+        click_on("Quizzes")
+        
+        assert_no_selector('a', :id => "teacher_granted_#{obj_not_in_this_class.id}")
+        
+    end
 
     test "lock in evening" do
         travel_to Time.zone.local(2019, 12, 07, 0, 15, 44)

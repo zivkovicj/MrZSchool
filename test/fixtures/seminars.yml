@@ -15,6 +15,9 @@ barebones: &minimal
   which_checkpoint: 1
   columns: 3
   grading_needed: false
+  quiz_open_times: [480,1020]
+  quiz_open_days: [1,2,3,4,5]
+
 
 one:
   name: 1st Period

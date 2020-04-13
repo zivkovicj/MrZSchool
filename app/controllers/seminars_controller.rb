@@ -68,6 +68,10 @@ class SeminarsController < ApplicationController
             end
         else
             @old_objectives = @seminar.objective_ids
+            time1 = params[:quiz_open_time].to_i
+            time2 = params[:quiz_close_time].to_i
+            @seminar.quiz_open_times = [time1,time2]
+            @seminar.quiz_open_days = params[:seminar][:quiz_open_days].map(&:to_i) if params[:seminar][:quiz_open_days]
             add_pre_reqs_to_seminar if @seminar.update(seminar_params)
         end
         flash[:success] = "Class Updated"
@@ -221,7 +225,7 @@ class SeminarsController < ApplicationController
     
     private 
         def seminar_params
-            params.require(:seminar).permit(:name, :consultantThreshold, :default_buck_increment, 
+            params.require(:seminar).permit(:name, :consultantThreshold, :default_buck_increment, :quiz_open_times,
                                             :school_year, :term, :columns, :which_checkpoint, objective_ids: [], teacher_ids: [])
         end
         

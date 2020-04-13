@@ -130,7 +130,7 @@ class User < ApplicationRecord
     def quiz_collection(seminar, which_key)
         # The line x.ready || which_key != "pretest" ensures that students are only offered pretests they are ready for.  But readiness doesn't affect showing other types of keys
         objective_students
-            .select{|x| x.read_attribute(:"#{which_key}_keys") > 0 && (which_key != "pretest" || x.ready) && !one_unfinished(x.objective)}
+            .select{|x| seminar.objectives.include?(x.objective) && x.read_attribute(:"#{which_key}_keys") > 0 && (which_key != "pretest" || x.ready) && !one_unfinished(x.objective)}
             .map(&:objective)
             .sort_by{|e| e.topic_and_number }
     end

@@ -29,7 +29,7 @@ class WorksheetsIndexTest < ActionDispatch::IntegrationTest
         # Individual page leads to edit instead of show
         click_on("#{@worksheet_2.name}")
         assert_selector("input", :id => "worksheet_name")
-        assert_selector("input", :id => "download_#{@worksheet_2.id}")
+        assert_selector("a", :id => "download_#{@worksheet_2.id}")
         
         # Back button goes to index, then Admin Page
         click_on("All Files")
@@ -64,7 +64,7 @@ class WorksheetsIndexTest < ActionDispatch::IntegrationTest
         
          # Individual page leads to show instead of edit
         assert_no_selector("input", :id => "worksheet_name")
-        assert_selector("input", :id => "download_#{@worksheet_2.id}")
+        assert_selector("a", :id => "download_#{@worksheet_2.id}")
         
         # Back to Index
         click_on("All Files")
@@ -95,7 +95,7 @@ class WorksheetsIndexTest < ActionDispatch::IntegrationTest
         # Individual page leads to show instead of edit
         # But there is the capability to download the file
         assert_no_selector("input", :id => "worksheet_name")
-        assert_selector("input", :id => "download_#{@worksheet_2.id}")
+        assert_selector("a", :id => "download_#{@worksheet_2.id}")
         
         # Back button goes to index, then teacher profile Page
         click_on("All Files")
@@ -126,7 +126,7 @@ class WorksheetsIndexTest < ActionDispatch::IntegrationTest
         ## Individual page leads to show instead of edit
         # But there is the capability to download the file
         assert_no_selector("input", :id => "worksheet_name")
-        assert_selector("input", :id => "download_#{@worksheet_2.id}")
+        assert_selector("a", :id => "download_#{@worksheet_2.id}")
         
         # Back button goes to index, then teacher profile Page
         click_on("All Files")

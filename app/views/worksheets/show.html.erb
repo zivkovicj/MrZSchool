@@ -11,5 +11,5 @@
 </br>
 </br>
 
-<%= link_to "Download File", worksheet.uploaded_file.to_s, :class => "plain_link"%>
+<%= link_to "Download File", @worksheet.uploaded_file.to_s, :class => "plain_link", :id => "download_#{@worksheet.id}"%>
 

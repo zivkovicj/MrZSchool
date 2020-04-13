@@ -489,7 +489,6 @@ class ObjectivesFormTest < ActionDispatch::IntegrationTest
         click_on(@objective_20.full_name)
         
         click_on("Basic Info")
-        assert_text("You are viewing the details of this objective. You may not make any edits because it was created by another teacher.")
         assert_no_selector('input', :id => "name", :visible => true)
         
         click_on(@objective_20.full_name)
