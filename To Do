@@ -1187,6 +1187,21 @@ Check workings in live site
 
 
 
+3.36 LOCK OPTIONS FIXES
+V Don't change the times when updating other parts of a seminar.
+V Allow for 25 iterations of option, so that the time can go until midnight.
+V Cut default currency increment
+V Capitalize Tuesday
+V Arrange the days onto their own line
+V Cut consultant threshold choice for now
+V Put open_days and open_times into seeds
+
+
+3.37 CUT FAT
+Cut checkpoint stuff
+And due_dates
+
+
 3.35 GRADE LEVELS
 Grade_level gets its own table?  Do I need join tables for associations?
 Edit grade levels of files

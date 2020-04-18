@@ -75,16 +75,10 @@ title_array = ["Mrs.", "Mr.", "Miss", "Ms.", "Dr."]
 end
 
 # Seminars
-sem_1 = Seminar.create!(name: "Main Teacher, 1st Period", user_id: 5, consultantThreshold: 7, term: 0, 
-    which_checkpoint: 0, school_year: 9, :owner => Teacher.find(5))
-sem_2 = Seminar.create!(name: "Main Teacher, 2nd Period", user_id: 5, consultantThreshold: 7, term: 0, 
-    which_checkpoint: 0, school_year: 9, :owner => Teacher.find(5))
-sem_3 = Seminar.create!(name: "Another Teacher, First Period", user_id: 6, consultantThreshold: 7, term: 0,
-    which_checkpoint: 0, school_year: 9, :owner => Teacher.find(6))
-
-sem_1.teachers << Teacher.find(5)
-sem_2.teachers << Teacher.find(5)
-sem_3.teachers << Teacher.find(6)
+[["Main Teacher, 1st Period",5], ["Main Teacher, 2nd Period",5], ["Another Teacher, First Period",6]].each_with_index do |n, index|
+    sem = Seminar.create!(name: n[0], user_id: n[1], consultantThreshold: 7, term: 0, school_year: 9, :owner => Teacher.find(n[1]), :quiz_open_days => [0,1,2,3,4,5,6], :quiz_open_times => [0,1380])
+    sem.teachers << Teacher.find(n[1])
+end
 
 # Fields
 

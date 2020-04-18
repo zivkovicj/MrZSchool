@@ -9,73 +9,70 @@
 <%= render 'seminar_submenus' %>
 <%= render 'shared/headline' %>
 
+
+
+
+<% def time_selection(which_time) %>
+    <% 25.times do |n| %>
+        <% this_time = 60*n %>
+        <% should_select = "" %>
+        <% should_select = "selected" if @seminar.quiz_open_times[which_time] == this_time %>
+        <option value="<%= this_time %>" <%= should_select %>><%= n %>:00</option>
+    <% end %>
+<% end %>
+
+<% days_of_week = ["Sunday", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] %>
+
+
+
+
+
+
+
 <%= form_for(@seminar) do |f| %>
   <%= render 'shared/error_messages', object: @seminar %>
   
   <div class="row">
-    <div class="col-sm-4">
-      <%= f.label :name %>
-      <%= f.text_field :name %>
-    </div>
-  
-    <div class="col-sm-2">
-      <%= f.label "School Year" %>
-      <%= render 'shared/school_year_selection', :index => 1, :default_year => @seminar.school_year, :name => "seminar[school_year]" %>
-    </div>
+    <div class="col-sm-3 singleOption">
+        <%= f.label :name %>
+        <%= f.text_field :name %>
 
-    <div class="col-sm-2">
+        </br>
+
+        <%= f.label "School Year" %>
+        <%= render 'shared/school_year_selection', :index => 1, :default_year => @seminar.school_year, :name => "seminar[school_year]" %>
+
+        </br>
+
         <%= f.label "Columns" %>
         <%= f.select :columns, [1,2,3,4] %>
     </div>
-    
-    <div class="col-sm-4">
-      <%= f.label "Default Currency Increment" %>
-      <h5>(How much class money do you usually give students at a time?)</h5>
-      <%= f.text_field :default_buck_increment %>
-    </div>
-  </div>
 
+    <div class="col-sm-1"></div>
 
-    <% def time_selection(which_time) %>
-        <% 24.times do |n| %>
-            <% this_time = 60*n %>
-            <% should_select = "" %>
-            <% should_select = "selected" if @seminar.quiz_open_times[which_time] == this_time %>
-            <option value="<%= this_time %>" <%= should_select %>><%= n %>:00</option>
-        <% end %>
-    <% end %>
-
-    <% days_of_week = ["Sunday", "Monday"," Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] %>
-
-  <div class="row">
-    <div class="col-sm-6">
-        <%= f.label "Quiz Open Times" %>
+    <div class="col-sm-4 singleOption">
+        <%= f.label "Quiz Open Time" %>
         <select name="quiz_open_time" id="quiz_open_time">
             <% time_selection(0) %>
         </select>
 
-        <%= f.label "Quiz Close Time" %>
+        &emsp;<%= f.label "Quiz Close Time" %>
         <select name="quiz_close_time" id="quiz_close_time">
             <% time_selection(1) %>
         </select>
 
+        </br>
+
         <%= f.label "Quiz Open Days" %>
+        </br>
         <% days_of_week.each_with_index do |n, index| %>
-        <%= f.check_box :quiz_open_days, {:mutiple => true, :id => "seminar_quiz_open_days_#{index}", :name => "seminar[quiz_open_days][]", :checked => @seminar.quiz_open_days.include?(index)}, index, false %>
-            <%= f.label n %>
+            <%= f.check_box :quiz_open_days, {:mutiple => true, :id => "seminar_quiz_open_days_#{index}", :name => "seminar[quiz_open_days][]", :checked => @seminar.quiz_open_days.include?(index)}, index, false %>
+            <%= n %>
+            </br>
         <% end %>
 
     </div>
 
-    <div class="singleOption col-sm-6">
-      <%= f.label "Consultant Threshold" %>
-      <%= f.collection_radio_buttons :consultantThreshold, [[5, '5 stars'] , [6, '6 stars'] ,[7, '7 stars'], [8, '8 stars'], [9, '9 stars'], [10, '10 stars']],
-              :first, :last, { item_wrapper_tag: false } do |b| %>
-          <label class="radio-inline">
-              <%= b.radio_button%> &nbsp; <%= b.label %>
-          </label>
-      <% end %>
-    </div>
   </div>
   
   </br>

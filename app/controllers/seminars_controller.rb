@@ -11,7 +11,7 @@ class SeminarsController < ApplicationController
     end
     
     def create
-        @seminar = Seminar.new(seminar_params)
+        @seminar = Seminar.new(seminar_basic_params)
         @creating_teacher = Teacher.find(params[:seminar][:teacher_id])
         @seminar.owner = @creating_teacher
         if @seminar.save
@@ -56,23 +56,17 @@ class SeminarsController < ApplicationController
         elsif params[:seminar][:checkpoint_due_dates]
             set_checkpoint_due_dates
         elsif params[:seminar][:term]
-            these_sems = [@seminar]
-            these_sems = current_user.seminars_i_can_edit if params[:repeat]
-            these_sems.each do |sem|
-                sem.update(seminar_params)
-                if params[:reset]
-                    reset_all_student_grades(sem)
-                    turn_other_keys_into_pretest_keys(sem)
-                    delete_unfinished_quizzes(sem)
-                end
-            end
-        else
+            term_updating_details
+        elsif params[:seminar][:objective_ids]
             @old_objectives = @seminar.objective_ids
+            add_pre_reqs_to_seminar if @seminar.update(seminar_objective_params)
+        else
+            basic_updating_details
             time1 = params[:quiz_open_time].to_i
             time2 = params[:quiz_close_time].to_i
             @seminar.quiz_open_times = [time1,time2]
             @seminar.quiz_open_days = params[:seminar][:quiz_open_days].map(&:to_i) if params[:seminar][:quiz_open_days]
-            add_pre_reqs_to_seminar if @seminar.update(seminar_params)
+            @seminar.update(seminar_basic_params)
         end
         flash[:success] = "Class Updated"
         redirect_to seminar_path(@seminar)
@@ -224,9 +218,16 @@ class SeminarsController < ApplicationController
 
     
     private 
-        def seminar_params
-            params.require(:seminar).permit(:name, :consultantThreshold, :default_buck_increment, :quiz_open_times,
-                                            :school_year, :term, :columns, :which_checkpoint, objective_ids: [], teacher_ids: [])
+        def seminar_basic_params
+            params.require(:seminar).permit(:name, :consultantThreshold, :default_buck_increment, :quiz_open_times, :school_year, :columns, teacher_ids: [])
+        end
+        
+        def seminar_objective_params
+            params.require(:seminar).permit(objective_ids: [])
+        end
+        
+        def seminar_term_params
+            params.require(:seminar).permit(:term)
         end
         
         def add_pre_reqs_to_seminar
@@ -314,6 +315,27 @@ class SeminarsController < ApplicationController
                 params[:priorities].each do |key, value|
                     @objective_seminar = ObjectiveSeminar.find(key)
                     @objective_seminar.update(:priority => value)
+                end
+            end
+        end
+        
+        def basic_updating_details
+            time1 = params[:quiz_open_time].to_i
+            time2 = params[:quiz_close_time].to_i
+            @seminar.quiz_open_times = [time1,time2]
+            @seminar.quiz_open_days = params[:seminar][:quiz_open_days].map(&:to_i) if params[:seminar][:quiz_open_days]
+            @seminar.update(seminar_basic_params)
+        end
+        
+        def term_updating_details
+            these_sems = [@seminar]
+            these_sems = current_user.seminars_i_can_edit if params[:repeat]
+            these_sems.each do |sem|
+                sem.update(seminar_term_params)
+                if params[:reset]
+                    reset_all_student_grades(sem)
+                    turn_other_keys_into_pretest_keys(sem)
+                    delete_unfinished_quizzes(sem)
                 end
             end
         end

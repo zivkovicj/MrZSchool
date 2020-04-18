@@ -9,6 +9,12 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         
         @old_seminar_count = Seminar.count
         @old_st_count = SeminarTeacher.count
+        
+        @old_name = @seminar.name
+        @old_school_year = @seminar.school_year
+        @old_columns = @seminar.columns
+        @old_open_times = @seminar.quiz_open_times
+        @old_open_days = @seminar.quiz_open_days
     end
     
     def go_to_term_and_checkpoint
@@ -43,48 +49,23 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 1, @seminar.objective_seminars.where(:objective => @assign_to_add).count
         assert_equal 1, @seminar.objective_seminars.where(:objective => @this_preassign).count
     end
-    
-    test "basic info autofill" do
-        old_name = @seminar.name
-        old_year = @seminar.school_year
-        old_thresh = @seminar.consultantThreshold
-        
-        capybara_login(@teacher_1)
-        go_to_seminar
-        click_on("Basic Info")
-        
-        click_on("Update This Class")
-        
-        @seminar.reload
-        assert_equal old_name, @seminar.name
-        assert_equal old_year, @seminar.school_year
-        assert_equal old_thresh, @seminar.consultantThreshold
-        
-        assert_selector('h2', :text => "Edit #{@seminar.name}")
+
+    def assert_all_defaults
+        assert_equal @old_name, @seminar.name
+        assert_equal @old_school_year, @seminar.school_year
+        assert_equal @old_columns, @seminar.columns
+        assert_equal @old_open_times, @seminar.quiz_open_times
+        assert_equal @old_open_days, @seminar.quiz_open_days
     end
 
     test "basic seminar info defaults" do
-        old_name = @seminar.name
-        old_school_year = @seminar.school_year
-        old_thresh = @seminar.consultantThreshold
-        old_buck_inc = @seminar.default_buck_increment
-        old_columns = @seminar.columns
-        old_open_times = @seminar.quiz_open_times
-        old_open_days = @seminar.quiz_open_days
-        
         capybara_login(@teacher_1)
         go_to_seminar
         click_on("Basic Info")
         click_on("Update This Class")
         
         @seminar.reload
-        assert_equal old_name, @seminar.name
-        assert_equal old_school_year, @seminar.school_year
-        assert_equal old_thresh, @seminar.consultantThreshold
-        assert_equal old_buck_inc, @seminar.default_buck_increment
-        assert_equal old_columns, @seminar.columns
-        assert_equal old_open_times, @seminar.quiz_open_times
-        assert_equal old_open_days, @seminar.quiz_open_days
+        assert_all_defaults
         
         assert_selector('div', :text => "Class Updated")
         assert_selector('h2', :text => "Edit #{@seminar.name}")
@@ -92,7 +73,6 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
     
     test "basic info change" do
         assert_not_equal 4, @seminar.school_year
-        assert_not_equal 8, @seminar.consultantThreshold
         assert_not_equal 4, @seminar.columns
         
         capybara_login(@teacher_1)
@@ -100,7 +80,6 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         click_on("Basic Info")
         
         fill_in "seminar[name]", with: "Dangle"
-        fill_in "seminar[default_buck_increment]", with: 9
         find("#seminar_columns").select("4") # Set to four columns
         find("#school_year_1").select("3")  # Choose 3 for 5th grade
         find("#quiz_open_time").select("2:00")
@@ -108,15 +87,11 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         check("seminar_quiz_open_days_0")
         uncheck("seminar_quiz_open_days_2") #Fixture begins with quiz_open_days: [1,2,3,4,5]
         
-        choose("seminar_consultantThreshold_8")
-        
         click_on("Update This Class")
         
         @seminar.reload
         assert_equal "Dangle", @seminar.name
         assert_equal 4, @seminar.school_year
-        assert_equal 8, @seminar.consultantThreshold
-        assert_equal 9, @seminar.default_buck_increment
         assert_equal 4, @seminar.columns
         assert_equal [120,300], @seminar.quiz_open_times
         assert_equal [0,1,3,4,5], @seminar.quiz_open_days
@@ -126,8 +101,6 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
     end
 
     test "basic info blank name" do
-        old_name = @seminar.name
-        
         capybara_login(@teacher_1)
         go_to_seminar
         click_on("Basic Info")
@@ -137,7 +110,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         click_on("Update This Class")
         
         @seminar.reload
-        assert_equal old_name, @seminar.name
+        assert_equal @old_name, @seminar.name
         
         assert_selector('h2', :text => "Edit #{@seminar.name}")
     end
@@ -176,13 +149,14 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         go_to_term_and_checkpoint
         
         find("#seminar_term").select("3")
-        find("#seminar_which_checkpoint").select("4")
         check("reset")
         click_on("Update This Class")
         
         @seminar.reload
+        assert_all_defaults
+        
+        # Term has changed
         assert_equal 3, @seminar.term
-        assert_equal 4, @seminar.which_checkpoint
         assert_equal 1, @seminar_2.reload.term    # To make sure that only changes if the repeat choice is checked.
         
         # Score has been reset
@@ -250,8 +224,8 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_equal 3, @seminar.reload.term
         assert_equal 3, @seminar_2.reload.term
         assert_equal 1, @avcne_seminar.reload.term
-        assert_equal nil, test_obj_stud_1.reload.points_this_term
-        assert_equal nil, test_obj_stud_2.reload.points_this_term
+        assert_nil test_obj_stud_1.reload.points_this_term
+        assert_nil test_obj_stud_2.reload.points_this_term
     end
     
     test "due dates" do
@@ -307,7 +281,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_no_text("Copy Due Dates from #{first_seminar.name}")
     end
     
-    test "objectives" do
+    test "seminar objectives" do
         setup_objectives
         obj_array = [@objective_30, @objective_40, @objective_50, @own_assign, @assign_to_add]
         assert_not @seminar.objectives.include?(@assign_to_add)
@@ -336,6 +310,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         click_on("Update This Class")
         
         @seminar.reload
+        assert_all_defaults
         
         obj_array.each do |obj|
             assert @seminar.objectives.include?(obj)
@@ -375,7 +350,6 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         click_on("Objectives")
         
         assert_selector("input", :id => "check_#{@priv_obj.id}")
-        
     end
 
     test "pretests" do
@@ -426,7 +400,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         assert_selector('h2', :text => "Edit #{@seminar.name}")
     end
     
-    test "priorities" do
+    test "seminar priorities" do
         @os_0 = @seminar.objective_seminars[0]
         @os_1 = @seminar.objective_seminars[1]
         @seminar.objective_seminars.update_all(:priority => 2)
@@ -440,6 +414,8 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
         
         click_on("Update This Class")
         
+        @seminar.reload
+        assert_all_defaults
         @os_0.reload
         @os_1.reload
         assert_equal 3, @os_0.priority
@@ -473,7 +449,7 @@ class SeminarsEditTest < ActionDispatch::IntegrationTest
     end
 
     test "remove seminar when alone" do
-    
+        # Does this one still need to be written?
     end
 
     test "remove seminar when sharing" do
