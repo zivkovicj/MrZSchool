@@ -21,6 +21,42 @@ Between each update, manually test:
 
 
 
+3.38 REMOVE CURRENT_CLASS
+Abandoned
+
+
+
+3.37 CUT FAT
+Cut checkpoint stuff
+And due_dates
+
+
+
+3.35 QUIZ LOCK OPTIONS
+V Add quiz_time to seminar, string, serialized
+V Use that to check whether quizzes should lock
+V Allow open days
+V Default time 
+V Default days
+V Teacher can change the times in the seminar edit form
+
+V Maybe also load only quizzes for the selected class.
+   
+
+Migrate and update all quiz lock times
+Check workings in live site
+
+3.36 LOCK OPTIONS FIXES
+V Don't change the times when updating other parts of a seminar.
+V Allow for 25 iterations of option, so that the time can go until midnight.
+V Cut default currency increment
+V Capitalize Tuesday
+V Arrange the days onto their own line
+V Cut consultant threshold choice for now
+V Put open_days and open_times into seeds
+
+
+
 3.34 MATERIALS PAGE 1
 Migrate to worksheet
     description

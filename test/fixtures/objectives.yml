@@ -127,6 +127,12 @@ select_many_objective:
   extent: public
   user: archer
   topic: integers
+
+interval_objective:
+  name: Interval Objective
+  extent: public
+  user: archer
+  topic: integers
   
 teacher_graded_objective_1: 
   name: Teacher-Graded Objective 1

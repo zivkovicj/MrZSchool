@@ -161,7 +161,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert @new_question_2.correct_answers.length == 2
     end
     
-    test "create teacher graded fill in questions" do
+    test "create teacher graded fill in question" do
         capybara_login(@teacher_1)
         go_to_new_questions
         
@@ -185,6 +185,35 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert @new_question.correct_answers.include?("Your answer should be good.")
         assert_equal [], @new_question.choices
         assert_equal 1, @new_question.correct_answers.length
+    end
+
+    test "create interval question" do
+        capybara_login(@teacher_1)
+        go_to_new_questions
+        
+        choose("style_interval")
+        choose("label_#{@user_l.id}")
+        click_on("Create Some Questions")
+        
+        assert_text("Enter the lowest possible answer in the first space and the highest possible answer in the second space.")
+        assert_no_text("A student may enter any of the answers below to earn credit.")
+        fill_in "prompt_0", with: "Prompt for interval question"
+        fill_in "question_0_choice_0", with: "2"
+        fill_in "question_0_choice_1", with: "4"
+        fill_in "prompt_1", with: "Prompt for second interval question"
+        fill_in "question_1_choice_0", with: "3"
+        fill_in "question_1_choice_1", with: "5"
+        click_on("Create These Questions")
+        
+        assert_equal @old_question_count + 2, Question.count
+        @new_question = Question.all[-1]
+        assert_equal @teacher_1, @new_question.user
+        assert_equal "private", @new_question.extent
+        assert_equal "interval", @new_question.style
+        assert_equal @user_l, @new_question.label
+        assert_equal "Prompt for second interval question", @new_question.prompt
+        assert_equal ["3","5"], @new_question.correct_answers
+        assert_equal ["3","5"], @new_question.choices
     end
     
     test "dont create with empty prompt" do

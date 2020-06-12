@@ -231,6 +231,33 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_not @seminar.reload.grading_needed
         assert_no_selector("h3", :text => "Your teacher will grade this question.")  #Counterpart to teacher-graded questions.
     end
+
+    test "take interval quiz" do
+        interval_objective = objectives(:interval_objective)
+        set_specific_score(@student_2, interval_objective, 4)
+        interval_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
+        @seminar.objectives << interval_objective
+        
+        go_to_first_period
+        
+        click_on("Quizzes")
+        find("#teacher_granted_#{interval_objective.id}").click
+        
+        # Answer the first question correct, but the second question wrong.
+        fill_in "riposte[stud_answer]", with: 3.14
+        click_on "Next Question"
+        fill_in "riposte[stud_answer]", with: 5.1
+        click_on "Next Question"
+        
+        @quiz = Quiz.last
+        assert_equal 0, @quiz.points_still_to_grade
+        assert_all_ripostes_graded
+        
+        riposte_1 = @quiz.ripostes.first
+        riposte_2 = @quiz.ripostes.second
+        assert_equal 2, riposte_1.tally
+        assert_equal 0, riposte_2.tally
+    end
     
     test "quiz with teacher graded question" do
         @tg_objective_1 = objectives(:teacher_graded_objective_1)

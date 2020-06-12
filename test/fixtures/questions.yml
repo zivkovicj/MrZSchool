@@ -89,6 +89,24 @@ select_many_question:
   user: archer
   <<: *base_choices
   correct_answers: ["0", "2", "3"]
+
+interval_question_1:
+  style: interval
+  prompt: "This is an interval question"
+  extent: public
+  label: interval_label
+  user: archer
+  <<: *base_choices
+  correct_answers: ["3", "5"]
+
+interval_question_2:
+  style: interval
+  prompt: "This is another interval question"
+  extent: public
+  label: interval_label
+  user: archer
+  <<: *base_choices
+  correct_answers: ["3", "5"]
   
 <% 30.times do |n| %>
 question_<%= n+5 %>:

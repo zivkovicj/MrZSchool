@@ -6,14 +6,21 @@
                      :select_many => {:computer => "Answer Choices",
                                      :teacher => "Answer Choices"},
                      :fill_in => {:computer => "Correct Answers",
-                                  :teacher => "Example Answers"}} %>
+                                  :teacher => "Example Answers"},
+                     :interval => {:computer => "Answer Range",
+                                    :teacher => "Answer Range"}} %>
 <% check_message = {:multiple_choice => {:computer => "Mark the bubble for the correct answer",
-                                         :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a multiple-choice question.)"},
+                            :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a multiple-choice question.)"},
                     :select_many => {:computer => "Check the box for each correct answer",
-                                    :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a select-many question.)"},
+                            :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a select-many question.)"},
                     :fill_in => {:computer => "A student may enter any of the answers below to earn credit.",
-                                :teacher => "This question needs to be graded by a person.  But if you include hints or examples here, students can see them after completing the quiz."}} %>
+                            :teacher => "This question needs to be graded by a person.  But if you include hints or examples here, students can see them after completing the quiz."},
+                    :interval => {:computer => "Enter the lowest possible answer in the first space and the highest possible answer in the second space.",
+                            :teacher => "You've chosen that this question should be teacher-graded (Not recommended for an interval question.)"}} %>
 
+
+
+<% blanks_provided = {:multiple_choice => 8, :select_many => 6, :fill_in => 6, :interval => 2} %>
 
 <div class="container singleOption">
     <div class="row">
@@ -53,7 +60,7 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <% 6.times do |n| %>
+                    <% blanks_provided[:"#{@style}"].times do |n| %>
                         <% if @question.style == "fill_in" %>
                             <%# Supply the existing answer choices (or example answers) if they exist. %>
                             <% these_answers = @question.correct_answers %>
@@ -69,6 +76,8 @@
                                         <%= check_box_tag "questions[#{index}][is_correct][]", n, checked = checkery, :id => "question_#{index}_is_correct_#{n}" %>
                                     <% elsif @style == "multiple_choice" %>
                                         <%= radio_button_tag "questions[#{index}][is_correct][]", n, checked = checkery, :id => "question_#{index}_is_correct_#{n}" %>
+                                    <% elsif @style == "interval" %>
+                                        <%= hidden_field_tag "questions[#{index}][is_correct][]", n %>
                                     <% end %>
                                 </td>
                                 <td>

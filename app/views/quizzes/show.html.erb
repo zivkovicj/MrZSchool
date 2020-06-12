@@ -23,14 +23,19 @@
                     <h4>Your Response</h4>
                     <% these_answers = question.correct_answers %>
                     <% if these_answers.present? %>
-                        <% correct_array_fixed = question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")} %>
+                        <% correct_array_fixed = these_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")} %>
                     <% else %>
                         <% correct_array_fixed = [] %>
                     <% end %>
                     <% riposte.stud_answer.each do |response| %>
                         <% if question.label.grade_type == "computer" then %>
-                            <% fixed_response = response.to_s.downcase.gsub(/\s+/, "").gsub(/[()]/, "") %>
-                            <% class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
+                            <% if question.style == "interval" then %>
+                                <% class_type = "red" %>
+                                <% class_type = "green" if riposte.stud_answer[0].to_f.between?(these_answers[0].to_f,these_answers[1].to_f) %>
+                            <% else %>
+                                <% fixed_response = response.to_s.downcase.gsub(/\s+/, "").gsub(/[()]/, "") %>
+                                <% class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
+                            <% end %>
                         <% else %>
                             <% class_type == "" %>
                         <% end %>
@@ -49,11 +54,17 @@
                         <h4>Your teacher will grade this question.</h4>
                     <% end %>
 
-                    <% if question.correct_answers.present? %>
+                    <% if these_answers.present? %>
                         <% if show_samples %>
-                            <%= first_phrase %>
-                            <% question.correct_answers.each do |answer| %>
-                                <li> <%= answer %></li>
+                            <h4><%= first_phrase %></h4>
+                            <% if question.style == "interval" %>
+                                <p>Between <%= these_answers.first %> and <%= these_answers.second %></p>
+                            <% else %>
+                                <% these_answers.each_with_index do |answer, index| %>
+                                    <li>
+                                        <%= answer %>
+                                    </li>
+                                <% end %>
                             <% end %>
                         <% else %>
                             <h4>We will show a sample answer after you use your last key for this quiz.</h4>

@@ -52,7 +52,12 @@ select_many_label:
   name: select_many_label
   extent: public
   grade_type: "computer"
-  
+
+interval_label:
+  name: interval_label
+  extent: public
+  grade_type: "computer"  
+
 intro_to_pythag:
   name: Intro to the Pythagorean Theorem
   extent: public

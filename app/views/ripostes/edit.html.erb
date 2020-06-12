@@ -25,7 +25,7 @@
 
     <table>
         <div class="container">
-            <% if @question.style == "fill_in" %>
+            <% if @question.style == "fill_in" || @question.style == "interval" %>
                 <p>Your Response:</p>
                 <%= r.text_field :stud_answer %>
             <% else  %>

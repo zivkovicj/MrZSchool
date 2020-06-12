@@ -17,6 +17,12 @@ fill_in:
   label: fill_in_label
   quantity: 7
   point_value: 2
+
+interval: 
+  objective: interval_objective
+  label: interval_label
+  quantity: 7
+  point_value: 2
   
 for_delete_test:
   objective: objective_40

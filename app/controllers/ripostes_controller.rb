@@ -12,37 +12,22 @@ class RipostesController < ApplicationController
         
         if @quiz.total_score == nil
             next_riposte_num = @riposte.position + 1
-            
-            perc = 0
+            @perc = 0
+            @stud_answer = []
             if @question.label.grade_type == "computer"
                 is_graded = 1
                 if params[:riposte].nil? || params[:riposte][:stud_answer].blank?
-                    stud_answer = ["blank"]
+                    @stud_answer = ["blank"]
                     is_graded = nil
                 else
-                    stud_answer = []
-                    if @question.style == "fill_in"
-                        stud_answer = [params[:riposte][:stud_answer]]
-                        correct_poss = 2
-                        correct_array = @question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
-                        backend_answer = stud_answer.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
-                    else
-                        params[:riposte][:stud_answer].each do |this_answer|
-                            stud_answer << @question.choices[this_answer.to_i]
-                        end
-                        correct_array = @question.correct_answers
-                        backend_answer = stud_answer
-                        correct_poss = backend_answer.length + correct_array.length
-                    end
-                    correct_count = 2 * (backend_answer & correct_array).length
-                    perc = (@riposte.poss * correct_count.to_f / correct_poss.to_f).round
+                    computer_grades_question
                 end
             else
                 is_graded = 0
-                stud_answer = [params[:riposte][:stud_answer]]
+                @stud_answer = [params[:riposte][:stud_answer]]
             end
         
-            @riposte.update(:stud_answer => stud_answer, :tally => perc, :graded => is_graded)
+            @riposte.update(:stud_answer => @stud_answer, :tally => @perc, :graded => is_graded)
             @quiz.update(:progress => next_riposte_num)
             
             if @riposte == @quiz.ripostes.order(:position).last
@@ -89,7 +74,33 @@ class RipostesController < ApplicationController
     end
 
     private
-        
+    
+        def computer_grades_question
+            correct_poss = 2
+            if @question.style == "fill_in"
+                @stud_answer = [params[:riposte][:stud_answer]]
+                correct_array = @question.correct_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
+                backend_answer = @stud_answer.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")}
+            elsif @question.style == "interval"
+                @stud_answer = [params[:riposte][:stud_answer].to_f]
+                low_answer = @question.correct_answers[0].to_f
+                high_answer = @question.correct_answers[1].to_f
+                backend_answer = @stud_answer
+                correct_array = []
+                correct_array = @stud_answer if @stud_answer[0].between?(low_answer,high_answer)
+            else
+                @stud_answer = []
+                params[:riposte][:stud_answer].each do |this_answer|
+                    @stud_answer << @question.choices[this_answer.to_i]
+                end
+                correct_array = @question.correct_answers
+                backend_answer = @stud_answer
+                correct_poss = backend_answer.length + correct_array.length
+            end
+            correct_count = 2 * (backend_answer & correct_array).length
+            @perc = (@riposte.poss * correct_count.to_f / correct_poss.to_f).round
+        end
+    
         def take_post_req_keys
             if @this_obj_stud.total_keys == 0 && !@this_obj_stud.passed
                 @objective.mainassigns.each do |mainassign|

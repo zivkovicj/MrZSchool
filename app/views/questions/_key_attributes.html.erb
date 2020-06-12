@@ -39,7 +39,8 @@
                 <table>
                     <% [["multiple_choice", 'Multiple Choice'],
                         ["select_many", "Select Many"],
-                        ["fill_in", 'Fill in']].each_with_index do |z, index| %><tr>
+                        ["fill_in", 'Fill in'],
+                        ["interval", 'Interval']].each_with_index do |z, index| %><tr>
                         <td width="20%"><% checkery = index == 0 ? "checked='checked'" : "" %>
                         <input type="radio" name="questions[0][style]" id="style_<%= z[0] %>" value=<%= z[0] %> <%= checkery %> /></td>
                         <td><%= z[1] %></td>
