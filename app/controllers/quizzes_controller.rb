@@ -33,17 +33,21 @@ class QuizzesController < ApplicationController
     end
     
     def show
+        @finished = params[:finished]
         @quiz = Quiz.find(params[:id])
         @objective = @quiz.objective
         @student = @quiz.user
         @this_os = @objective.objective_students.find_by(:user => @student) 
         
-        @this_score = @quiz.total_score 
-        @old_stars = @quiz.old_stars 
-        @max_after_grade = @quiz.max_after_grade 
-        @points_still_to_grade = @quiz.points_still_to_grade 
-
-        establish_offer_next_try
+        if @finished == "true"
+            @quiz.set_total_score
+            take_post_req_keys
+            @this_score = @quiz.total_score
+            @old_stars = @quiz.old_stars
+            @max_after_grade = @quiz.max_after_grade
+            @points_still_to_grade = @quiz.points_still_to_grade
+            establish_offer_next_try
+        end
     end
     
     private
@@ -100,6 +104,14 @@ class QuizzesController < ApplicationController
                 @offer_next_try = "none"
             end
         end
-    
-    
+        
+        def take_post_req_keys
+            if @this_os.total_keys == 0 && !@this_os.passed
+                @objective.mainassigns.each do |mainassign|
+                    this_mainassign = mainassign.objective_students.find_by(:user => @student)
+                    this_mainassign.update(:pretest_keys => 0) if this_mainassign
+                end
+            end
+        end
+
 end

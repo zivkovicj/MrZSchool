@@ -42,6 +42,7 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
         assert_text("Question: 1")
         
         answer_quiz_randomly
+        submit_quiz
         click_on("Try this quiz again")
         
         assert_equal 0, @test_os.reload.read_attribute(:"#{which_key}_keys")
@@ -130,6 +131,7 @@ class QuizzesAvailableTest < ActionDispatch::IntegrationTest
             choose("choice_bubble_1")
             click_on("Next Question")
         end
+        submit_quiz
        
        assert_text("Previous score this term")
     end

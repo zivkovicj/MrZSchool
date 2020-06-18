@@ -2,6 +2,7 @@ class RipostesController < ApplicationController
     
     def edit
         @riposte = Riposte.find(params[:id])
+        @quiz = @riposte.quizzes.order(:created_at).last
         @question = @riposte.question
     end
     
@@ -11,9 +12,9 @@ class RipostesController < ApplicationController
         @quiz = @riposte.quizzes.order(:created_at).last
         
         if @quiz.total_score == nil
-            next_riposte_num = @riposte.position + 1
             @perc = 0
             @stud_answer = []
+            next_riposte_num = @riposte.position + 1
             if @question.label.grade_type == "computer"
                 is_graded = 1
                 if params[:riposte].nil? || params[:riposte][:stud_answer].blank?
@@ -30,16 +31,15 @@ class RipostesController < ApplicationController
             @riposte.update(:stud_answer => @stud_answer, :tally => @perc, :graded => is_graded)
             @quiz.update(:progress => next_riposte_num)
             
-            if @riposte == @quiz.ripostes.order(:position).last
-                @student = @quiz.user
-                @objective = @quiz.objective
-                @this_obj_stud = @student.objective_students.find_by(:objective => @objective)
-                @quiz.set_total_score
-                take_post_req_keys
-                redirect_to quiz_path(@quiz)
-            else
+            if @riposte == @quiz.ripostes.order(:position).last || params[:commit] == "Finish Quiz"
+                redirect_to quiz_path(@quiz, :finished => false)
+            elsif params[:commit] == "Next Question"
                 next_riposte = @quiz.ripostes.find_by(:position => next_riposte_num)
                 redirect_to  edit_riposte_path(next_riposte)
+            elsif params[:commit] == "Previous Question"
+                prev_riposte_num = @riposte.position - 1
+                prev_riposte = @quiz.ripostes.find_by(:position => prev_riposte_num)
+                redirect_to  edit_riposte_path(prev_riposte)
             end
         else
             redirect_to quiz_path(@quiz)
@@ -101,13 +101,6 @@ class RipostesController < ApplicationController
             @perc = (@riposte.poss * correct_count.to_f / correct_poss.to_f).round
         end
     
-        def take_post_req_keys
-            if @this_obj_stud.total_keys == 0 && !@this_obj_stud.passed
-                @objective.mainassigns.each do |mainassign|
-                    this_mainassign = mainassign.objective_students.find_by(:user => @student)
-                    this_mainassign.update(:pretest_keys => 0) if this_mainassign
-                end
-            end
-        end
+
     
 end

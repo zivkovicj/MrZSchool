@@ -1,17 +1,89 @@
-<%= render 'quizzes/total_score' %>
+
+<%# DEFINING FUNCTIONS %>
+
+<% def colors_for_responses(this_response) %>
+    <% @these_corr_ans = @question.correct_answers %>
+    <% correct_array_fixed = [] %>
+    <% if @these_corr_ans.present? %>
+        <% correct_array_fixed = @these_corr_ans.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")} %>
+    <% end %>
+    <% if @question.label.grade_type == "computer" then %>
+        <% if @question.style == "interval" %>
+            <% @class_type = "red" %>
+            <% @class_type = "green" if @this_stud_ans[0].to_f.between?(@these_corr_ans[0].to_f, @these_corr_ans[1].to_f) %>
+        <% else %>
+            <% fixed_response = this_response.to_s.downcase.gsub(/\s+/, "").gsub(/[()]/, "") %>
+            <% @class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
+        <% end %>
+    <% end %>
+<% end %>
+
+<% def show_answer_interval %>
+    <p>Between <%= @these_corr_ans.first %> and <%= @these_corr_ans.second %></p>
+<% end %>
+
+<% def list_all_correct_answers %>
+    <% if @these_corr_ans.present? %>
+        <% @these_corr_ans.each do |answer| %>
+            <li><%= answer %></li>
+        <% end %>
+    <% end %>
+<% end %>
+
+<% def used_all_keys_message %>
+    <div class="singleOption">You have used all your keys for this quiz.</div>
+<% end %>
+
+<% def try_again_message %>
+    <%= link_to "Try this quiz again",
+        {:controller => "quizzes", :action => "new", :objective_id => @objective.id, :origin => @offer_next_try},
+        :class => "btn btn-lg btn-primary plain_link" %>
+<% end %>
+
+<% def back_to_class_page %>
+    <%= link_to "Back to Your Class Page",
+    seminar_student_path(current_user.seminar_students.find_by(:seminar => current_user.current_class)),
+    :class => "btn btn-lg btn-primary plain_link" %>
+<% end %>
+
+<% def submit_for_grading_link %>
+    <%= link_to "Submit for grading", quiz_path(@quiz, :finished => true), :class => "btn btn-lg btn-primary plain_link" %>
+<% end %>
+
+
+<%# ACTUAL PAGE CODE BEGINS %>
+
+
+<% if @finished == "true" %>
+    <%= render 'quizzes/total_score' %>
+<% else %>
+    </br>
+    <h1>
+        Review answers before submitting &emsp;
+        <% submit_for_grading_link %>
+    </h1>
+    </br>
+<% end %>
+
 
 <div class="container">
     <% @quiz.ripostes.each do |riposte| %>
-        <% question = riposte.question %>
+        <% @question = riposte.question %>
         <div class="container singleOption topic">
-            <h5 style="color:gray;">Question ID #<%= question.id %></h5>
+
+            <h5 style="color:gray;">Question ID #<%= @question.id %>
+                <% if @finished == "false" %>
+                    &emsp; <%= link_to "Jump to", edit_riposte_path(riposte), :class => "btn btn-lg btn-primary plain_link", :id => "jump_to_#{riposte.id}" %>
+                <% end %>
+            </h5>
+
             <div class="singleOption lowSingOpt">
                 <div class="row">
                     <div class="col-sm-6">
-                        <%= question.prompt %>
+                        <%= @question.prompt %>
                     </div>
                     <div class="col-sm-6">
-                        <% picture = question.picture %>
+                        <% picture = @question.picture %>
                         <%= image_tag(picture.image_url(:quiz_size).to_s) if picture.present? %>
                     </div>
                 </div>
@@ -20,58 +92,46 @@
             
             <div class="row">
                 <div class="col-sm-6">
+                    <% @this_stud_ans = riposte.stud_answer %>
+
                     <h4>Your Response</h4>
-                    <% these_answers = question.correct_answers %>
-                    <% if these_answers.present? %>
-                        <% correct_array_fixed = these_answers.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")} %>
-                    <% else %>
-                        <% correct_array_fixed = [] %>
+
+                    <% @this_stud_ans.each do |stud_response| %>
+                        <% colors_for_responses(stud_response) if @finished == "true" %>
+                        <p class=<%= @class_type %>><%= stud_response %></p>
                     <% end %>
-                    <% riposte.stud_answer.each do |response| %>
-                        <% if question.label.grade_type == "computer" then %>
-                            <% if question.style == "interval" then %>
-                                <% class_type = "red" %>
-                                <% class_type = "green" if riposte.stud_answer[0].to_f.between?(these_answers[0].to_f,these_answers[1].to_f) %>
-                            <% else %>
-                                <% fixed_response = response.to_s.downcase.gsub(/\s+/, "").gsub(/[()]/, "") %>
-                                <% class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
-                            <% end %>
-                        <% else %>
-                            <% class_type == "" %>
-                        <% end %>
-                        <p class=<%= class_type %>><%= response %></p>
+
+                    <%# Let students know if they omitted some answers in a select many question %>
+                    <% if @question.style == "select_many" && @finished == "true" && !(@these_corr_ans - @this_stud_ans).empty? %>
+                        <p class="red">Some correct answers left out</p>
                     <% end %>
                 </div>
-                <div class="col-sm-6">
-                    <% show_samples = false %>
-                    <% show_samples = true if @offer_next_try == "none" %>
 
-                    <% if question.label.grade_type == "computer" %>
-                        <% first_phrase = "Correct Responses" %>
+                <%# Show answers if the quiz is finished %>
+                <% if @finished == "true" %>
+                    <div class="col-sm-6">
                         <% show_samples = true %>
-                    <% else %>
-                        <% first_phrase = "Example Responses" %>
-                        <h4>Your teacher will grade this question.</h4>
-                    <% end %>
+                        <% first_phrase = "Correct Responses" %>
 
-                    <% if these_answers.present? %>
-                        <% if show_samples %>
-                            <h4><%= first_phrase %></h4>
-                            <% if question.style == "interval" %>
-                                <p>Between <%= these_answers.first %> and <%= these_answers.second %></p>
-                            <% else %>
-                                <% these_answers.each_with_index do |answer, index| %>
-                                    <li>
-                                        <%= answer %>
-                                    </li>
-                                <% end %>
-                            <% end %>
-                        <% else %>
-                            <h4>We will show a sample answer after you use your last key for this quiz.</h4>
+                        <% if @question.label.grade_type != "computer" %>
+                            <% first_phrase = "Example Responses" %>
+                            <% show_samples = false unless @offer_next_try == "none" %>
+                            <h4>Your teacher will grade this question.</h4>
                         <% end %>
-                    <% end %>
 
-                </div>
+                        <% if show_samples == false %>
+                            <h4>We will show a sample answer after you use your last key for this quiz.</h4>
+                        <% else %>
+                            <h4><%= first_phrase %></h4>
+                            <% if @question.style == "interval" %>
+                                <% show_answer_interval %>
+                            <% else %>
+                                <% list_all_correct_answers %>
+                            <% end %>
+                        <% end %>
+                    </div>
+                <% end %>
+
             </div>
         </div>
         </br>
@@ -80,21 +140,20 @@
 
 <div class="container">
     <div class="row">
-        <% if @offer_next_try == "none" %>
-            <div class="singleOption">
-                You have used all your keys for this quiz.
-            </div>
+        <% if @finished == "false" %>
+            <% submit_for_grading_link %>
         <% else %>
-            <%= link_to "Try this quiz again",
-                {:controller => "quizzes", :action => "new", :objective_id => @objective.id, :origin => @offer_next_try}, 
-                :class => "btn btn-lg btn-primary plain_link" %>
+
+            <% if @offer_next_try == "none" %>
+                <% used_all_keys_message %>
+            <% else %>
+                <% try_again_message %>
+            <% end %>
+
+            <% back_to_class_page %>
+
+            <%= render 'quizzes/total_score' %>
         <% end %>
-        <%= link_to "Back to Your Class Page", 
-            seminar_student_path(current_user.seminar_students.find_by(:seminar => current_user.current_class)),
-            :class => "btn btn-lg btn-primary plain_link" %>
     </div>
 </div>
-</br>
-
-<%= render 'quizzes/total_score' %>
 

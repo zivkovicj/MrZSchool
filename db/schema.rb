@@ -10,53 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200410015407) do
-
-  create_table "checkpoints", force: :cascade do |t|
-    t.integer  "goal_student_id"
-    t.string   "action"
-    t.integer  "achievement"
-    t.text     "teacher_comment"
-    t.text     "student_comment"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "sequence"
-  end
-
-  create_table "commodities", force: :cascade do |t|
-    t.string   "name"
-    t.string   "image"
-    t.integer  "school_id"
-    t.integer  "user_id"
-    t.integer  "production_rate"
-    t.integer  "current_price"
-    t.integer  "production_day"
-    t.integer  "quantity"
-    t.datetime "date_last_produced"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.boolean  "deliverable"
-    t.boolean  "salable"
-    t.boolean  "usable"
-    t.index ["school_id"], name: "index_commodities_on_school_id"
-    t.index ["user_id"], name: "index_commodities_on_user_id"
-  end
-
-  create_table "commodity_students", force: :cascade do |t|
-    t.integer  "commodity_id"
-    t.integer  "user_id"
-    t.integer  "quantity"
-    t.integer  "price_paid"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.boolean  "delivered"
-    t.integer  "seminar_id"
-    t.integer  "school_id"
-    t.index ["commodity_id"], name: "index_commodity_students_on_commodity_id"
-    t.index ["school_id"], name: "index_commodity_students_on_school_id"
-    t.index ["seminar_id"], name: "index_commodity_students_on_seminar_id"
-    t.index ["user_id"], name: "index_commodity_students_on_user_id"
-  end
+ActiveRecord::Schema.define(version: 20200618211507) do
 
   create_table "consultancies", force: :cascade do |t|
     t.integer  "seminar_id"
@@ -64,21 +18,6 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.datetime "updated_at", null: false
     t.string   "duration"
     t.index ["seminar_id"], name: "index_consultancies_on_seminar_id"
-  end
-
-  create_table "currencies", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "seminar_id"
-    t.integer  "school_id"
-    t.integer  "giver_id"
-    t.integer  "value"
-    t.text     "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["giver_id"], name: "index_currencies_on_giver_id"
-    t.index ["school_id"], name: "index_currencies_on_school_id"
-    t.index ["seminar_id"], name: "index_currencies_on_seminar_id"
-    t.index ["user_id"], name: "index_currencies_on_user_id"
   end
 
   create_table "domains", force: :cascade do |t|
@@ -93,33 +32,6 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "goal_students", force: :cascade do |t|
-    t.integer  "goal_id"
-    t.integer  "user_id"
-    t.integer  "seminar_id"
-    t.integer  "target"
-    t.boolean  "approved"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "term"
-    t.index ["goal_id", "user_id"], name: "index_goal_students_on_goal_id_and_user_id"
-    t.index ["goal_id"], name: "index_goal_students_on_goal_id"
-    t.index ["seminar_id"], name: "index_goal_students_on_seminar_id"
-    t.index ["user_id"], name: "index_goal_students_on_user_id"
-  end
-
-  create_table "goals", force: :cascade do |t|
-    t.text     "actions"
-    t.integer  "style"
-    t.string   "name"
-    t.string   "statement_stem"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.string   "extent"
-    t.integer  "user_id"
-    t.index ["user_id"], name: "index_goals_on_user_id"
   end
 
   create_table "label_objectives", force: :cascade do |t|
@@ -178,13 +90,11 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.integer  "objective_id"
     t.integer  "user_id"
     t.integer  "points_all_time"
-    t.integer  "unlocked"
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
     t.integer  "pretest_keys"
     t.integer  "dc_keys"
     t.integer  "teacher_granted_keys"
-    t.text     "score_record"
     t.integer  "pretest_score"
     t.integer  "teacher_manual_score"
     t.integer  "points_this_term"
@@ -245,6 +155,7 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.datetime "updated_at",      null: false
     t.text     "choices"
     t.string   "grade_type"
+    t.boolean  "shuffle"
     t.index ["label_id"], name: "index_questions_on_label_id"
     t.index ["picture_id"], name: "index_questions_on_picture_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
@@ -293,12 +204,9 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.string   "name"
     t.string   "city"
     t.string   "state"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer  "term"
-    t.text     "term_dates"
-    t.string   "market_name"
-    t.string   "school_currency_name"
   end
 
   create_table "seminar_students", force: :cascade do |t|
@@ -308,12 +216,8 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.integer  "learn_request"
     t.integer  "pref_request"
     t.boolean  "present"
-    t.integer  "consulting_stars"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.integer  "seminar_bucks_earned"
-    t.integer  "gems_given_toward_reward"
-    t.text     "stars_used_toward_grade"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.date     "last_consultant_day"
     t.integer  "last_obj"
     t.index ["seminar_id", "user_id"], name: "index_seminar_students_on_seminar_id_and_user_id"
@@ -334,15 +238,9 @@ ActiveRecord::Schema.define(version: 20200410015407) do
   create_table "seminars", force: :cascade do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.integer  "consultantThreshold"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "which_checkpoint"
-    t.text     "checkpoint_due_dates"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.integer  "school_year"
-    t.integer  "default_buck_increment"
-    t.string   "class_reward"
-    t.integer  "target_rate"
     t.integer  "school_id"
     t.datetime "term_start_date"
     t.datetime "term_end_date"
@@ -401,14 +299,13 @@ ActiveRecord::Schema.define(version: 20200410015407) do
     t.string   "reset_digest"
     t.datetime "reset_sent_at"
     t.datetime "last_login"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "school_id"
     t.integer  "verified"
     t.integer  "sponsor_id"
     t.integer  "school_year"
     t.integer  "school_admin"
-    t.string   "teacher_currency_name"
     t.integer  "school_bucks_earned"
   end
 

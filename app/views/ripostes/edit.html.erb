@@ -21,7 +21,11 @@
         <h5 id="teacher_graded_tag">Teacher-Graded Question</h5>
     <% end %>
 
-    <% this_order = [0,1,2,3,4,5].shuffle %>
+    <% these_choices = @question.choices %>
+    <% length_minus_one = these_choices.length - 1 %>
+
+    <% this_order = [*0..length_minus_one] %>
+    <% this_order.shuffle! if @question.shuffle %>
 
     <table>
         <div class="container">
@@ -29,16 +33,18 @@
                 <p>Your Response:</p>
                 <%= r.text_field :stud_answer %>
             <% else  %>
-                <% 6.times do |n| %>
-                    <% x = this_order[n] %>
-                    <% answer_text = @question.choices[x] %>
+                <% these_choices.length.times do |n| %>
+                    <% shuf_num = this_order[n] %>
+                    <% answer_text = these_choices[shuf_num] %>
                     <% if !answer_text.blank? %>
                         <tr>
                             <td width="50%">
                                 <% if @question.style == "multiple_choice" %>
-                                    <%= radio_button_tag "riposte[stud_answer][]", x, false, :id => "choice_bubble_#{x}" %>
+                                    <% should_select = @riposte.stud_answer[0] == answer_text if @riposte.stud_answer %>
+                                    <%= radio_button_tag "riposte[stud_answer][]", shuf_num, should_select, :id => "choice_bubble_#{shuf_num}" %>
                                 <% elsif @question.style == "select_many" %>
-                                    <%= check_box_tag "riposte[stud_answer][]", x, false, :id => "check_box_#{x}" %>
+                                    <% should_select = @riposte.stud_answer.include?(answer_text) if @riposte.stud_answer %>
+                                    <%= check_box_tag "riposte[stud_answer][]", shuf_num, should_select, :id => "check_box_#{shuf_num}" %>
                                 <% end %>
                             </td>
                             <td><%= answer_text %></td>
@@ -51,5 +57,13 @@
 
 
     </br>
-    <%= r.submit "Next Question", class: "btn btn-primary" %>
+    <% unless @riposte.position == 1 %>
+        <%= r.submit "Previous Question", class: "btn", :id => "previous_question" %>
+    <% end %>
+    
+    <%= r.submit "Next Question", class: "btn btn-primary", :id => "next_question" %>
+
+    <% if @riposte.stud_answer.present? %>
+        <%= r.submit "Finish Quiz", class: "btn btn-primary", :id => "finish_quiz" %>
+    <% end %>
 <% end %>

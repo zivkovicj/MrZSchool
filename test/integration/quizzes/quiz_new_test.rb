@@ -49,7 +49,6 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             quiz.ripostes.create(:question => Question.all[trip])
         end
     end
-        
     
     def prepare_fill_in
         @fill_in_objective = Objective.find_by(:name => "fill_in Questions Only")
@@ -57,6 +56,12 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         @fill_in_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
     end
     
+    def prepare_select_many
+        @sm_objective = objectives(:select_many_objective)
+        set_specific_score(@student_2, @sm_objective, 4)
+        @sm_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
+        @seminar.objectives << @sm_objective
+    end
     
     test "setup quiz" do
         current_term = @seminar.term
@@ -126,6 +131,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             fill_in "riposte[stud_answer]", with: "ofcourse"
             click_on "Next Question"
         end
+        submit_quiz
         
         @quiz.reload
         assert_equal 9, @quiz.total_score
@@ -151,7 +157,13 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             assert_nil riposte.tally
         end
         answer_quiz_randomly
-        click_on("Back to Your Class Page")
+        
+        assert_no_selector("h4", :text => "Correct Responses")
+        assert_no_selector("p",:text => "Some correct answers left out")
+        
+        submit_quiz
+        
+        assert_selector("h4", :text => "Correct Responses")
         
         # Replace this with the new line that checks to see if a student is on her profile page
         # assert_text("Your Scores in All Objectives")
@@ -168,26 +180,23 @@ class NewQuizTest < ActionDispatch::IntegrationTest
     end
     
     test "take select many quiz" do
-        sm_objective = objectives(:select_many_objective)
-        set_specific_score(@student_2, sm_objective, 4)
-        sm_objective.objective_students.find_by(:user => @student_2).update(:teacher_granted_keys => 2)
-        @seminar.objectives << sm_objective
+        prepare_select_many
         
         go_to_first_period
         click_on("Quizzes")
-        find("#teacher_granted_#{sm_objective.id}").click
+        find("#teacher_granted_#{@sm_objective.id}").click
         
         # Choose two of three correct answers, and add one wrong choice
         check("check_box_0")
         check("check_box_1")
         check("check_box_2")
         click_on "Next Question"
+        submit_quiz
         
         @quiz = Quiz.last
         assert_equal 7, @quiz.total_score
         assert_equal 0, @quiz.points_still_to_grade
         assert_all_ripostes_graded
-        assert_not @seminar.reload.grading_needed 
         
         riposte = @quiz.ripostes.first
         assert_equal 67, riposte.tally
@@ -195,6 +204,33 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert riposte.stud_answer.include?("1")
         assert riposte.stud_answer.include?("2")
         assert_not riposte.stud_answer.include?("3")
+        
+        assert_selector("p",:text => "Some correct answers left out")
+    end
+
+    test "select many all correct" do
+        prepare_select_many
+        
+        go_to_first_period
+        click_on("Quizzes")
+        find("#teacher_granted_#{@sm_objective.id}").click
+        
+        # Choose all correct answers
+        check("check_box_0")
+        check("check_box_2")
+        check("check_box_3")
+        click_on "Next Question"
+        submit_quiz
+        
+        @quiz = Quiz.last
+        assert_equal 10, @quiz.total_score
+        assert_equal 0, @quiz.points_still_to_grade
+        assert_all_ripostes_graded
+        
+        riposte = @quiz.ripostes.first
+        assert_equal 100, riposte.tally
+        
+        assert_no_selector("p",:text => "Some correct answers left out")
     end
     
     test "take fill in quiz" do
@@ -223,6 +259,9 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal 7, @quiz.progress
         fill_in "riposte[stud_answer]", with: "course of"
         click_on "Next Question"
+        submit_quiz
+        
+        assert_no_selector("p",:text => "Some correct answers left out")
         
         @quiz.reload
         assert_equal 6, @quiz.total_score
@@ -248,6 +287,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         click_on "Next Question"
         fill_in "riposte[stud_answer]", with: 5.1
         click_on "Next Question"
+        
+        assert_no_selector("p",:text => "Some correct answers left out")
         
         @quiz = Quiz.last
         assert_equal 0, @quiz.points_still_to_grade
@@ -304,6 +345,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             end
             click_on "Next Question"
         end
+        submit_quiz
         
         new_time = @quiz_1_0.created_at - 1.hour
         @quiz_1_0.update(:created_at => new_time) # This fixes an error that the test caused by creating all of the quizzes at the exact same time.
@@ -341,6 +383,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_correctly if !teacher_graded_tags.present?
             click_on "Next Question"
         end
+        submit_quiz
         
         @quiz_1_1.reload
         riposte_0.reload
@@ -359,6 +402,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             fill_in "riposte[stud_answer]", with: "Yes"
             click_on "Next Question"
         end
+        submit_quiz
         
         assert_equal 0, @quiz_2.reload.total_score
         
@@ -380,6 +424,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             end
             click_on "Next Question"
         end
+        submit_quiz
         
         assert_equal 6, @quiz_3.reload.total_score
         assert_equal 0, obj_stud_2_1.reload.teacher_granted_keys
@@ -443,6 +488,101 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         find("#quiz_grading_seminar_#{@seminar.id}").click
         assert_text("All quizzes in this class are fully graded.")
     end
+
+    test "jump to mc" do
+        setup_consultancies
+        go_to_first_period
+        begin_quiz
+        
+        # Take this quiz mostly randomly
+        @quiz = Quiz.last
+        riposte_1 = @quiz.ripostes.order(:position).first
+        riposte_2 = @quiz.ripostes.order(:position).second
+        
+        # No "Finish Quiz" button on the first time through
+        assert_no_selector("a", :text => "Finish Quiz")
+        
+        # Get first question right
+        answer_question_correctly
+        click_on("Next Question")
+        
+        # Get second question wrong
+        answer_question_incorrectly
+        click_on("Next Question")
+        
+        # Answer rest of quiz randomly.
+        8.times do
+            assert_no_selector("input", :id => "finish_quiz")
+            choose("choice_bubble_1")
+            click_on("Next Question")
+        end
+        
+        # First question right, second wrong
+        assert_equal 1, riposte_1.reload.tally
+        assert_equal 0, riposte_2.reload.tally
+        assert_selector("a", :text => "Submit for grading")
+        
+        # Jump back to first question.
+        click_on("jump_to_#{riposte_1.id}")
+        assert_text(riposte_1.question.prompt)
+        click_on("Next Question")
+        
+        # First Answer is still correct (Earlier answer was auto-filled)
+        assert_equal 1, riposte_1.reload.tally
+        
+        assert_text(riposte_2.question.prompt)
+        assert_no_text(riposte_1.question.prompt)
+        
+        answer_question_correctly
+        assert_selector("input", :id => "finish_quiz")
+        click_on("Finish Quiz")
+        
+        # Second question is answered correctly now.
+        assert_equal 1, riposte_2.reload.tally
+        assert_selector("a", :text => "Submit for grading")
+    end
+
+    test "jump to select many" do
+        prepare_select_many
+        
+        go_to_first_period
+        click_on("Quizzes")
+        find("#teacher_granted_#{@sm_objective.id}").click
+        
+        @quiz = Quiz.last
+        riposte_1 = @quiz.ripostes.order(:position).first
+        
+        # Choose two of three correct answers, and add one wrong choice
+        check("check_box_0")
+        check("check_box_1")
+        check("check_box_2")
+        click_on "Next Question"
+        
+        riposte_1.reload
+        assert riposte_1.stud_answer.include?("0")
+        assert riposte_1.stud_answer.include?("1")
+        assert riposte_1.stud_answer.include?("2")
+        assert_equal 3, riposte_1.stud_answer.length
+        
+        # Jump back to question.  # Answer was pre-filled
+        click_on("jump_to_#{riposte_1.id}")
+        click_on("Next Question")
+        riposte_1.reload
+        assert riposte_1.stud_answer.include?("0")
+        assert riposte_1.stud_answer.include?("1")
+        assert riposte_1.stud_answer.include?("2")
+        assert_equal 3, riposte_1.stud_answer.length
+        
+        # Jump again and change
+        click_on("jump_to_#{riposte_1.id}")
+        uncheck("check_box_2")
+        click_on("Next Question")
+        riposte_1.reload
+        assert riposte_1.stud_answer.include?("0")
+        assert riposte_1.stud_answer.include?("1")
+        assert_equal 2, riposte_1.stud_answer.length
+        
+    end
     
     test "take keys for 100 percent" do
         # Counterpart is that the program does NOT take keys if student scores less.
@@ -457,6 +597,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_correctly
             click_on("Next Question")
         end
+        submit_quiz
         
         @quiz = Quiz.last
         assert_equal 10, @quiz.total_score
@@ -487,6 +628,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_incorrectly
             click_on("Next Question")
         end
+        submit_quiz
         
         @test_obj_stud.reload
         assert_equal 3, @test_obj_stud.points_all_time
@@ -505,6 +647,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_incorrectly
             click_on("Next Question")
         end
+        submit_quiz
         
         @test_obj_stud.reload
         assert_equal 9, @test_obj_stud.points_all_time
@@ -528,6 +671,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_incorrectly
             click_on("Next Question")
         end
+        submit_quiz
         
         @test_obj_stud.reload
         assert_equal 8, @test_obj_stud.points_all_time
@@ -575,6 +719,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_incorrectly
             click_on("Next Question")
         end
+        submit_quiz
         
         # Doesn't take the keys yet, because student still has another try
         @test_obj_stud.reload
@@ -594,6 +739,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_incorrectly
             click_on("Next Question")
         end
+        submit_quiz
         
         # Now it takes the pretest keys for the post-requisites to spare the student the struggle of taking a pre-test that she is doomed to fail.
         @test_obj_stud.reload
@@ -602,6 +748,38 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal 3, @test_obj_stud.points_all_time
         assert_nil      @test_obj_stud.points_this_term
         assert_equal 0, @mainassign_os.reload.pretest_keys   
+    end
+
+    test "previous question" do
+        @test_obj_stud.update(:dc_keys => 2)
+        setup_consultancies
+        
+        go_to_first_period
+        begin_quiz
+        
+        this_id = current_path[/\d+/].to_i
+        this_riposte = Riposte.find(this_id)
+        assert_equal 1, this_riposte.position
+        answer_question_correctly
+        assert_no_selector("input", :id => "previous_question")
+        click_on("Next Question")
+        
+        this_id = current_path[/\d+/].to_i
+        this_riposte = Riposte.find(this_id)
+        assert_equal 2, this_riposte.position
+        answer_question_correctly
+        assert_selector("input", :id => "previous_question")
+        click_on("Previous Question")
+        
+        this_id = current_path[/\d+/].to_i
+        this_riposte = Riposte.find(this_id)
+        assert_equal 1, this_riposte.position
+        
+        @quiz = Quiz.last
+        riposte_1 = @quiz.ripostes.order(:position).first
+        riposte_2 = @quiz.ripostes.order(:position).second
+        assert_equal 1, riposte_1.tally
+        assert_equal 1, riposte_2.tally
     end
     
     test "set ready upon passing" do
@@ -625,6 +803,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
             answer_question_correctly
             click_on("Next Question")
         end
+        submit_quiz
         
         assert os_1.reload.ready
         assert_not os_2.reload.ready
@@ -642,6 +821,7 @@ class NewQuizTest < ActionDispatch::IntegrationTest
                 answer_question_incorrectly
                 click_on "Next Question"
             end
+            submit_quiz
             click_on("Back to Your Class Page")
             @test_obj_stud.reload.update(:teacher_granted_keys => 2)
             

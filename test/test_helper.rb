@@ -259,6 +259,10 @@ class ActiveSupport::TestCase
     @worksheet_3 = worksheets(:three)
   end
   
+  def submit_quiz
+      click_on("Submit for grading")
+  end
+  
   def travel_to_open_time
       travel_to Time.zone.local(2019, 12, 06, 23, 45, 44)
   end

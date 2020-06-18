@@ -1164,16 +1164,30 @@ V Grades interval question
 V Displays correct interval
 
 
-ERROR["test_create_teacher_graded_fill_in_question", Minitest::Result, 218.91048000000046]
- test_create_teacher_graded_fill_in_question#Minitest::Result (218.91s)
-Minitest::UnexpectedError:         Capybara::ExpectationNotMet: expected to find text "This question needs to be graded by a person. " in "Mr. Z School\nHome Log out\nMathematics is the most beautiful and most powerful creation of the human spirit. -Stefan Banach\n Details for New Questions\nPrivate Fill_in Questions    Label: Unlabeled\nQuestion 1\nPrompt  \nCorrect Answers\nA student may enter any of the answers below to earn credit.\nQuestion 2\nPrompt  \nCorrect Answers\nA student may enter any of the answers below to earn credit.\nQuestion 3\nPrompt  \nCorrect Answers\nA student may enter any of the answers below to earn credit.\nQuestion 4\nPrompt  \nCorrect Answers\nA student may enter any of the answers below to earn credit.\nQuestion 5\nPrompt  \nCorrect Answers\nA student may enter any of the answers below to earn credit.\nAbout Contact Partner"
-            test/integration/questions/questions_new_test.rb:171:in `block in <class:QuestionsNewTest>'
 
+3.40 OMITTED ANSWERS
+V Show students when they've left out some correct answers
+V Before submitting final answers, show a screen that summarizes student's answer choice.  V Link back to fix questions.
+V After all questions have been attempted, offer a button to jump to submit page
+V Previous question
+V Clean up the quiz_show page.  It's getting hard to read.
+V Answers are pre-filled when student revisits questions
+V this_order made compatible with more multiple choice choices than six
 
+I think the update_quantities method can be deleted
 
-INDICATE TO STUDENTS WHEN THEY HAVE OMITTED SOME CORRECT ANSWERS
+Grade_types for labels in seeds
 
+Shuffle can be set upon question creation or editing
 
+Shuffle in question seeds
+
+Migrate to add shuffle to questions
+Update existing questions
+
+Make sure submit page works with unfinished quizzes.
+And with backtracking
+Think of other edge cases
 
 
 
@@ -1181,6 +1195,11 @@ ALLOW STUDENTS TO SUBMIT PHOTO EVIDENCE OF WORK
 
 MAKE SURE THAT ALTERNATE ACTIVITIES ARE WORKING CONVENIENTLY IN APP, SUCH AS PAPER CRANES
 
+SYSTEM FOR STUDENTS TO REQUEST KEYS
+
+HOW TO HANDLE ACTIVITIES THAT REQUIRE NO IN-APP RESPONSE
+
+FIGURE OUT WHY THERE'S A BLANK SPACE IN THE LAST ROW OF THE SCORESHEET
 
 3.35 GRADE LEVELS
 Grade_level gets its own table?  Do I need join tables for associations?
