@@ -7,7 +7,6 @@ class SchoolsEditTest < ActionDispatch::IntegrationTest
     def setup
         setup_users
         setup_schools
-        setup_commodities
     end
     
     def set_admin_levels_for_extra_teachers
@@ -19,22 +18,6 @@ class SchoolsEditTest < ActionDispatch::IntegrationTest
         @extra_teacher_2.update(:school_admin => 2)
     end
     
-    test "edit school name and market name" do
-        @teacher_1.update(:school_admin => 2)
-        capybara_login(@teacher_1)
-        assert_selector('input', :id => "edit_school_#{@school.id}")
-        find("#edit_school_#{@school.id}").click
-    
-        fill_in "school[name]", with: "Maiden Elementary"
-        fill_in "school[market_name]", with: "Maiden Market"
-        fill_in "school[school_currency_name]", with: "Metal Bucks"
-        click_on("Save Changes")
-        
-        @school.reload
-        assert_equal "Maiden Elementary", @school.name 
-        assert_equal "Maiden Market", @school.market_name
-        assert_equal "Metal Bucks", @school.school_currency_name
-    end
     
     test "edit_term_dates" do
         @teacher_1.update(:school_admin => 2)

@@ -53,8 +53,6 @@ class SeminarsController < ApplicationController
             set_priorities
         elsif params[:pretest_on]
             set_pretests
-        elsif params[:seminar][:checkpoint_due_dates]
-            set_checkpoint_due_dates
         elsif params[:seminar][:term]
             term_updating_details
         elsif params[:seminar][:objective_ids]
@@ -86,13 +84,6 @@ class SeminarsController < ApplicationController
 
     ### Sub-menus for editing seminar
     
-    def copy_due_dates
-        @seminar = Seminar.find(params[:id])
-        first_seminar = current_user.first_seminar
-        @seminar.update(:checkpoint_due_dates => first_seminar.checkpoint_due_dates)
-        flash[:success] = "Checkpoint Due Dates Updated"
-        redirect_to seminar_path(@seminar)
-    end
     
     def change_owner
         @seminar = Seminar.find(params[:id])
@@ -108,12 +99,6 @@ class SeminarsController < ApplicationController
     def change_term
        @seminar = Seminar.find(params[:id]) 
        @current_term = @seminar.term
-       @current_checkpoint = @seminar.which_checkpoint
-    end
-    
-    def due_dates
-        @seminar = Seminar.find(params[:id])
-        set_editing_privilege
     end
     
     def objectives
@@ -219,7 +204,7 @@ class SeminarsController < ApplicationController
     
     private 
         def seminar_basic_params
-            params.require(:seminar).permit(:name, :consultantThreshold, :default_buck_increment, :quiz_open_times, :school_year, :columns, teacher_ids: [])
+            params.require(:seminar).permit(:name, :quiz_open_times, :school_year, :columns, teacher_ids: [])
         end
         
         def seminar_objective_params
@@ -247,19 +232,7 @@ class SeminarsController < ApplicationController
             @seminar.seminar_teachers.find_by(:user => @creating_teacher).update(:can_edit => true, :accepted => true) 
         end
         
-        def set_checkpoint_due_dates
-            date_array = [[0], [],[],[],[]]
-            params[:seminar][:checkpoint_due_dates].each do |level_x|
-                x = level_x.to_i
-                params[:seminar][:checkpoint_due_dates][level_x].each do |level_y|
-                    y = level_y.to_i
-                    this_date = params[:seminar][:checkpoint_due_dates][level_x][level_y]
-                    date_array[x][y] = (this_date) if this_date.present?
-                end
-            end
-            @seminar.checkpoint_due_dates = date_array
-            @seminar.save
-        end
+
         
         def set_editing_privilege
             @this_teacher_can_edit = current_user.can_edit_this_seminar(@seminar) 

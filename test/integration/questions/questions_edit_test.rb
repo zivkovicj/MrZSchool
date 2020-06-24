@@ -61,6 +61,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert_not @user_q.correct_answers.include?("3")
         assert_equal "private", @user_q.extent
         assert_equal @user_l, @user_q.label
+        @user_q.update(:shuffle => false)
 
         goto_mc_question
         not_on_show_page
@@ -73,6 +74,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         choose("questions_0_extent_public")
         choose("label_#{@admin_l.id}")
         choose("question_0_picture_#{@user_p.id}")
+        check("question_0_shuffle")
         click_on("save_changes_2")
         
         @user_q.reload
@@ -82,6 +84,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert_equal "public", @user_q.extent
         assert_equal @admin_l, @user_q.label
         assert_equal @user_q.picture, @user_p
+        assert @user_q.shuffle
         
         assert_selector('h2', :text => "All Questions")
     end
@@ -93,6 +96,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert_equal ["0", "2", "3"], @select_many_q.correct_answers
         assert_equal "public", @select_many_q.extent
         assert_equal @select_many_l, @select_many_q.label
+        @select_many_q.update(:shuffle => false)
         
         capybara_login(@teacher_1)
         go_to_all_questions
@@ -105,6 +109,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         uncheck('question_0_is_correct_2')
         check('question_0_is_correct_4')
         check('question_0_is_correct_5') # Mark it right, but leave the space blank
+        check("question_0_shuffle")
         click_on("save_changes_2")
         
         @select_many_q.reload
@@ -112,12 +117,13 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         assert_equal ["Bill","1","2","3","4"], @select_many_q.choices  # Blank choice has been removed
         assert_equal ["Bill", "3", "4"], @select_many_q.correct_answers # Blank choice is excluded
         assert_equal "public", @select_many_q.extent  # Default extent is left
+        assert @select_many_q.shuffle
         
         assert_selector('h2', :text => "All Questions")
     end
     
     test "default answer choice" do
-        @user_q.update(:correct_answers => ["2"], :picture => nil)
+        @user_q.update(:correct_answers => ["2"], :picture => nil, :shuffle => false)
         
         capybara_login(@teacher_1)
         go_to_all_questions
@@ -126,6 +132,7 @@ class QuestionsEditTest < ActionDispatch::IntegrationTest
         
         @user_q.reload
         assert_equal ["2"], @user_q.correct_answers
+        assert_not @user_q.shuffle
     end
     
     test "edit fill in question" do  

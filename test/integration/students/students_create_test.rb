@@ -16,7 +16,6 @@ class StudentsNewTest < ActionDispatch::IntegrationTest
         assignment_count = @seminar.objectives.count
         old_ss_count = SeminarStudent.count
         old_score_count = ObjectiveStudent.count
-        old_goal_student_count = @seminar.goal_students.count
         
         # Setup old_students_needed to count that it's updated upon adding new students
         first_obj = @seminar.objectives.first
@@ -55,9 +54,6 @@ class StudentsNewTest < ActionDispatch::IntegrationTest
         assert_equal @old_stud_count+5, Student.count
         assert_equal old_score_count + (assignment_count*5), ObjectiveStudent.count
         assert_equal old_ss_count + 5, SeminarStudent.count
-        assert_equal old_goal_student_count + 20, @seminar.goal_students.count
-        @gs = @seminar.goal_students.order(:created_at).last
-        assert_equal 4, @gs.checkpoints.count
         
         first_new_student = Student.find_by(:last_name => "Labonte")
         thisId = first_new_student.id

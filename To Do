@@ -1174,6 +1174,11 @@ V Clean up the quiz_show page.  It's getting hard to read.
 V Answers are pre-filled when student revisits questions
 V this_order made compatible with more multiple choice choices than six
 
+Allow for infinity as values for interval questions
+
+UPDATE SHUFFLE IN QUESTION EDIT
+
+
 I think the update_quantities method can be deleted
 
 Grade_types for labels in seeds
@@ -1181,6 +1186,8 @@ Grade_types for labels in seeds
 Shuffle can be set upon question creation or editing
 
 Shuffle in question seeds
+
+Make sure to merge this time!  Didn't merge after I cut the fat!
 
 Migrate to add shuffle to questions
 Update existing questions

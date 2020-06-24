@@ -3,7 +3,6 @@ class Student < User
     has_many    :seminar_students, dependent: :destroy, foreign_key: :user_id
     has_many    :seminars, through: :seminar_students
     has_many    :teachers, through: :seminars
-    has_many    :commodity_students, dependent: :destroy, foreign_key: :user_id
     has_many    :objective_students, dependent: :destroy, foreign_key: :user_id
     has_many    :objectives, through: :objective_students
     has_many    :consulted_teams, :class_name => "Team", foreign_key: "consultant_id"
@@ -12,25 +11,6 @@ class Student < User
     validates_uniqueness_of :username, unless: Proc.new { |a| a.username.blank? }
     has_secure_password :validations => false, :allow_nil => true
 
-    def bucks_current(category, target)
-        self.bucks_earned(category, target) - self.bucks_spent(category, target)
-    end
-    
-    def bucks_earned(category, target)
-        self.currencies.where(category => target).sum(:value)
-    end
-    
-    def bucks_spent(category, target)
-        self.commodity_students.where(category => target).sum(:price_paid)
-    end
-    
-    def com_quant(commode)
-        self.commodity_students.where(:commodity => commode).sum(:quantity)
-    end
-    
-    def com_quant_delivered(commode)
-        self.commodity_students.where(:commodity => commode, :delivered => true).count 
-    end
     
     def quiz_stars_this_term(seminar)
         objective_students

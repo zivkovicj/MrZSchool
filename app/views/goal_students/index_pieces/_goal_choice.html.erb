@@ -1,6 +1,0 @@
-
-<td>
-    <% goal_options = Goal.all.collect {|p| [ p.id, p.name ] } %>
-    <% this_place_holder = @gs.goal != nil ? @gs.goal.name : "Click to Choose Student's Goal" %>
-    <h3 id="goal_text_<%= @gs.id %>"><%= best_in_place @gs, :goal_id, :as => :select, :collection => goal_options, :place_holder => this_place_holder %></h3>
-</td>

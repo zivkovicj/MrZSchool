@@ -58,15 +58,8 @@
 <% end %>
 
 <div class="row">
-  <div class="col-sm-4">
-    <%= link_to "Student Purchased Items", commodity_students_path(:user_id => current_user.id), :class => "btn btn-lg btn-primary", :method => :get,
-      :id => "view_purchases" %>
-  </div>
-    
-  <div class="col-sm-4">
-    <%= link_to "Manage #{@teacher.name_with_title} Market", commodities_path(:user_id => @teacher.id), class: "btn btn-lg btn-primary", :method => :get,
-      :id => "manage_teacher_market" %>
-  </div>
+
+
     
   <div class="col-sm-4">
     <%= button_to "View/Create Content", content_path, 

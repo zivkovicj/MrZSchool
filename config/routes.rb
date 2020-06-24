@@ -14,16 +14,7 @@ Rails.application.routes.draw do
 
   resources :admins
   resources :account_activations, only: [:edit]
-  resources :checkpoints
-  resources :commodities
-  resources :commodity_students, only: [:index, :update]
   resources :consultancies
-  resources :goal_students do
-    get  'checkpoints', on: :member
-    post 'update_checkpoints', on: :member
-    get 'print', on: :collection
-  end
-  resources :goals
   resources :labels
   resources :label_objectives do
     post 'update_quantities', on: :collection
@@ -57,8 +48,6 @@ Rails.application.routes.draw do
     get 'basic_info', on: :member
     get 'change_owner', on: :member
     get 'change_term', on: :member
-    get 'copy_due_dates', on: :member
-    get 'due_dates', on: :member
     get 'objectives', on: :member
     get 'pretests', on: :member
     get 'priorities', on: :member
@@ -72,11 +61,9 @@ Rails.application.routes.draw do
     get 'usernames', on: :member
   end
   resources :seminar_students do
-    get 'goal_reroute', on: :member
     get 'give_keys', on: :member
     get 'grades', on: :member
     get 'move_or_remove', on: :member
-    get 'star_market', on: :member
     get 'quizzes', on: :member
     put 'quizzes', on: :member
   end

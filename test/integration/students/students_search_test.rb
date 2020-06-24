@@ -78,7 +78,6 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
     
     #Setup before adding student
     old_ss_count = SeminarStudent.count
-    old_goal_student_count = @seminar.goal_students.count
     old_score_count = ObjectiveStudent.count
     stud_objective_count = stud_to_add.objective_students.count
     new_objective_count = @seminar.objectives.where.not(:id => stud_to_add.objective_ids).count  #Objectives in the new seminar that student didn't have yet.
@@ -113,7 +112,6 @@ class StudentsSearchTest < ActionDispatch::IntegrationTest
     assert_equal stud_objective_count + new_objective_count, stud_to_add.objectives.count
     assert_equal old_score_count + new_objective_count, ObjectiveStudent.count
     assert_equal 1, stud_to_add.objective_students.where(:objective => first_objective).count  #Don't add another copy of the same objective_student
-    assert_equal old_goal_student_count + 4, @seminar.goal_students.count
     
     # students_needed has been updated for obj_sem
     assert_equal old_studs_need_count + 1, this_obj_sem.reload.students_needed

@@ -22,15 +22,7 @@
       <%= f.label "Change to:" %>
       <%= f.select :term, select_options, :selected => suggested_term %>
     </div>
-    
-    <div class="col-sm-2">
-      <h5>Current checkpoint: <%= @current_checkpoint %></h5>
-      <% suggested_checkpoint = 4 %>
-      <% suggested_checkpoint = @current_checkpoint + 1 unless @current_checkpoint == 4 %>
-      </br>
-      <%= f.label "Change to:" %>
-      <%= f.select :which_checkpoint, select_options, :selected => suggested_checkpoint %>
-    </div>
+
     
     <div class="col-sm-1"></div>
     

@@ -50,6 +50,7 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
             end
         end
         choose("question_0_is_correct_2")
+        check("question_0_shuffle")
         choose("question_1_is_correct_0")
         choose("question_0_picture_#{@user_p.id}")
         choose("question_0_picture_nil")
@@ -74,7 +75,10 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
             assert_not @new_question.correct_answers.include?(@new_choice[0][n]) if n != 2
         end
         assert @new_question.picture.blank?
-        
+
+        @new_question_1 = Question.all[-5]
+        assert @new_question_1.shuffle
+
         @new_question_2 = Question.all[-4]
         assert_equal "Are there two questions?", @new_question_2.prompt
         assert @new_question_2.choices.include?(@new_choice[1][0])
@@ -82,7 +86,8 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert @new_question_2.correct_answers.include?(@new_choice[1][0])
         assert_not @new_question_2.correct_answers.include?(@new_choice[1][1])
         assert_equal @user_p, @new_question_2.picture
-        
+        assert_not @new_question_2.shuffle
+
         assert_selector('p', :text => "Teacher Since:")
     end
     
@@ -104,14 +109,23 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         check("question_0_is_correct_0")
         check("question_0_is_correct_2")
         
+        fill_in "prompt_1", with: "Some Prompt"
+        fill_in "question_1_choice_0", with: "Some Choice"
+        fill_in "question_1_choice_1", with: "Some Other Choice"
+        check "question_1_shuffle"
+        
         click_on("Create These Questions")
         
-        new_question = Question.last
+        new_question = Question.all[-2]
         assert_equal ["Correct", "Incorrect", "Also Correct", "Also incorrect", "This one's incorrect too"], new_question.choices
             # This also checks that the blank field does not add a blank entry to the choices.
         assert_equal ["Correct", "Also Correct"], new_question.correct_answers
         assert_equal "select_many", new_question.style
         assert_equal "Prompt for select-many question", new_question.prompt
+        assert_not new_question.shuffle
+        
+        new_question = Question.all[-1]
+        assert new_question.shuffle
     end
     
     test "create computer graded fill in questions" do
@@ -214,6 +228,31 @@ class QuestionsNewTest < ActionDispatch::IntegrationTest
         assert_equal "Prompt for second interval question", @new_question.prompt
         assert_equal ["3","5"], @new_question.correct_answers
         assert_equal ["3","5"], @new_question.choices
+    end
+
+    test "interval with infinity" do
+        capybara_login(@teacher_1)
+        go_to_new_questions
+        
+        choose("style_interval")
+        choose("label_#{@user_l.id}")
+        click_on("Create Some Questions")
+        
+        fill_in "prompt_0", with: "Prompt for interval question"
+        fill_in "question_0_choice_0", with: "2"
+        fill_in "question_0_choice_1", with: "i"
+        fill_in "prompt_1", with: "Prompt for second interval question"
+        fill_in "question_1_choice_0", with: "-i"
+        fill_in "question_1_choice_1", with: "5"
+        click_on("Create These Questions")
+        
+        assert_equal @old_question_count + 2, Question.count
+        @new_question = Question.all[-2]
+        a = Float::INFINITY
+        b = -1*a
+        assert_equal ["2",a], @new_question.correct_answers
+        @new_question = Question.all[-1]
+        assert_equal [b,"5"], @new_question.correct_answers
     end
     
     test "dont create with empty prompt" do

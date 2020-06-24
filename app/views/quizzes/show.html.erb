@@ -10,7 +10,7 @@
     <% if @question.label.grade_type == "computer" then %>
         <% if @question.style == "interval" %>
             <% @class_type = "red" %>
-            <% @class_type = "green" if @this_stud_ans[0].to_f.between?(@these_corr_ans[0].to_f, @these_corr_ans[1].to_f) %>
+            <% @class_type = "green" if @riposte.tally > 0 %>
         <% else %>
             <% fixed_response = this_response.to_s.downcase.gsub(/\s+/, "").gsub(/[()]/, "") %>
             <% @class_type = (correct_array_fixed.include?(fixed_response) ? "green" : "red") %>
@@ -58,10 +58,7 @@
     <%= render 'quizzes/total_score' %>
 <% else %>
     </br>
-    <h1>
-        Review answers before submitting &emsp;
-        <% submit_for_grading_link %>
-    </h1>
+    <h1>Review answers before submitting &emsp</h1>
     </br>
 <% end %>
 

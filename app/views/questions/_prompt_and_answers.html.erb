@@ -55,11 +55,16 @@
             <h3><%= check_message[:"#{@style}"][:"#{@grade_type}"] %></h3>
             </br>
             <table class="table-borderless">
+                <% if @style != "fill_in" %>
+                    <% checkery = @question.shuffle %>
+                    <%= check_box_tag "questions[#{index}][shuffle]", true, checked = checkery, :id => "question_#{index}_shuffle" %>
+                <% end %>
                 <thead>
                     <th><% if @style != "fill_in" %>Correct? &nbsp;<% end %></th>
                     <th></th>
                 </thead>
                 <tbody>
+
                     <% blanks_provided[:"#{@style}"].times do |n| %>
                         <% if @question.style == "fill_in" %>
                             <%# Supply the existing answer choices (or example answers) if they exist. %>

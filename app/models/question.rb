@@ -12,6 +12,7 @@ class Question < ApplicationRecord
   
   attribute  :extent, :string, default: "private"
   attribute  :grade_type, :string, default: "computer"
+  attribute  :shuffle, :boolean, default: false
   
   validates :prompt, :presence => true
   validates :extent, :presence => true

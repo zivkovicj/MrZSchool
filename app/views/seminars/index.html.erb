@@ -22,7 +22,6 @@
         <td>Student Count</td>
         <td>Created_at</td>
         <td>Updated_at</td>
-        <td>consultantThreshold</td>
       </tr>
     </thead>
     <tbody>
@@ -37,7 +36,6 @@
           <td><%= seminar.students.count %></td>
           <td><%= seminar.created_at.strftime("%Y-%m-%d") %></td>
           <td><%= seminar.updated_at.strftime("%Y-%m-%d") %></td>
-          <td><%= seminar.consultantThreshold %></td>
         </tr>
       <% end %>
     </tbody>

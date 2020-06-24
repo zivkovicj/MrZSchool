@@ -12,7 +12,6 @@ class GiveQuizKeysTest < ActionDispatch::IntegrationTest
         poltergeist_stuff
         setup_scores
         setup_schools
-        setup_goals
         
         @test_os = @objective_10.objective_students.find_by(:user => @student_2)
         @test_os.update(:teacher_granted_keys => 2, :points => 2)

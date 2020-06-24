@@ -21,11 +21,9 @@ class SeminarsNewTest < ActionDispatch::IntegrationTest
         @seminar = Seminar.last
         assert_equal "4th Period",  @seminar.name
         assert_equal 8, @seminar.school_year
-        assert_equal 7, @seminar.consultantThreshold
         assert_equal @teacher_1, @seminar.teachers.first
         assert_equal @teacher_1, @seminar.owner
         assert_equal 1, @seminar.term
-        assert_equal Seminar.due_date_array, @seminar.checkpoint_due_dates
         assert_equal 3, @seminar.columns
         assert_equal [0,1380], @seminar.quiz_open_times
         assert_equal [0,1,2,3,4,5,6], @seminar.quiz_open_days

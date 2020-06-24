@@ -7,7 +7,6 @@ class StudentsEditTest < ActionDispatch::IntegrationTest
        setup_schools
        setup_objectives
        setup_seminars
-       setup_goals
     end
     
     def student_edit_stuff

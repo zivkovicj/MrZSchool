@@ -64,7 +64,7 @@ class SeminarsControllerTest < ActionDispatch::IntegrationTest
   
   test "should redirect create when not logged in" do
     assert_no_difference 'Seminar.count' do
-      post '/seminars/', params: { seminar: { name: "2nd period",  consultantThreshold: 7, school_year: 9} }
+      post '/seminars/', params: { seminar: { name: "2nd period", school_year: 9} }
     end
   end
   

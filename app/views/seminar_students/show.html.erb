@@ -13,23 +13,18 @@
     </div>
     
     <div class="col-sm-1"></div>
-    
-    <%# CUT THE GOAL PART FOR NOW %>
-    <%# <div class="col-sm-6 singleOption"><%= render 'student_profile_checkpoint_statement' ></div> %>
+
 </div>
 
-<% star_market_info = [star_market_seminar_student_path(@ss), "Market", "market.png"] %>
 <% give_key_info = [give_keys_seminar_student_path(@ss), "Give Keys", "keys/key.jpg"] %>
 <% move_or_remove_info = [move_or_remove_seminar_student_path(@ss), "Move or Remove", "student_move.png"] %>
 <% quiz_info = [quizzes_seminar_student_path(@ss), "Quizzes", "quiz.png"] %>
-<% goal_info = [goal_reroute_seminar_student_path(@ss), "Edit Goal", "apple.jpg"] %>
 <% grades_info = [grades_seminar_student_path(@ss), "Scores", "apple.jpg"] %>
 <% profile_info = [edit_student_path(@student),"Profile","student.png"] %>
 
 <% if current_user.type == "Teacher" %>
     <% @submenus = [
         grades_info,
-        star_market_info,
         give_key_info,
         move_or_remove_info,
         profile_info
@@ -38,9 +33,7 @@
 <% elsif current_user.type == "Student" %>
     <% @submenus = [
         grades_info,
-        quiz_info,
-        star_market_info,
-        #goal_info,
+        quiz_info
         ]
     %>
 <% end %>

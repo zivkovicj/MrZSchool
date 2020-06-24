@@ -1,8 +1,0 @@
-<% if @gs && @gs.goal.present? %>
-    <h2><strong><%= @gs.statement_with_target %></strong></h2>
-    <h3>Checkpoint Due <%= friendly_date(@checkpoint_due_date) %></h3>
-    <h3><%= @checkpoint.statement %></h3>
-<% else %>
-    
-    <h3>No goal set</h3>
-<% end %>

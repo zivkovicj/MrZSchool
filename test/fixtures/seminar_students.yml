@@ -5,7 +5,6 @@ barebones: &minimal
   learn_request:
   pref_request:
   present: true
-  stars_used_toward_grade: [0,0,0,0]
 
 <% (0..50).each do |n| %>
 ss_<%= n %>:

@@ -1,18 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-<% checkpoint_array = [
-            [0],
-            [0, "12/07/2017", "12/14/2017", "12/21/2017", "12/28/2017"],
-            [0, "01/11/2018","01/21/2018","01/31/2018","02/07/2018"],
-            [0, "03/07/2018","03/14/2018","03/21/2018","03/28/2018"],
-            [0, "04/07/2018","04/14/2018","04/21/2018","04/28/2018"]] %>
+
             
 barebones: &minimal
-  consultantThreshold: 7
-  default_buck_increment: 5
   school_year: 9
   term: 1
-  which_checkpoint: 1
   columns: 3
   grading_needed: false
   quiz_open_times: [480,1020]
@@ -22,32 +14,27 @@ barebones: &minimal
 one:
   name: 1st Period
   school: school_1
-  checkpoint_due_dates: <%= checkpoint_array %>
   owner: archer
   <<: *minimal
 
 two:
   name: 2nd Period
   school: school_1
-  checkpoint_due_dates: <%= checkpoint_array %>
   <<: *minimal
   
 
 three:
   name: 3rd Period
   school: school_1
-  checkpoint_due_dates: <%= checkpoint_array %>
   <<: *minimal
   
 archer_can_view_not_edit:
   name: Archer Can View
   school: school_1
-  checkpoint_due_dates: <%= checkpoint_array %>
   <<: *minimal
   
 four:
   name: Zacky's first period
-  checkpoint_due_dates: <%= checkpoint_array %>
   <<: *minimal
   
 
@@ -56,7 +43,6 @@ four:
 seminar_<%= n %>:
   name:  <%= "Seminar #{n}" %>
   #user: archer
-  checkpoint_due_dates: <%= checkpoint_array %>
   <<: *minimal
 <% end %>
 
@@ -64,5 +50,4 @@ seminar_<%= n %>:
 unverified_teacher_class:
   name: unverified teachers class
   #user: user_1
-  checkpoint_due_dates: <%= checkpoint_array %>
   <<: *minimal

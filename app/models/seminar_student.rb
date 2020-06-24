@@ -24,17 +24,9 @@ class SeminarStudent < ApplicationRecord
     
     private
         def add_student_stuff
-            new_student_goals
             new_student_scores
             new_student_pretest_keys
             self.update(:last_consultant_day => Date.today)
-        end
-        
-        def new_student_goals
-            4.times do |n|
-                term_num = n + 1
-                user.goal_students.create(:seminar_id => seminar.id, :term => term_num)
-            end
         end
         
         def new_student_pretest_keys

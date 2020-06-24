@@ -29,10 +29,6 @@ class SeminarStudentsController < ApplicationController
   def show
     setup_ss_vars
     #term = @seminar.term
-    #this_sequence = @seminar.which_checkpoint
-    #@gs = GoalStudent.find_by(:user => @student, :seminar => @seminar, :term => term)
-    #@checkpoint = Checkpoint.find_by(:goal_student => @gs, :sequence => this_sequence)
-    #@checkpoint_due_date = @seminar.checkpoint_due_dates[term][this_sequence]
     delete_broken_quizzes
   
     update_current_class
@@ -40,9 +36,7 @@ class SeminarStudentsController < ApplicationController
   
   def update
     @ss = SeminarStudent.find(params[:id])
-    if params[:bucks_to_add]
-      Currency.create(:seminar => @ss.seminar, :user => @ss.user, :giver => current_user, :value => params[:bucks_to_add])
-    elsif params[:present]
+    if params[:present]
       @ss.update(:present => params[:present])
     else
       req_type = params[:seminar_student][:req_type]
@@ -95,14 +89,6 @@ class SeminarStudentsController < ApplicationController
     
   end
   
-  def goal_reroute
-    @ss = SeminarStudent.find(params[:id])
-    @user = @ss.user
-    @seminar = @ss.seminar
-    @term = @seminar.term
-    @gs = GoalStudent.find_by(:user => @user, :seminar => @seminar, :term => @term)
-    redirect_to edit_goal_student_path(@gs)
-  end
   
   def move_or_remove
     setup_ss_vars
@@ -112,15 +98,6 @@ class SeminarStudentsController < ApplicationController
     @classes_with_student_list = current_user.seminars.select{|x| x.students.include?(@student) }
   end
   
-  def star_market
-    setup_ss_vars
-    
-    @bucks_current = @student.bucks_current(:seminar, @seminar)
-    @dbi = @seminar.default_buck_increment
-    @commodities = @seminar.commodities_for_seminar.paginate(:per_page => 6, page: params[:page])
-    @term = @seminar.term
-    @school_or_seminar = "seminar"
-  end
   
   def quizzes
     setup_ss_vars

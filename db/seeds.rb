@@ -76,7 +76,7 @@ end
 
 # Seminars
 [["Main Teacher, 1st Period",5], ["Main Teacher, 2nd Period",5], ["Another Teacher, First Period",6]].each_with_index do |n, index|
-    sem = Seminar.create!(name: n[0], user_id: n[1], consultantThreshold: 7, term: 0, school_year: 9, :owner => Teacher.find(n[1]), :quiz_open_days => [0,1,2,3,4,5,6], :quiz_open_times => [0,1380])
+    sem = Seminar.create!(name: n[0], user_id: n[1], term: 0, school_year: 9, :owner => Teacher.find(n[1]), :quiz_open_days => [0,1,2,3,4,5,6], :quiz_open_times => [0,1380])
     sem.teachers << Teacher.find(n[1])
 end
 
@@ -369,35 +369,11 @@ school_array =
     ["Clark High School", "Las Vegas", "NV"]]
     
 school_array.each do |school|
-    School.create(:name => school[0], :city => school[1], :state => school[2], :market_name => "#{school[0]} Market", :school_currency_name => "#{school[0]} Bucks")
+    School.create(:name => school[0], :city => school[1], :state => school[2])
 end
 
-30.times do |n|
-    item = School.first.commodities.new(:name => "Item #{n}", :current_price => n, :quantity => 3*n)
-    item.image = Picture.all[rand(Picture.count)].image
-    item.save
-end
 
-goal_array = [
-    ["Turn in assignments",
-      "I will turn in (?) % of my assignments this term.",
-     [[0],
-      ["Write all assignments in my planner.", "Check my grades online to see which assignments I'm missing.","Choose a classmate who is very good at completing assignments. Ask to be partners with that classmate."],
-      ["Turn in (?) % of my assignments so far."],
-      ["Write all assignments in my planner.", "Check my grades online to see which assignments I'm missing.","Choose a classmate who is very good at completing assignments. Ask to be partners with that classmate."],
-      ["I will turn in (?) % of my assignments since Checkpoint 2."]]],
-      
-    ["Arrive to class on time",
-       "I will arrive to class on time for (?) % of the school days this term.",
-      [[0],
-       ["Write a description of the reasons why I am sometimes tardy, and a short plan for how I will change my habits.", "Identify a friend who causes me to be tardy often."],
-       ["Arrive to class on time for for (?) % of the school days so far."],
-       ["Write a description of the reasons why I am sometimes tardy, and a short plan for how I will change my habits.", "Identify a friend who causes me to be tardy often."],
-       ["I will arrive to class on time for (?) % of the days since Checkpoint 2."]]]]
 
-goal_array.each do |this_goal|
-    Goal.create(:name => this_goal[0], :statement_stem => this_goal[1], :actions => this_goal[2], :user_id => User.first.id, :extent => "public")
-end
 
 Teacher.all[0..5].each do |teach|
     teach.update(:school => School.first)
@@ -409,11 +385,6 @@ end
 Student.all.each do |stud|
     stud.update(:sponsor => stud.seminars.first.teachers.first)
     stud.update(:school => stud.sponsor.school)
-    stud.seminars.each do |seminar|
-        4.times do |n|
-            stud.goal_students.create(:seminar => seminar, :term => n)
-        end
-    end
 end
 
 

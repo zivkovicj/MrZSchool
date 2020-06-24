@@ -5,20 +5,15 @@ class User < ApplicationRecord
     before_create       :create_activation_digest
     after_create        :update_last_login
     
-    has_many    :commodities
     has_many    :objectives
     has_many    :questions
     has_many    :labels
     has_many    :quizzes, dependent: :destroy
     has_many    :pictures
-    has_many    :goals
-    has_many    :currencies
-    has_many    :given_currencies, :class_name => "Currency", :as => :giver
     has_many    :ripostes, dependent: :destroy
     has_and_belongs_to_many  :teams
     belongs_to  :school
     belongs_to   :sponsor,  :class_name => "User"
-    has_many    :goal_students, dependent: :destroy
     has_many    :worksheets
     
     attribute :verified, :integer, default: 0
@@ -38,7 +33,6 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false },
                     unless: Proc.new { |a| a.type == "Student" && a.email.blank? }
     
-    include NeedDelivered
     
     class << self
         # Returns the hash digest of the given string.

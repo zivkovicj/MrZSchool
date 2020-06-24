@@ -99,16 +99,7 @@ class ActiveSupport::TestCase
     ObjectiveStudent.where(category => subject).update_all(:points_all_time => score)
   end
   
-  def setup_commodities
-    @testing_date_last_produced = "Sat, 16 Jun 2018 00:00:00 UTC +00:00"
-    @teacher_1_star = @teacher_1.commodities.first
-    @teacher_1_star.update_attribute(:date_last_produced,  @testing_date_last_produced)
-    @commodity_2 = Commodity.find_by(:name => "Burger Salad")
-    
-    @game_time_ticket = commodities(:game_time_ticket)
-    @fidget_spinner = Commodity.find_by(:name => "Fidget Spinner")
-    @piece_of_candy = Commodity.find_by(:name => "Piece of Candy")
-  end
+
   
   def setup_consultancies
     c1 = seminars(:one).consultancies.create
@@ -129,16 +120,6 @@ class ActiveSupport::TestCase
     @other_consultancy = Consultancy.all[-2]
   end
   
-  def setup_goals
-    Seminar.all.each do |seminar|
-      seminar.students.each do |stud|
-        4.times do |n|
-          term_num = n + 1
-          stud.goal_students.create(:seminar_id => seminar.id, :term => term_num)
-        end
-      end
-    end
-  end
   
   def setup_objectives
     @objective_10 = objectives(:objective_10)
@@ -182,9 +163,6 @@ class ActiveSupport::TestCase
     @school = @teacher_1.school
     @school.update(:term_dates => School.default_terms, :term => 1)
     @school_2 = schools(:school_2)
-    School.all.each do |school|
-      school.set_market_and_currency_name
-    end
   end
   
   def setup_seminars
@@ -315,9 +293,6 @@ class ActiveSupport::TestCase
     click_on('Create New Students')
   end
   
-  def go_to_goals
-    click_on("goal_students_#{@seminar.id}")
-  end
   
   def teacher_form_stuff(button_text)
     select('Mrs.', :from => 'teacher_title')

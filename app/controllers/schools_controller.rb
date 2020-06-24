@@ -50,7 +50,7 @@ class SchoolsController < ApplicationController
     private
     
         def school_params
-          params.require(:school).permit(:name, :city, :state, :market_name, :school_currency_name)
+          params.require(:school).permit(:name, :city, :state)
         end
         
         def new_school_stuff

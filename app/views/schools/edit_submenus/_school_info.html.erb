@@ -2,12 +2,8 @@
 <% if current_user.school_admin > 1 %>
     <%= @form.label :name %>
     <%= @form.text_field :name, class: 'form-control', :id => "school_name_edit" %></br>
-    
-    <%= @form.label "Name of School's Currency" %>
-    <%= @form.text_field :school_currency_name, class: 'form-control', :id => "school_currency_name_edit" %>
-    
-    <%= @form.label "Name of School's Market" %>
-    <%= @form.text_field :market_name, class: 'form-control', :id => "school_market_name_edit" %>
+
+
     
     <%= @form.label :city %>
     <%= @form.text_field :city, class: 'form-control', :id => "school_city_edit" %>

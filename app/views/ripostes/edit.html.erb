@@ -21,11 +21,7 @@
         <h5 id="teacher_graded_tag">Teacher-Graded Question</h5>
     <% end %>
 
-    <% these_choices = @question.choices %>
-    <% length_minus_one = these_choices.length - 1 %>
 
-    <% this_order = [*0..length_minus_one] %>
-    <% this_order.shuffle! if @question.shuffle %>
 
     <table>
         <div class="container">
@@ -33,6 +29,12 @@
                 <p>Your Response:</p>
                 <%= r.text_field :stud_answer %>
             <% else  %>
+
+                <% these_choices = @question.choices %>
+                <% length_minus_one = these_choices.length - 1 %>
+                <% this_order = [*0..length_minus_one] %>
+                <% this_order.shuffle! if @question.shuffle %>
+
                 <% these_choices.length.times do |n| %>
                     <% shuf_num = this_order[n] %>
                     <% answer_text = these_choices[shuf_num] %>

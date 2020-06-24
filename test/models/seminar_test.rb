@@ -4,7 +4,7 @@ class SeminarTest < ActiveSupport::TestCase
 
   def setup
     setup_users
-    @test_seminar = @teacher_1.seminars.create(:name => "1st Period", :consultantThreshold => 7)
+    @test_seminar = @teacher_1.seminars.create(:name => "1st Period")
   end
 
   test "should be valid" do

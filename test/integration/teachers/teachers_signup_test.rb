@@ -15,7 +15,6 @@ class TeachersSignupTest < ActionDispatch::IntegrationTest
     end
     
     test "new teacher old school" do
-        commodity_count = Commodity.count
         
         goto_signup_page
         teacher_form_stuff('Create My Account')
@@ -24,12 +23,6 @@ class TeachersSignupTest < ActionDispatch::IntegrationTest
         
         assert_equal @old_teacher_count + 1, Teacher.count
         assert_in_delta @this_teacher.created_at, @this_teacher.last_login, 1.minute
-        assert_equal commodity_count + 1, Commodity.count
-        @commodity = @this_teacher.commodities.first
-        assert_equal "Star", @commodity.name
-        assert @commodity.salable
-        assert @commodity.usable
-        assert_equal false, @commodity.deliverable
         
         assert_nil @this_teacher.school
         fill_in "search_field", with: @school.name
@@ -77,14 +70,12 @@ class TeachersSignupTest < ActionDispatch::IntegrationTest
     end
     
     test "new teacher new school" do
-        commodity_count = Commodity.count
 
         goto_signup_page
         teacher_form_stuff('Create My Account')
         
         @this_teacher = Teacher.last
         teacher_assertions(@this_teacher)
-        assert_equal commodity_count + 1, Commodity.count
         
         assert_nil @this_teacher.school
         fill_in "school_name", with: "Slunk Elementary"
@@ -96,8 +87,6 @@ class TeachersSignupTest < ActionDispatch::IntegrationTest
         @new_school = School.find_by(:name => "Slunk Elementary")
         assert_equal "Bucketheadland", @new_school.city
         assert_equal "UT", @new_school.state
-        assert_equal "Slunk Elementary Market", @new_school.market_name
-        assert_equal "Slunk Elementary Bucks", @new_school.school_currency_name
         assert_equal @new_school, @this_teacher.school
         assert_equal @old_school_count + 1, School.count
         assert_equal 0, @new_school.term

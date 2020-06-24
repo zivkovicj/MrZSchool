@@ -41,7 +41,6 @@ The default password will be exactly the same as the username.</h5>
       <% end %>
       <tr class="<%= hoggle %>">
         <td><%= index+1 %></td>
-        <%#= select("syl[#{checkpoint.id}]", "action", these_actions.collect {|act| [@gs.action_with_target(act), act]}, :class => "select_box left_box") %>
                 
         <td>
           <%= render "shared/school_year_selection", :index => index, :default_year => @default_year, 

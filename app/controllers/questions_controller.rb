@@ -107,7 +107,7 @@ class QuestionsController < ApplicationController
   
   private
     def multi_params(my_params)
-        my_params.permit(:prompt, :user_id, :label_id, :extent, :style, :picture_id, :grade_type)
+        my_params.permit(:prompt, :user_id, :label_id, :extent, :style, :picture_id, :grade_type, :shuffle)
     end
     
     def create_question_group
@@ -126,7 +126,12 @@ class QuestionsController < ApplicationController
         choice_array = these_params["choices"].reject { |c| c.empty? } # Removes the blank elements from the array
         these_params["is_correct"]&.each do |correct_num|
           this_answer = these_params["choices"][correct_num.to_i]
-          correct_array << this_answer unless this_answer.empty?
+          unless this_answer.empty?
+              a = Float::INFINITY
+              this_answer = a if this_answer == "i"
+              this_answer = -1*a if this_answer == "-i"
+              correct_array << this_answer
+          end
         end
       end
       @question.update(:correct_answers => correct_array, :choices => choice_array)

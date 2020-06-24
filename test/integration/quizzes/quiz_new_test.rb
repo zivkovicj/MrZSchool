@@ -10,7 +10,6 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         setup_objectives
         setup_questions
         setup_scores
-        setup_goals
         
         give_a_key
         travel_to_open_time
@@ -299,7 +298,8 @@ class NewQuizTest < ActionDispatch::IntegrationTest
         assert_equal 2, riposte_1.tally
         assert_equal 0, riposte_2.tally
     end
-    
+
+
     test "quiz with teacher graded question" do
         @tg_objective_1 = objectives(:teacher_graded_objective_1)
         @tg_objective_2 = objectives(:teacher_graded_objective_2)

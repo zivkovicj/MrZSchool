@@ -51,20 +51,5 @@ class ApplicationController < ActionController::Base
     current_user.update(:current_class => @seminar.id)
   end
   
-  def create_commodities
-    @teacher.commodities.each do |commode|
-      today_weekday_num = Date.today.wday
-      days_since_last = (Date.today - commode.date_last_produced.to_date).to_i
-      if (today_weekday_num >= commode.production_day && days_since_last > 1) || (days_since_last > 7)
-        num_students = @teacher.students.count
-        full_term_production = num_students * commode.production_rate
-        
-        this_term = @school.term
-        term_length = (friendly_date(@school.term_dates[this_term][1]) - friendly_date(@school.term_dates[this_term][0])).to_i
-        term_weeks = term_length / 7
-        quantity_to_produce = (full_term_production / term_weeks).round
-        commode.update(:quantity => commode.quantity + quantity_to_produce, :date_last_produced => Date.today)
-      end
-    end
-  end
+  
 end

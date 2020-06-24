@@ -1,7 +1,0 @@
-<% if @this_teacher_can_edit %>
-    <%= @form.label :default_buck_increment, "Default Increment for Bucks" %>
-    <%= @form.text_field :default_buck_increment, class: 'form-control' %>
-<% else %>
-    <h2>Default Buck Increment</h2>
-    <h3><%= @seminar.default_buck_increment %></h3>
-<% end %>
