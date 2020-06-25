@@ -205,19 +205,19 @@ Student.all.each do |student|
     end
 end
 
-label_for_pictures = Label.create(:name => "Label for Pictures", :extent => "public", :user => jeff)
-other_label_for_pictures = Label.create(:name => "Other Label for Pictures", :extent => "public", :user => jeff)
+label_for_pictures = Label.create(:name => "Label for Pictures", :extent => "public", :user => jeff, :grade_type => "computer")
+other_label_for_pictures = Label.create(:name => "Other Label for Pictures", :extent => "public", :user => jeff, :grade_type => "computer")
 
-add_label = Label.create(:name => "Adding Numbers", :extent => "public", :user => jeff)
-subtract_label = Label.create(:name => "Subtracting Numbers", :extent => "public", :user => jeff)
-multiply_label = Label.create(:name => "Multiplying Numbers", :extent => "public", :user => jeff)
-divide_label = Label.create(:name => "Dividing Numbers", :extent => "public", :user => jeff)
-select_many_label = Label.create(:name => "Which Expressions are Equal", :extent => "public", :user => jeff)
+add_label = Label.create(:name => "Adding Numbers", :extent => "public", :user => jeff, :grade_type => "computer")
+subtract_label = Label.create(:name => "Subtracting Numbers", :extent => "public", :user => jeff, :grade_type => "computer")
+multiply_label = Label.create(:name => "Multiplying Numbers", :extent => "public", :user => jeff, :grade_type => "computer")
+divide_label = Label.create(:name => "Dividing Numbers", :extent => "public", :user => jeff, :grade_type => "computer")
+select_many_label = Label.create(:name => "Which Expressions are Equal", :extent => "public", :user => jeff, :grade_type => "computer")
 
 teacher_user = Teacher.first
-intercept_from_graphs_label = Label.create(:name => "Intercept from Graphs", :extent => "public", :user => teacher_user)
-intercept_from_equations_label = Label.create(:name => "Intercept from Equations", :extent => "public", :user => teacher_user)
-intercept_from_tables_label = Label.create(:name => "Intercept from Tables", :extent => "public", :user => teacher_user)
+intercept_from_graphs_label = Label.create(:name => "Intercept from Graphs", :extent => "public", :user => teacher_user, :grade_type => "computer")
+intercept_from_equations_label = Label.create(:name => "Intercept from Equations", :extent => "public", :user => teacher_user, :grade_type => "computer")
+intercept_from_tables_label = Label.create(:name => "Intercept from Tables", :extent => "public", :user => teacher_user, :grade_type => "computer")
 
 
 # Add labels to topics

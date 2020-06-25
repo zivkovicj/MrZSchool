@@ -15,7 +15,7 @@
                             :teacher => "You've chosen that this question should be teacher-graded (Not recommended for a select-many question.)"},
                     :fill_in => {:computer => "A student may enter any of the answers below to earn credit.",
                             :teacher => "This question needs to be graded by a person.  But if you include hints or examples here, students can see them after completing the quiz."},
-                    :interval => {:computer => "Enter the lowest possible answer in the first space and the highest possible answer in the second space.",
+                    :interval => {:computer => "Enter the lowest possible answer in the first space and the highest possible answer in the second space.  Use i for Infinity and -i for Negative Infinity",
                             :teacher => "You've chosen that this question should be teacher-graded (Not recommended for an interval question.)"}} %>
 
 
@@ -55,9 +55,12 @@
             <h3><%= check_message[:"#{@style}"][:"#{@grade_type}"] %></h3>
             </br>
             <table class="table-borderless">
-                <% if @style != "fill_in" %>
+                <% if ["multiple_choice","select_many"].include?(@style) %>
                     <% checkery = @question.shuffle %>
+                    <h4>
                     <%= check_box_tag "questions[#{index}][shuffle]", true, checked = checkery, :id => "question_#{index}_shuffle" %>
+                    &emsp; Shuffle Answers
+                    </h4>
                 <% end %>
                 <thead>
                     <th><% if @style != "fill_in" %>Correct? &nbsp;<% end %></th>

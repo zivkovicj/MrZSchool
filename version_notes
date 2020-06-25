@@ -21,6 +21,31 @@ Between each update, manually test:
 
 
 
+3.40 OMITTED ANSWERS
+V Show students when they've left out some correct answers
+V Before submitting final answers, show a screen that summarizes student's answer choice.  V Link back to fix questions.
+V After all questions have been attempted, offer a button to jump to submit page
+V Previous question
+V Clean up the quiz_show page.  It's getting hard to read.
+V Answers are pre-filled when student revisits questions
+V this_order made compatible with more multiple choice choices than six
+V Allow for infinity as values for interval questions
+V Choose the shuffle property in question edit screen.
+V Shuffle can be set upon question creation or editing
+V Migrate to add shuffle to questions
+V Update existing questions
+
+
+
+3.39 INTERVAL QUESTIONS
+V Create an interval question
+    V Low answer and high answer go into first slots of correct answer array
+V Student answers interval question
+V Grades interval question
+V Displays correct interval
+
+
+
 3.38 REMOVE CURRENT_CLASS
 Abandoned
 

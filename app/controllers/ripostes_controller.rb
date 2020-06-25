@@ -31,31 +31,21 @@ class RipostesController < ApplicationController
             @riposte.update(:stud_answer => @stud_answer, :tally => @perc, :graded => is_graded)
             @quiz.update(:progress => next_riposte_num)
             
-            if @riposte == @quiz.ripostes.order(:position).last || params[:commit] == "Finish Quiz"
-                redirect_to quiz_path(@quiz, :finished => false)
-            elsif params[:commit] == "Next Question"
-                next_riposte = @quiz.ripostes.find_by(:position => next_riposte_num)
-                redirect_to  edit_riposte_path(next_riposte)
-            elsif params[:commit] == "Previous Question"
+            if params[:commit] == "Previous Question"
                 prev_riposte_num = @riposte.position - 1
                 prev_riposte = @quiz.ripostes.find_by(:position => prev_riposte_num)
-                redirect_to  edit_riposte_path(prev_riposte)
+                redirect_to edit_riposte_path(prev_riposte)
+            elsif @riposte == @quiz.ripostes.order(:position).last || params[:commit] == "Finish Quiz"
+                redirect_to quiz_path(@quiz, :finished => false)
+            else
+                next_riposte = @quiz.ripostes.find_by(:position => next_riposte_num)
+                redirect_to  edit_riposte_path(next_riposte)
             end
         else
             redirect_to quiz_path(@quiz)
         end
     end
-    
-    # Erase this after using
-    def update_quantities
-        if params[:syl]
-            params[:syl].each do |key, value|
-                @lo = LabelObjective.find(key)
-                @lo.update(:quantity => value[:quantity], :point_value => value[:point_value])
-            end
-        end
-        redirect_to current_user
-    end
+
     
     def teacher_grading
         if params[:ripostes]

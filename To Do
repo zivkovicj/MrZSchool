@@ -1156,45 +1156,22 @@ Reloading label form directs to index
 Aqui
 
 
-3.39 INTERVAL QUESTIONS
-V Create an interval question
-    V Low answer and high answer go into first slots of correct answer array
-V Student answers interval question
-V Grades interval question
-V Displays correct interval
 
 
 
-3.40 OMITTED ANSWERS
-V Show students when they've left out some correct answers
-V Before submitting final answers, show a screen that summarizes student's answer choice.  V Link back to fix questions.
-V After all questions have been attempted, offer a button to jump to submit page
-V Previous question
-V Clean up the quiz_show page.  It's getting hard to read.
-V Answers are pre-filled when student revisits questions
-V this_order made compatible with more multiple choice choices than six
+3.41_INTERVAL_FOLLOW_UP
 
-Allow for infinity as values for interval questions
-
-UPDATE SHUFFLE IN QUESTION EDIT
+V Grade_types for labels in seeds
+V Test the display of the infinity answers
+V Label to show when shuffling.
+V Don't show the shuffle checkbox for interval questions
+V Let users know about infinity
+V Review answers before submitting &emsp
+V I think the update_quantities method can be deleted
 
 
-I think the update_quantities method can be deleted
 
-Grade_types for labels in seeds
-
-Shuffle can be set upon question creation or editing
-
-Shuffle in question seeds
-
-Make sure to merge this time!  Didn't merge after I cut the fat!
-
-Migrate to add shuffle to questions
-Update existing questions
-
-Make sure submit page works with unfinished quizzes.
-And with backtracking
-Think of other edge cases
+Should be taking post req keys the same way we take extra keys for 100%
 
 
 

@@ -4,9 +4,8 @@
 <% def colors_for_responses(this_response) %>
     <% @these_corr_ans = @question.correct_answers %>
     <% correct_array_fixed = [] %>
-    <% if @these_corr_ans.present? %>
-        <% correct_array_fixed = @these_corr_ans.map{|e| e.downcase.gsub(/\s+/, "").gsub(/[()]/, "")} %>
-    <% end %>
+    <% correct_array_fixed = fix_answer_array(@these_corr_ans) if @these_corr_ans.present? %>
+
     <% if @question.label.grade_type == "computer" then %>
         <% if @question.style == "interval" %>
             <% @class_type = "red" %>
@@ -58,13 +57,14 @@
     <%= render 'quizzes/total_score' %>
 <% else %>
     </br>
-    <h1>Review answers before submitting &emsp</h1>
+    <h1>Review answers before submitting</h1>
     </br>
 <% end %>
 
 
 <div class="container">
     <% @quiz.ripostes.each do |riposte| %>
+        <% @riposte = riposte %>
         <% @question = riposte.question %>
         <div class="container singleOption topic">
 
